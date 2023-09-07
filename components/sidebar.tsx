@@ -16,6 +16,7 @@ import StyledIcon from "./styled-icon";
 const Sidebar = () => {
   const pathname = usePathname();
   const shrinked = useAppSelector((state) => state.sidebar.shrinked);
+  // const shrinked = false
   const dispatch = useAppDispatch();
 
   const toggleSidebar = () => {

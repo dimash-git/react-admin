@@ -17,9 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <StoreProvider>
-        <body className={interTight.className}>{children}</body>
-      </StoreProvider>
+      <body className={interTight.className}>
+        <StoreProvider>{children} </StoreProvider>
+      </body>
     </html>
   );
 }
