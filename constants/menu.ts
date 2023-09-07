@@ -10,7 +10,7 @@ const menu = [
   {
     name: "Главная",
     icon: Home,
-    to: "/",
+    to: "/my",
   },
   {
     name: "Параметры",

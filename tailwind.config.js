@@ -53,6 +53,9 @@ module.exports = {
         // Custom Added by Me
         thBlue: "#0072FF",
         thGray: "#EAECEF",
+        thGreen: "#0DB679",
+        thOrange: "#EC8901",
+        thRed: "#DC3C3C",
       },
       borderRadius: {
         lg: "var(--radius)",

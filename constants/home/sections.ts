@@ -14,12 +14,12 @@ const events = {
     {
       name: "Создать мероприятие",
       icon: Plus,
-      to: "/events/add",
+      to: "/my/events/add",
     },
     {
       name: "Все мероприятия",
       icon: ArrowRight,
-      to: "/events",
+      to: "/my/events",
     },
   ],
 };
@@ -31,12 +31,12 @@ const promo = {
     {
       name: "Создать новость",
       icon: Plus,
-      to: "/news/add",
+      to: "/my/news/add",
     },
     {
       name: "Все новости",
       icon: ArrowRight,
-      to: "/news",
+      to: "/my/news",
     },
   ],
 };
@@ -48,17 +48,17 @@ const news = {
     {
       name: "Создать новость",
       icon: Plus,
-      to: "/news/add",
+      to: "/my/news/add",
     },
     {
       name: "Редактор тегов",
       icon: ArrowRight,
-      to: "/news/edit",
+      to: "/my/news/edit",
     },
     {
       name: "Все новости",
       icon: ArrowRight,
-      to: "/news/",
+      to: "/my/news/",
     },
   ],
 };
@@ -70,17 +70,17 @@ const products = {
     {
       name: "Добавить продукт",
       icon: Plus,
-      to: "/products/add",
+      to: "/my/products/add",
     },
     {
       name: "Редактор категорий",
       icon: ArrowRight,
-      to: "/products/edit",
+      to: "/my/products/edit",
     },
     {
       name: "Все продукты",
       icon: ArrowRight,
-      to: "/products/",
+      to: "/my/products/",
     },
   ],
 };
@@ -92,13 +92,13 @@ const marketing = {
     {
       name: "Создать маркетинг продукт",
       icon: Plus,
-      to: "/marketing/add",
+      to: "/my/marketing/add",
     },
 
     {
       name: "Все маркетинг продукты",
       icon: ArrowRight,
-      to: "/marketing/",
+      to: "/my/marketing/",
     },
   ],
 };
@@ -113,12 +113,12 @@ const support = {
         {
           name: "Создать категорию",
           icon: Plus,
-          to: "/support/add",
+          to: "/my/support/add",
         },
         {
           name: "Все категории",
           icon: ArrowRight,
-          to: "/support/",
+          to: "/my/support/",
         },
       ],
     },
@@ -129,12 +129,12 @@ const support = {
         {
           name: "Создать короткий ответ ",
           icon: Plus,
-          to: "/support/answers/add",
+          to: "/my/support/answers/add",
         },
         {
           name: "Все короткие ответы",
           icon: ArrowRight,
-          to: "/support/answers",
+          to: "/my/support/answers",
         },
       ],
     },
@@ -144,12 +144,12 @@ const support = {
         {
           name: "Создать статью",
           icon: Plus,
-          to: "/support/articles/add",
+          to: "/my/support/articles/add",
         },
         {
           name: "Все статьти",
           icon: ArrowRight,
-          to: "/support/articles",
+          to: "/my/support/articles",
         },
       ],
     },
