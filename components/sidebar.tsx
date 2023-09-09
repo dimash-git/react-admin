@@ -3,14 +3,14 @@
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
-import menu from "@/constants/menu";
+import menu from "@/lib/constants/menu";
 import Collapse from "@/public/icons/collapse.svg";
 
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/redux/hooks";
-import { toggle } from "@/redux/slices/sidebarSlice";
+import { toggle } from "@/redux/features/sidebarSlice";
 import StyledIcon from "./styled-icon";
 
 const Sidebar = () => {

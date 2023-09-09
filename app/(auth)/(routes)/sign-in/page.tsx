@@ -14,19 +14,34 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
-const LoginPage = () => {
+const SignInPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      username: "admin",
+      password: "admin",
+      code: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+
+    const { username: login, password, code } = values;
+    console.log(values);
+    try {
+      await signIn("credentials", {
+        login,
+        password,
+        code,
+        callbackUrl: "/my",
+      });
+    } catch (error) {
+      console.log("Signin", error);
+    }
   }
   return (
     <div className="flex flex-col space-y-[20px]">
@@ -63,7 +78,19 @@ const LoginPage = () => {
               </FormItem>
             )}
           />
-          <Button variant="submit" type="submit" className="w-full">
+          <FormField
+            control={form.control}
+            name="code"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Код" {...field} variant="auth" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button variant="submit" size="md" type="submit" className="w-full">
             Вход
           </Button>
         </form>
@@ -72,4 +99,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignInPage;

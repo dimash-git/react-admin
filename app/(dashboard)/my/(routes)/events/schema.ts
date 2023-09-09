@@ -1,4 +1,5 @@
 import * as z from "zod";
+const MAX_FILE_SIZE = 3000000;
 
 const eventFormSchema = z.object({
   name: z.string().min(3, {
@@ -17,6 +18,13 @@ const eventFormSchema = z.object({
     required_error: "Пожалуйста выберите дату и время",
     invalid_type_error: "Это не дата!",
   }),
+  file: z
+    .any()
+    .refine((file) => file?.name, "Файл не выбран")
+    .refine(
+      (file) => file?.size < MAX_FILE_SIZE,
+      `Максимальный размер файла ${MAX_FILE_SIZE / 1000000} MB.`
+    ),
 });
 
 export default eventFormSchema;

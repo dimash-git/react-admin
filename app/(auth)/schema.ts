@@ -5,6 +5,9 @@ export const loginFormSchema = z.object({
     message: "Заполните логин или почту",
   }),
   password: z.string().min(2, { message: "Заполните пароль" }),
+  code: z.string().min(2, {
+    message: "Введите код подтверждения",
+  }),
 });
 
 export const smsFormSchema = z.object({

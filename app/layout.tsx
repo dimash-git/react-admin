@@ -1,5 +1,8 @@
-import StoreProvider from "@/redux/store-provider";
 import "./globals.css";
+
+import AuthProvider from "@/components/providers/auth-provider";
+import StoreProvider from "@/components/providers/store-provider";
+
 import type { Metadata } from "next";
 import { Inter_Tight } from "next/font/google";
 
@@ -18,7 +21,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={interTight.className}>
-        <StoreProvider>{children} </StoreProvider>
+        <AuthProvider>
+          <StoreProvider>{children} </StoreProvider>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -9,7 +9,7 @@ import {
   products,
   promo,
   support,
-} from "@/constants/home/sections";
+} from "@/lib/constants/home/sections";
 
 const DashboardPage = () => {
   return (

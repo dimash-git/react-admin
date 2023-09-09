@@ -12,7 +12,7 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import sidebarReducer from "./slices/sidebarSlice";
+import sidebarReducer from "./features/sidebarSlice";
 
 import storage from "./storage";
 

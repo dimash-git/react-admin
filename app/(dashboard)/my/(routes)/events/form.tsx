@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import eventFormSchema from "./schema";
+import { format } from "date-fns";
 
 import {
   Form,
@@ -22,6 +23,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
 const text = `Мероприятие более чем на 100 человек, с after-party на яхте Radisson!
 
@@ -42,6 +51,7 @@ const EventForm = () => {
       name: "Москва",
       description: text,
       type: "offline",
+      file: {} as File,
     },
   });
   function onSubmit(values: z.infer<typeof eventFormSchema>) {
@@ -52,10 +62,7 @@ const EventForm = () => {
   return (
     <div>
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-[30px] mt-[30px]"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[30px]">
           <FormField
             control={form.control}
             name="name"
@@ -107,6 +114,73 @@ const EventForm = () => {
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="mb-5">
+                   Дата проведения мероприятия
+                </FormLabel>
+                <FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="inputLike"
+                          size="inputLike"
+                          className={cn(
+                            "w-full pl-3 text-left",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="file"
+            render={({ field: { value, ...field } }) => (
+              <FormItem>
+                <FormLabel className="mb-5">Описание мероприятия</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    {...field}
+                    // spreading value is important cause you do not want default value change
+                    onChange={(e) => {
+                      if (!e.target.files) return;
+                      field.onChange(e.target.files[0]);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

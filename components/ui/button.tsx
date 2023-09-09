@@ -17,13 +17,16 @@ const buttonVariants = cva(
           "bg-thBlue hover:bg-thBlue/80 py-ten text-[16px] font-bold text-gray",
         modal: "bg-[#455580] hover:bg-[#455580]/80 text-[16px] font-bold",
         form: "bg-[#455580] hover:bg-[#455580]/80 text-[12px] font-bold",
+        inputLike:
+          "border-[#455580] border-[1px] rounded-ten text-[15px] font-semibold #8F9297 text-[#8F9297]",
       },
       size: {
         // Custom added by me
         default: "h-[25px] py-[5px] px-5", // card edit
         sm: "h-[25px] py-[5px] px-ten", // card remove
-        md: "px-10",
+        md: "px-10 py-ten",
         lg: "h-10 py-ten px-10", // modal
+        inputLike: "p-ten",
       },
     },
     defaultVariants: {
