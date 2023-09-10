@@ -3,11 +3,11 @@ import React from "react";
 
 const bdEvents = [
   {
-    to: "/my",
+    to: "/dashboard/my",
     name: "Главная",
   },
   {
-    to: "/my/events",
+    to: "/dashboard/my/events",
     name: "Мероприятия",
   },
 ];

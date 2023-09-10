@@ -10,37 +10,37 @@ const menu = [
   {
     name: "Главная",
     icon: Home,
-    to: "/my",
+    to: "/dashboard/my",
   },
   {
     name: "Параметры",
     icon: Wheel,
-    to: "/parameters",
+    to: "/dashboard/parameters",
   },
   {
     name: "Процессы",
     icon: Process,
-    to: "/processes",
+    to: "/dashboard/processes",
   },
   {
     name: "P2P Платформа",
     icon: P2P,
-    to: "/p2p",
+    to: "/dashboard/p2p",
   },
   {
     name: "МЛМ",
     icon: MLM,
-    to: "/mlm",
+    to: "/dashboard/mlm",
   },
   {
     name: "Пользователи",
     icon: User,
-    to: "/users",
+    to: "/dashboard/users",
   },
   {
     name: "Админ панель",
     icon: Panel,
-    to: "/admin",
+    to: "/dashboard/admin",
   },
 ];
 

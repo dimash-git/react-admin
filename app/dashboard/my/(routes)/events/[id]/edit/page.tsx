@@ -1,14 +1,14 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import React from "react";
-import EventForm from "../../form";
+import EventForm from "../../_components/form";
 
 const bdEvents = [
   {
-    to: "/my",
+    to: "/dashboard/my",
     name: "Главная",
   },
   {
-    to: "/my/events",
+    to: "/dashboard/my/events",
     name: "Мероприятия",
   },
 ];

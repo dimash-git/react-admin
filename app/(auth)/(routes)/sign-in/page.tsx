@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 const SignInPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -25,22 +26,28 @@ const SignInPage = () => {
       code: "",
     },
   });
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
 
+  const { toast } = useToast();
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const { username: login, password, code } = values;
-    console.log(values);
     try {
       await signIn("credentials", {
         login,
         password,
         code,
-        callbackUrl: "/my",
+        callbackUrl: "/dashboard/my",
+      });
+      toast({
+        variant: "success",
+        title: "Вход выполнен успешно!",
       });
     } catch (error) {
-      console.log("Signin", error);
+      console.log("Sign-in Error", error);
+      toast({
+        variant: "destructive",
+        title: "Произошла ошибка при входе.",
+      });
     }
   }
   return (

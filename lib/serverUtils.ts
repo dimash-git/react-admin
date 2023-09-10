@@ -1,6 +1,6 @@
 import axios from "axios";
 import "server-only";
-import { BACKEND_URL } from "./constants/variables";
+import { BACKEND_URL } from "./serverConstants";
 
 interface LoginCreds {
   login: string;
@@ -23,7 +23,6 @@ const getVerificationKey = async (
     );
 
     if (res.status == 200) {
-      console.log("getVerkey: ", res.data);
       const { content } = res.data;
       return content.verification_key;
     }
@@ -31,4 +30,14 @@ const getVerificationKey = async (
   return null;
 };
 
-export { getVerificationKey };
+const axiosBack = axios.create({
+  baseURL: BACKEND_URL,
+});
+
+const retrieveApiKey = (tokens: BackendTokens) => {
+  if (!tokens) return null;
+  const base64ApiKey = btoa(tokens?.access_token + ":" + tokens?.refresh_token);
+  return base64ApiKey;
+};
+
+export { getVerificationKey, axiosBack, retrieveApiKey };

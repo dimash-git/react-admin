@@ -1,5 +1,7 @@
 import "./globals.css";
 
+import { Toaster } from "@/components/ui/toaster";
+
 import AuthProvider from "@/components/providers/auth-provider";
 import StoreProvider from "@/components/providers/store-provider";
 
@@ -24,6 +26,7 @@ export default function RootLayout({
         <AuthProvider>
           <StoreProvider>{children} </StoreProvider>
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );
