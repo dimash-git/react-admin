@@ -4,7 +4,7 @@ import React from "react";
 import CardActions from "./card-actions";
 import Image from "next/image";
 
-const EventsCard = ({ card }: { card: Event }) => {
+const EventCard = ({ card }: { card: Event }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
@@ -37,15 +37,15 @@ const EventsCard = ({ card }: { card: Event }) => {
           {card.is_online ? "Онлайн" : "Оффлайн"}
         </span>
       </div>
-      <div className="flex flex-col gap-[7px]">
+      <div className="flex flex-col gap-[7px] max-w-[169px] w-full">
         <span className="text-[10px] uppercase">ID</span>
         <span className="text-[10px] uppercase">{card?.event_id}</span>
       </div>
       <div className="flex gap-ten items-center">
-        <CardActions id="010000" />
+        <CardActions id={card?.event_id} />
       </div>
     </div>
   );
 };
 
-export default EventsCard;
+export default EventCard;

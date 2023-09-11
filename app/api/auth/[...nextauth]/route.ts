@@ -7,30 +7,38 @@ import {
 } from "@/lib/serverUtils";
 import { JWT } from "next-auth/jwt";
 
-const ACCESS_TOKEN_EXPIRE_TIME = 10 * 60 * 1000;
+const ACCESS_TOKEN_EXPIRE_TIME = 9 * 60 * 1000;
 
 // return type for next-auth provider "credentials"
 interface User extends NextAuthUser {
-  info: {
-    user_id?: string;
-  };
-  expiresIn: number;
-  backendTokens: BackendTokens;
+  backendTokens: BackendTokensWE;
 }
 
 async function refreshToken(token: JWT): Promise<JWT> {
   const apiKey = retrieveApiKey(token.backendTokens);
+  console.log(`apiKey in refresh: ${apiKey}`);
+
   const res = await axiosBack.get("/main/auth/refresh_auth", {
     headers: {
       Authorization: apiKey,
     },
   });
 
-  console.log(res.data);
+  console.log("refresh attempt: ", res.data);
+
+  const { access_token, refresh_token } = res.data.content;
+
+  console.log("success refresh");
 
   return {
     ...token,
-    backendTokens: res.data,
+    backendTokens: {
+      access_token,
+      refresh_token,
+      expiresIn: new Date().setTime(
+        new Date().getTime() + ACCESS_TOKEN_EXPIRE_TIME
+      ),
+    },
   };
 }
 
@@ -61,7 +69,7 @@ export const authOptions: NextAuthOptions = {
           code,
         });
 
-        console.log("VerKey: ", verification_key);
+        // console.log("VerKey: ", verification_key);
 
         if (!verification_key) return null;
 
@@ -83,13 +91,13 @@ export const authOptions: NextAuthOptions = {
           const { user_id, ...content } = res.data.content;
 
           const user: User = {
-            info: {
-              user_id,
+            id: user_id, // DefaultUser Type
+            backendTokens: {
+              ...content,
+              expiresIn: new Date().setTime(
+                new Date().getTime() + ACCESS_TOKEN_EXPIRE_TIME
+              ),
             },
-            expiresIn: new Date().setTime(
-              new Date().getTime() + ACCESS_TOKEN_EXPIRE_TIME
-            ),
-            backendTokens: content,
           };
           return user;
         }
@@ -102,16 +110,19 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
-      // console.log("jwt: ", { ...token, ...user });
+      console.log("token jwt: ", token);
+      console.log("user jwt: ", user);
 
-      if (user) {
-        return { ...token, ...user };
-      } // this object will be passed as token in session callback
+      // Initial sign in
+      if (user) return { ...token, ...user };
 
-      return token;
+      // Return previous token if the access token has not expired yet
+      if (new Date().getTime() < token.backendTokens.expiresIn) return token;
+
+      return await refreshToken(token);
     },
     async session({ token, session }) {
-      session.user = token.info;
+      session.user = { id: token.id };
       session.backendTokens = token.backendTokens;
 
       return session;

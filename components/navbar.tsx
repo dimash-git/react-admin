@@ -17,14 +17,15 @@ const Navbar = () => {
   const { toast } = useToast();
   const handleClick = async () => {
     try {
-      const res = await axios.get("/api/auth/leave");
-      if (res.data.status == 200) {
-        signOut({ callbackUrl: "/sign-in" });
-        toast({
-          variant: "success",
-          title: "Выход выполнен успешно!",
-        });
-      }
+      // const res = await axios.get("/api/auth/leave");
+      // if (res.data.status == 200) {
+      //   signOut({ callbackUrl: "/sign-in" });
+      //   toast({
+      //     variant: "success",
+      //     title: "Выход выполнен успешно!",
+      //   });
+      // }
+      signOut({ callbackUrl: "/sign-in" });
     } catch (error) {
       toast({
         variant: "destructive",
