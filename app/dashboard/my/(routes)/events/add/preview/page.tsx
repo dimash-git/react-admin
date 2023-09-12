@@ -7,12 +7,13 @@ import {
   cn,
   dateToUnix,
   fileToBase64,
+  getFileType,
   readableDate,
   unixToReadableDate,
 } from "@/lib/utils";
 import PostArrowLeft from "@/public/icons/post-arrow-left.svg";
 import axios from "axios";
-import { revalidateTag } from "next/cache";
+// import { revalidateTag } from "next/cache";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
@@ -42,10 +43,11 @@ const EventPreviewPage = () => {
       } catch (error: any) {
         console.error("Publish error: ", error.message);
       }
-      publishInfo.img_type = image.type;
+
+      publishInfo.img_type = getFileType(image.type);
     }
 
-    // console.log("Publish:", publishInfo);
+    console.log("Publish:", publishInfo);
 
     const res = await axios.post("/api/event/add", publishInfo);
 

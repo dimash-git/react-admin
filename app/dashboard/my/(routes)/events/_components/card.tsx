@@ -10,11 +10,11 @@ const EventCard = ({ card }: { card: _Event }) => {
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
         <div className="card__cover w-[94px] h-[50px] bg-[#2D3D52]">
           <Image
-            src={card.img_url}
+            src={card?.img_url as string}
             alt={card.name}
             width={94}
             height={50}
-            className="max-w-none"
+            className="max-w-none h-full"
           />
         </div>
         <div className="flex flex-col gap-[7px]">

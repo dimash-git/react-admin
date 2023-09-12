@@ -20,11 +20,19 @@ export async function POST(req: Request) {
     if (body?.img_type) {
       const { img_type, img_data_base64 } = body;
       mediaInfo = {
-        img_type: img_type,
-        img_data_base64: img_data_base64,
+        img_type,
+        img_data_base64,
         media_blocks: [],
       };
     }
+
+    // console.log({
+    //   name,
+    //   desc,
+    //   is_online,
+    //   timestamp,
+    //   ...mediaInfo,
+    // });
 
     const res = await axiosBack.post(
       "/event/add_event",

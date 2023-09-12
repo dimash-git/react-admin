@@ -45,7 +45,10 @@ export function fileToBase64(file: File) {
 
     reader.onload = function (event) {
       // The result property contains the base64-encoded string
-      const base64String = event?.target?.result;
+      const dataUrl = event?.target?.result as string;
+
+      // Extract the base64 part without "data:" prefix
+      const base64String = dataUrl ? dataUrl.split(",")[1] : "";
       resolve(base64String);
     };
 
@@ -66,4 +69,15 @@ export async function getFileFromUrl(url: string) {
 
   // return { blob, filename, mimeType };
   return new File([blob], filename, { type: mimeType });
+}
+
+export function getFileType(mimeType: string) {
+  const parts = mimeType.split("/");
+
+  // The file type is the second part of the array (e.g., "png")
+  if (parts.length === 2) {
+    return parts[1];
+  } else {
+    return "";
+  }
 }
