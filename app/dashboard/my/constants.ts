@@ -7,9 +7,9 @@ import Cart from "@/public/icons/cart.svg";
 import Bar from "@/public/icons/bar.svg";
 import QMark from "@/public/icons/qmark.svg";
 
-const myBaseUrl = "/dashboard/my";
+export const homeBaseUrl = "/dashboard/my";
 
-const mySections = {
+export const homeSections = {
   events: {
     name: "Мероприятие",
     icon: Calendar,
@@ -17,13 +17,13 @@ const mySections = {
       {
         name: "Создать мероприятие",
         icon: Plus,
-        to: myBaseUrl + "/events/add",
+        to: homeBaseUrl + "/events/add",
         slug: "add_event",
       },
       {
         name: "Все мероприятия",
         icon: ArrowRight,
-        to: myBaseUrl + "/events",
+        to: homeBaseUrl + "/events",
         slug: "list_events",
       },
     ],
@@ -35,12 +35,12 @@ const mySections = {
       {
         name: "Создать новость",
         icon: Plus,
-        to: myBaseUrl + "/news/add",
+        to: homeBaseUrl + "/promo/add",
       },
       {
         name: "Все новости",
         icon: ArrowRight,
-        to: myBaseUrl + "/news",
+        to: homeBaseUrl + "/promo",
       },
     ],
   },
@@ -51,17 +51,17 @@ const mySections = {
       {
         name: "Создать новость",
         icon: Plus,
-        to: myBaseUrl + "/news/add",
+        to: homeBaseUrl + "/news/add",
       },
       {
         name: "Редактор тегов",
         icon: ArrowRight,
-        to: myBaseUrl + "/news/edit",
+        to: homeBaseUrl + "/news/edit",
       },
       {
         name: "Все новости",
         icon: ArrowRight,
-        to: myBaseUrl + "/news/",
+        to: homeBaseUrl + "/news/",
       },
     ],
   },
@@ -72,17 +72,17 @@ const mySections = {
       {
         name: "Добавить продукт",
         icon: Plus,
-        to: myBaseUrl + "/products/add",
+        to: homeBaseUrl + "/products/add",
       },
       {
         name: "Редактор категорий",
         icon: ArrowRight,
-        to: myBaseUrl + "/products/edit",
+        to: homeBaseUrl + "/products/edit",
       },
       {
         name: "Все продукты",
         icon: ArrowRight,
-        to: myBaseUrl + "/products/",
+        to: homeBaseUrl + "/products/",
       },
     ],
   },
@@ -93,13 +93,13 @@ const mySections = {
       {
         name: "Создать маркетинг продукт",
         icon: Plus,
-        to: myBaseUrl + "/marketing/add",
+        to: homeBaseUrl + "/marketing/add",
       },
 
       {
         name: "Все маркетинг продукты",
         icon: ArrowRight,
-        to: myBaseUrl + "/marketing/",
+        to: homeBaseUrl + "/marketing/",
       },
     ],
   },
@@ -113,12 +113,12 @@ const mySections = {
           {
             name: "Создать категорию",
             icon: Plus,
-            to: myBaseUrl + "/support/add",
+            to: homeBaseUrl + "/support/add",
           },
           {
             name: "Все категории",
             icon: ArrowRight,
-            to: myBaseUrl + "/support/",
+            to: homeBaseUrl + "/support/",
           },
         ],
       },
@@ -129,12 +129,12 @@ const mySections = {
           {
             name: "Создать короткий ответ ",
             icon: Plus,
-            to: myBaseUrl + "/support/answers/add",
+            to: homeBaseUrl + "/support/answers/add",
           },
           {
             name: "Все короткие ответы",
             icon: ArrowRight,
-            to: myBaseUrl + "/support/answers",
+            to: homeBaseUrl + "/support/answers",
           },
         ],
       },
@@ -144,12 +144,12 @@ const mySections = {
           {
             name: "Создать статью",
             icon: Plus,
-            to: myBaseUrl + "/support/articles/add",
+            to: homeBaseUrl + "/support/articles/add",
           },
           {
             name: "Все статьти",
             icon: ArrowRight,
-            to: myBaseUrl + "/support/articles",
+            to: homeBaseUrl + "/support/articles",
           },
         ],
       },
@@ -157,22 +157,34 @@ const mySections = {
   },
 };
 
-const myTabs = {
+export const homeTabs = {
   events: [
     {
-      to: myBaseUrl + "/events",
+      to: homeBaseUrl + "/events",
       slug: "events",
       name: "Все мероприятия",
     },
     {
-      to: myBaseUrl + "/events/add",
+      to: homeBaseUrl + "/events/add",
       slug: "add",
       name: "Создать мероприятие",
     },
   ],
+  promo: [
+    {
+      to: homeBaseUrl + "/promo",
+      slug: "promo",
+      name: "Все промо материалы",
+    },
+    {
+      to: homeBaseUrl + "/promo/add",
+      slug: "add",
+      name: "Добавить промо материал",
+    },
+  ],
 };
 
-const myBreadcrumbs = {
+export const homeBreadcrumbs = {
   events: [
     {
       to: "/dashboard/my",
@@ -182,6 +194,20 @@ const myBreadcrumbs = {
       name: "Мероприятия",
     },
   ],
+  promo: [
+    {
+      to: "/dashboard/my",
+      name: "Главная",
+    },
+    {
+      name: "промо материалы",
+    },
+  ],
 };
 
-export { mySections, myTabs };
+export const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];

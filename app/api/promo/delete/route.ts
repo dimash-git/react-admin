@@ -2,6 +2,7 @@ import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/route";
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -13,9 +14,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { id } = body;
     const res = await axiosBack.post(
-      "/event/delete_event",
+      "/promo/delete_promo_material",
       {
-        event_id: id,
+        promo_id: id,
       },
       {
         headers: {
@@ -25,14 +26,14 @@ export async function POST(req: Request) {
     );
 
     if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Event delete failed", { status: 500 });
+      return new NextResponse("Promo delete failed", { status: 500 });
     }
 
     // console.log(res.data);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("EVENT_DELETE_ERROR", error);
+    console.log("PROMO_DELETE_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

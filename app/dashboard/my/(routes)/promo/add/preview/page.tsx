@@ -1,55 +1,58 @@
 "use client";
 
-import { EventContext } from "@/app/dashboard/my/(routes)/events/_components/event-provider";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  cn,
-  dateToUnix,
-  fileToBase64,
-  getFileType,
-  readableDate,
-  unixToReadableDate,
-} from "@/lib/utils";
+import { fileToBase64, getFileType } from "@/lib/utils";
 import PostArrowLeft from "@/public/icons/post-arrow-left.svg";
 import axios from "axios";
-// import { revalidateTag } from "next/cache";
+
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
+import { PromoContext } from "../../_components/promo-provider";
+import { homeBaseUrl } from "@/app/dashboard/my/constants";
 
-const EventPreviewPage = () => {
-  const { event } = useContext(EventContext);
+const PromoPreviewPage = () => {
+  const { promo } = useContext(PromoContext);
   const { toast } = useToast();
   const router = useRouter();
 
   const handlePublish = async () => {
-    const { name, desc, date, type } = event;
+    const { name } = promo;
     const publishInfo = {
       name,
-      desc,
-      timestamp: dateToUnix(date),
-      is_online: type == "online" ? true : false,
       img_data_base64: "",
       img_type: "",
+      file_data_base64: "",
+      file_data_type: "",
     };
 
-    if (event?.image) {
-      const { image } = event;
+    if (promo?.image) {
+      const { image } = promo;
       try {
         const base64String = await fileToBase64(image);
         publishInfo.img_data_base64 = base64String as string;
+        publishInfo.img_type = getFileType(image.type);
       } catch (error: any) {
         console.error("Publish error: ", error.message);
       }
+    }
 
-      publishInfo.img_type = getFileType(image.type);
+    if (promo?.file) {
+      const { file } = promo;
+      try {
+        const base64String = await fileToBase64(file);
+        publishInfo.file_data_base64 = base64String as string;
+        publishInfo.file_data_type = getFileType(file.type);
+      } catch (error: any) {
+        console.error("Publish error: ", error.message);
+      }
     }
 
     console.log("Publish:", publishInfo);
 
-    const res = await axios.post("/api/event/add", publishInfo);
+    const res = await axios.post("/api/promo/add", publishInfo);
 
     // console.log("Response:", res.data);
 
@@ -57,18 +60,18 @@ const EventPreviewPage = () => {
     if (status != 200) {
       toast({
         variant: "success",
-        title: "Ошибка при добавлении мероприятия!",
+        title: "Ошибка при добавлении промо материала!",
       });
       return;
     }
 
     toast({
       variant: "success",
-      title: "Мероприятие добавлено успешно!",
+      title: "Промо материал добавлено успешно!",
     });
-    // revalidateTag("events");
+
     router.refresh();
-    router.push("/dashboard/my/events");
+    router.push(`${homeBaseUrl}/promo`);
   };
 
   return (
@@ -78,34 +81,33 @@ const EventPreviewPage = () => {
       </div>
       <div>
         <div className="event__header">
-          <div className="flex justify-start gap-[6px] text-[10px] font-medium">
-            <div>{readableDate(event?.date)}</div>
-            <div
-              className={cn(
-                event?.type == "online" ? "text-thGreen" : "text-thOrange"
-              )}
-            >
-              {event?.type == "online" ? "Онлайн" : "Оффлайн"}
-            </div>
-          </div>
           <div className="event__name text-[40px] font-bold mt-[5px]">
-            {event?.name}
+            {promo?.name}
           </div>
         </div>
-        <div className="event__description my-[20px] text-[15px] font-medium">
-          <p>{event?.desc}</p>
-        </div>
+
         <div className="event__cover">
-          {event?.image && (
+          {promo?.image && (
             <Image
               width={400}
               height={238}
               alt="Image"
-              src={URL.createObjectURL(event.image as File)}
+              src={URL.createObjectURL(promo.image as File)}
               className="w-full object-cover"
             />
           )}
         </div>
+      </div>
+      <div>
+        <Button
+          variant="formSubmit"
+          type="button"
+          onClick={() =>
+            window.open(URL.createObjectURL(promo.file as File), "_blank")
+          }
+        >
+          Скачать презентацию
+        </Button>
       </div>
       <div className="event__controls flex items-center justify-between">
         <button
@@ -123,4 +125,4 @@ const EventPreviewPage = () => {
   );
 };
 
-export default EventPreviewPage;
+export default PromoPreviewPage;

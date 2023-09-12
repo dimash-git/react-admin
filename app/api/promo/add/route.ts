@@ -1,7 +1,9 @@
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+
+import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { authOptions } from "../../auth/[...nextauth]/route";
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -11,11 +13,23 @@ export async function POST(req: Request) {
     if (!apiKey) return;
 
     const body = await req.json();
-    const { id } = body;
+
+    const {
+      name,
+      img_data_base64,
+      img_type,
+      file_data_base64,
+      file_data_type,
+    } = body;
+
     const res = await axiosBack.post(
-      "/event/delete_event",
+      "/promo/add_promo_material",
       {
-        event_id: id,
+        name,
+        img_data_base64,
+        img_type,
+        file_data_base64,
+        file_data_type,
       },
       {
         headers: {
@@ -25,14 +39,14 @@ export async function POST(req: Request) {
     );
 
     if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Event delete failed", { status: 500 });
+      return new NextResponse("Promo publish failed", { status: 500 });
     }
 
-    // console.log(res.data);
+    console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("EVENT_DELETE_ERROR", error);
+    console.log("PROMO_PUBLISH_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

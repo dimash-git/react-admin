@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/serverUtils";
 
 import Breadcrumbs from "@/components/breadcrumbs";
-import EventCard from "./_components/card";
+import PromoCard from "./_components/card";
 import { homeBreadcrumbs, homeTabs } from "../../constants";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
@@ -33,7 +33,7 @@ const EventsPage = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/event/get_events", {
+  const response = await fetch(BACKEND_URL + "/promo/get_promo_materials", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -43,47 +43,31 @@ const EventsPage = async ({
       skip,
       limit: pageSize,
     }),
-    next: { tags: ["events"] },
+    next: { tags: ["promos"] },
   });
 
   if (!response.ok) {
-    throw new Error("Error Loading Events");
+    throw new Error("Error Loading Promo Materials");
   }
 
   const { status, content } = await response.json();
 
   if (status.code !== 200) {
-    throw new Error("Error Loading Events");
+    throw new Error("Error Loading Promo Materials");
   }
 
-  const { events, count }: { events: _Event[]; count: number } = content;
-  // const res = await axiosBack.post(
-  //   "/event/get_events",
-  //   {
-  //     skip,
-  //     limit: pageSize,
-  //   },
-  //   {
-  //     headers: {
-  //       Authorization: apiKey,
-  //     },
-  //   }
-  // );
-
-  // // console.log(res.data);
-
-  // if (res.data.status.code != 200) return <>Error Loading Evens</>;
-
-  // const { events, count }: { events: Event[]; count: number } =
-  //   res.data.content;
+  const {
+    promo_materials,
+    count,
+  }: { promo_materials: Promo[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={homeBreadcrumbs.events} />
-      <Tabs links={homeTabs.events} />
+      <Breadcrumbs bd={homeBreadcrumbs.promo} />
+      <Tabs links={homeTabs.promo} />
       <div className="flex flex-col space-y-[30px]">
-        {events.map((event, idx) => (
-          <EventCard key={idx} card={event} />
+        {promo_materials.map((promo, idx) => (
+          <PromoCard key={idx} card={promo} />
         ))}
       </div>
       <div>

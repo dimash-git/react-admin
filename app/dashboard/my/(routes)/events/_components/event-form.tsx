@@ -32,25 +32,25 @@ import { cn, dateToUnix, getFileFromUrl } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { useContext } from "react";
-import { EventContext } from "@/components/providers/event-provider";
+import { EventContext } from "@/app/dashboard/my/(routes)/events/_components/event-provider";
 import { useRouter } from "next/navigation";
 
-const EventForm = ({ event }: { event?: _Event }) => {
-  const { event: eventState, setEvent } = useContext(EventContext);
+const EventForm = ({ parsed }: { parsed?: _Event }) => {
+  const { event, setEvent } = useContext(EventContext);
   // console.log("Event from form", event);
 
   const router = useRouter();
 
   const defaultValues = {
-    name: event?.name ?? eventState?.name,
-    desc: event?.desc ?? eventState?.desc,
+    name: parsed?.name ?? event?.name,
+    desc: parsed?.desc ?? event?.desc,
     // type: (event?.is_online ? "online" : "offline") ?? eventState?.type
-    type: ((event?.is_online ? "online" : "offline") ??
-      eventState?.type) as EventType,
+    type: ((parsed?.is_online ? "online" : "offline") ??
+      event?.type) as EventType,
     date:
-      eventState?.date ??
-      new Date(event?.timestamp ? event?.timestamp * 1000 : Date.now()),
-    // image: event?.img_url ? getFileFromUrl(event?.img_url) : eventState?.image,
+      event?.date ??
+      new Date(parsed?.timestamp ? parsed?.timestamp * 1000 : Date.now()),
+    image: parsed?.img_url ? getFileFromUrl(parsed?.img_url) : event?.image,
     // form image field should be always File type
     // 1st case: event data fetched from server, it has url as img_url
     // 2nd case: event data gotten from state manipulation

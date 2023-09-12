@@ -1,11 +1,6 @@
 import * as z from "zod";
+import { ACCEPTED_IMAGE_TYPES } from "../../constants";
 const MAX_FILE_SIZE = 3000000;
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
 
 const eventFormSchema = z.object({
   name: z.string().min(3, {

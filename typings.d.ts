@@ -25,3 +25,16 @@ interface EventForm {
   image?: File; // if image was chosen at form
   img_url?: string; // if image was fetched from backend
 }
+
+interface Promo {
+  promo_id: string;
+  name: string;
+  img_url?: string;
+  file_url?: string;
+}
+
+interface PromoForm {
+  name: string;
+  image?: File;
+  file?: File;
+}

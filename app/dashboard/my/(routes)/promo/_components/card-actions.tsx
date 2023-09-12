@@ -24,7 +24,7 @@ const CardActions = ({ id }: CardActionsProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleDelete = async () => {
-    const res = await axios.post("/api/event/delete", {
+    const res = await axios.post("/api/promo/delete", {
       id,
     });
 
@@ -34,14 +34,14 @@ const CardActions = ({ id }: CardActionsProps) => {
     if (status != 200) {
       toast({
         variant: "success",
-        title: "Ошибка при удалении мероприятия!",
+        title: "Ошибка при удалении промо материала!",
       });
       return;
     }
 
     toast({
       variant: "success",
-      title: "Мероприятие удалено успешно!",
+      title: "Промо материал удален успешно!",
     });
     setOpen(false);
     router.refresh();
@@ -60,9 +60,9 @@ const CardActions = ({ id }: CardActionsProps) => {
         </Modal.Trigger>
         <Modal.Content className="max-w-[462px] bg-[#2D3D52] p-5 rounded-[20px]">
           <div className="flex flex-col space-y-6">
-            <h4 className="text-md font-semibold">Удалить мероприятие</h4>
+            <h4 className="text-md font-semibold">Удалить промо материал</h4>
             <p className="font-medium text-[14px]">
-              Вы уверены что хотите удалить мероприятие?
+              Вы уверены что хотите удалить промо материал?
             </p>
             <div className="flex gap-6 w-full">
               <Button
