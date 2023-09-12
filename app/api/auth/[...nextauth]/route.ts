@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
           code,
         });
 
-        // console.log("VerKey: ", verification_key);
+        console.log("VerKey: ", verification_key);
 
         if (!verification_key) return null;
 

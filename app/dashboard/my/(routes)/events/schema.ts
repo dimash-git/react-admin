@@ -1,11 +1,17 @@
 import * as z from "zod";
 const MAX_FILE_SIZE = 3000000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 const eventFormSchema = z.object({
   name: z.string().min(3, {
     message: "Введите название мероприятия",
   }),
-  description: z
+  desc: z
     .string()
     .min(10, {
       message: "Описание должно быть больше 10 символов.",
@@ -18,12 +24,16 @@ const eventFormSchema = z.object({
     required_error: "Пожалуйста выберите дату и время",
     invalid_type_error: "Это не дата!",
   }),
-  file: z
+  image: z
     .any()
     .refine((file) => file?.name, "Файл не выбран")
     .refine(
       (file) => file?.size < MAX_FILE_SIZE,
       `Максимальный размер файла ${MAX_FILE_SIZE / 1000000} MB.`
+    )
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      "Только файлы в формате .jpg, .jpeg, .png and .webp принимаются."
     ),
 });
 

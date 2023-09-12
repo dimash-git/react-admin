@@ -12,12 +12,16 @@ import {
 
 interface ModalProps {
   children: React.ReactNode;
-  // open: boolean;
-  // onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
 }
 
-const Modal = ({ children }: ModalProps) => {
-  return <Dialog>{children}</Dialog>;
+const Modal = ({ children, open, setOpen }: ModalProps) => {
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      {children}
+    </Dialog>
+  );
 };
 
 Modal.Trigger = DialogTrigger;

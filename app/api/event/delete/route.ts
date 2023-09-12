@@ -1,24 +1,21 @@
+import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { authOptions } from "../../auth/[...nextauth]/route";
-
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
-
-    if (!session) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
+    if (!session) return new NextResponse("Unauthorized", { status: 401 });
 
     const apiKey = retrieveApiKey(session.backendTokens);
+    if (!apiKey) return;
 
+    const body = await req.json();
+    const { event_id } = body;
     const res = await axiosBack.post(
-      "/main/event/get_events",
+      "/event/delete_event",
       {
-        skip: 0,
-        limit: 19,
+        event_id,
       },
       {
         headers: {
@@ -28,14 +25,14 @@ export async function GET(req: Request) {
     );
 
     if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Get events failed", { status: 500 });
+      return new NextResponse("Event delete failed", { status: 500 });
     }
 
-    console.log(res.data);
+    // console.log(res.data);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("[CONVERSATION_ERROR]", error);
+    console.log("EVENT_DELETE_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

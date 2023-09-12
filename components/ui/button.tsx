@@ -17,6 +17,7 @@ const buttonVariants = cva(
           "bg-thBlue hover:bg-thBlue/80 py-ten text-[16px] font-bold text-gray",
         modal: "bg-[#455580] hover:bg-[#455580]/80 text-[16px] font-bold",
         form: "bg-[#455580] hover:bg-[#455580]/80 text-[12px] font-bold",
+        formSubmit: "bg-thBlue hover:bg-thBlue/80 text-[12px] font-bold",
         inputLike:
           "border-[#455580] border-[1px] rounded-ten text-[15px] font-semibold #8F9297 text-[#8F9297]",
       },

@@ -6,10 +6,22 @@ interface BackendTokens {
 interface BackendTokensWE extends BackendTokens {
   expiresIn: number;
 }
-interface Event {
+
+type EventType = "online" | "offline";
+interface _Event {
   event_id: string;
-  img_url: string;
   is_online: boolean;
   name: string;
+  desc: string;
   timestamp: number;
+  img_url?: string;
+}
+
+interface EventForm {
+  name: string;
+  desc: string;
+  type: EventType;
+  date: Date;
+  image?: File; // if image was chosen at form
+  img_url?: string; // if image was fetched from backend
 }

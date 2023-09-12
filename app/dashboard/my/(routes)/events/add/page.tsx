@@ -1,5 +1,5 @@
 import React from "react";
-import EventForm from "../_components/form";
+import EventForm from "../_components/event-form";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Tabs from "@/components/tabs";
 import { myTabs } from "../../../constants";

@@ -56,6 +56,7 @@ module.exports = {
         thGreen: "#0DB679",
         thOrange: "#EC8901",
         thRed: "#DC3C3C",
+        thYellow: "#FFDC83",
       },
       borderRadius: {
         lg: "var(--radius)",

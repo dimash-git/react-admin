@@ -2,6 +2,7 @@ import React from "react";
 import ChevronRight from "@/public/icons/chevron-right.svg";
 import ChevronLeft from "@/public/icons/chevron-left.svg";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const Pagination = ({
   pageSize,
@@ -28,7 +29,10 @@ const Pagination = ({
             <Link
               href={`?page=${idx + 1}`}
               key={idx}
-              className="flex items-center transition hover:bg-thBlue cursor-pointer text-[16px] font-bold leading-4 py-[5px] px-ten bg-[#455580] rounded-[5px]"
+              className={cn(
+                "flex items-center transition hover:bg-thBlue cursor-pointer text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
+                currPage == idx + 1 ? "bg-thBlue" : "bg-[#455580]"
+              )}
             >
               {idx + 1}
             </Link>

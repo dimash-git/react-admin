@@ -34,7 +34,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "app/dashboard/my/(routes)/events/add/preview"  ],
   "exclude": [
     "node_modules"
   ]

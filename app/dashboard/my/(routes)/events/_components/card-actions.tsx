@@ -5,6 +5,10 @@ import Modal from "@/components/modal";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface CardActionsProps {
   id: string;
@@ -12,6 +16,37 @@ interface CardActionsProps {
 
 const CardActions = ({ id }: CardActionsProps) => {
   const pathname = usePathname();
+  const { toast } = useToast();
+  const router = useRouter();
+
+  // console.log("id", id);
+
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleDelete = async () => {
+    const res = await axios.post("/api/event/delete", {
+      event_id: id,
+    });
+
+    const { status } = res.data;
+    console.log(res.data);
+
+    if (status != 200) {
+      toast({
+        variant: "success",
+        title: "Ошибка при удалении мероприятия!",
+      });
+      return;
+    }
+
+    toast({
+      variant: "success",
+      title: "Мероприятие удалено успешно!",
+    });
+    setOpen(false);
+    router.refresh();
+  };
+
   return (
     <>
       <Link href={`${pathname}/${id}/edit`}>
@@ -19,7 +54,7 @@ const CardActions = ({ id }: CardActionsProps) => {
       </Link>
 
       {/* Delete Button */}
-      <Modal>
+      <Modal open={open} setOpen={setOpen}>
         <Modal.Trigger className="inline-flex items-center justify-center rounded-[5px] font-medium bg-thRed text-white hover:bg-thRed/90 h-[25px] py-[5px] px-ten">
           <Trash />
         </Modal.Trigger>
@@ -30,7 +65,12 @@ const CardActions = ({ id }: CardActionsProps) => {
               Вы уверены что хотите удалить мероприятие?
             </p>
             <div className="flex gap-6 w-full">
-              <Button variant="modal" size="lg" className="w-full">
+              <Button
+                variant="modal"
+                size="lg"
+                className="w-full"
+                onClick={handleDelete}
+              >
                 Удалить
               </Button>
               <Modal.Close asChild>

@@ -1,10 +1,10 @@
-import { cn, unixToDate } from "@/lib/utils";
+import { cn, unixToReadableDate } from "@/lib/utils";
 import React from "react";
 
 import CardActions from "./card-actions";
 import Image from "next/image";
 
-const EventCard = ({ card }: { card: Event }) => {
+const EventCard = ({ card }: { card: _Event }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
@@ -22,7 +22,7 @@ const EventCard = ({ card }: { card: Event }) => {
             {card?.name}
           </span>
           <span className="card__date text-[10px]">
-            {unixToDate(card?.timestamp)}
+            {unixToReadableDate(card?.timestamp)}
           </span>
         </div>
       </div>

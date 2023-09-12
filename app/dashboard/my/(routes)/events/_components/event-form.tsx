@@ -28,36 +28,54 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn, dateToUnix, getFileFromUrl } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
+import { useContext } from "react";
+import { EventContext } from "@/components/providers/event-provider";
+import { useRouter } from "next/navigation";
 
-const text = `Мероприятие более чем на 100 человек, с after-party на яхте Radisson!
+const EventForm = ({ event }: { event?: _Event }) => {
+  const { event: eventState, setEvent } = useContext(EventContext);
+  // console.log("Event from form", event);
 
-На нашем мероприятии вы увидите:
+  const router = useRouter();
 
-- Новый кабинет и сайт компании
-- Новую партнёрскую программу
-- Уникальную разработку не имеющую аналогов на рынке
-- Подведем итоги промоушена на 3.000.000р
-- Поделимся планами и новостями компании
+  const defaultValues = {
+    name: event?.name ?? eventState?.name,
+    desc: event?.desc ?? eventState?.desc,
+    // type: (event?.is_online ? "online" : "offline") ?? eventState?.type
+    type: ((event?.is_online ? "online" : "offline") ??
+      eventState?.type) as EventType,
+    date:
+      eventState?.date ??
+      new Date(event?.timestamp ? event?.timestamp * 1000 : Date.now()),
+    // image: event?.img_url ? getFileFromUrl(event?.img_url) : eventState?.image,
+    // form image field should be always File type
+    // 1st case: event data fetched from server, it has url as img_url
+    // 2nd case: event data gotten from state manipulation
+  };
 
-А также вы получите возможность поучаствовать в розыгрыше подарков от компании, вкусно покушаем, будет шоу программа, фото/видео съёмка, и многое другое! 🤩🤩🤩`;
-
-const EventForm = () => {
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
-    defaultValues: {
-      name: "Москва",
-      description: text,
-      type: "offline",
-      file: {} as File,
-    },
+    defaultValues,
   });
+
+  const { isLoading, isSubmitting } = form.formState;
+
   function onSubmit(values: z.infer<typeof eventFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    const { name, desc, type, date, image } = values;
+    setEvent({
+      name,
+      desc,
+      type,
+      date,
+      image,
+    });
+    router.push("add/preview");
   }
   return (
     <div>
@@ -78,7 +96,7 @@ const EventForm = () => {
           />
           <FormField
             control={form.control}
-            name="description"
+            name="desc"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="mb-5">Описание мероприятия</FormLabel>
@@ -101,7 +119,13 @@ const EventForm = () => {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger
+                        className={
+                          field.value == "online"
+                            ? "text-thGreen"
+                            : "text-thOrange"
+                        }
+                      >
                         <SelectValue placeholder="Выберите тип мероприятия" />
                       </SelectTrigger>
                     </FormControl>
@@ -167,7 +191,7 @@ const EventForm = () => {
           />
           <FormField
             control={form.control}
-            name="file"
+            name="image"
             render={({ field: { value, ...field } }) => (
               <FormItem>
                 <FormLabel className="mb-5">Описание мероприятия</FormLabel>
@@ -187,11 +211,13 @@ const EventForm = () => {
             )}
           />
           <div className="flex gap-ten">
-            <Button variant="form">Отмена</Button>
+            <Button variant="form" onClick={() => router.back()}>
+              Отмена
+            </Button>
             <Button
-              variant="form"
+              variant="formSubmit"
               type="submit"
-              className="bg-thBlue hover:bg-thBlue/80"
+              disabled={isLoading || isSubmitting}
             >
               Сохранить изменения
             </Button>

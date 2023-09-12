@@ -1,6 +1,7 @@
 import axios from "axios";
 import "server-only";
 import { BACKEND_URL } from "./serverConstants";
+import fetch from "node-fetch";
 
 interface LoginCreds {
   login: string;
