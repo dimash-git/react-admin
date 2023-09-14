@@ -2,7 +2,7 @@ import React from "react";
 import EventForm from "../_components/event-form";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Tabs from "@/components/tabs";
-import { myTabs } from "../../../constants";
+import { homeTabs } from "../../../constants";
 
 const bdEvents = [
   {
@@ -19,7 +19,7 @@ const EventAddPage = () => {
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={[...bdEvents, { name: "Cоздать мероприятие" }]} />
-      <Tabs links={myTabs.events} />
+      <Tabs links={homeTabs.events} />
       <EventForm />
     </div>
   );

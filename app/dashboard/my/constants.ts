@@ -56,7 +56,7 @@ export const homeSections = {
       {
         name: "Редактор тегов",
         icon: ArrowRight,
-        to: homeBaseUrl + "/news/edit",
+        to: homeBaseUrl + "/tags",
       },
       {
         name: "Все новости",
@@ -182,6 +182,23 @@ export const homeTabs = {
       name: "Добавить промо материал",
     },
   ],
+  news: [
+    {
+      to: homeBaseUrl + "/news",
+      slug: "news",
+      name: "Все новости",
+    },
+    {
+      to: homeBaseUrl + "/tags",
+      slug: "tags",
+      name: "Тэги",
+    },
+    {
+      to: homeBaseUrl + "/news/add",
+      slug: "add",
+      name: "Добавить новость",
+    },
+  ],
 };
 
 export const homeBreadcrumbs = {
@@ -201,6 +218,24 @@ export const homeBreadcrumbs = {
     },
     {
       name: "промо материалы",
+    },
+  ],
+  news: [
+    {
+      to: "/dashboard/my",
+      name: "Главная",
+    },
+    {
+      name: "Новости",
+    },
+  ],
+  tags: [
+    {
+      to: "/dashboard/my",
+      name: "Главная",
+    },
+    {
+      name: "Тэги",
     },
   ],
 };

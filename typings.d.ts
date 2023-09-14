@@ -38,3 +38,27 @@ interface PromoForm {
   image?: File;
   file?: File;
 }
+
+interface NewsForm {
+  name: string;
+  tag: string;
+  excerpt: string;
+  desc: string;
+  image?: File;
+  url: string;
+}
+
+interface News {
+  news_id: string;
+  name: string;
+  img: string;
+  timestamp: number;
+  desc: string;
+  tags?: string[];
+  url?: string;
+}
+
+interface Tags {
+  tag_id: string;
+  name: string;
+}

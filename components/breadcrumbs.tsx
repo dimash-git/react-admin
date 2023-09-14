@@ -3,7 +3,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 interface BdLink {
-  to?: string;
+  to?: string | undefined;
   name: string;
 }
 
