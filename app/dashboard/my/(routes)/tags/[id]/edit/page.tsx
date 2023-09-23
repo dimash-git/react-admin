@@ -13,7 +13,7 @@ lastBread.to = `/dashboard/my/${cat}`;
 
 const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
 
-const TagEditPage = async ({ params }: { params: { id: string } }) => {
+const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -47,4 +47,4 @@ const TagEditPage = async ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default TagEditPage;
+export default EditPage;

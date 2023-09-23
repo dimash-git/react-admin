@@ -26,7 +26,7 @@ const EventPreviewPage = () => {
 
   const handlePublish = async () => {
     const { name, desc, date, type } = event;
-    const publishInfo = {
+    const formData = {
       name,
       desc,
       timestamp: dateToUnix(date),
@@ -39,17 +39,17 @@ const EventPreviewPage = () => {
       const { image } = event;
       try {
         const base64String = await fileToBase64(image);
-        publishInfo.img_data_base64 = base64String as string;
+        formData.img_data_base64 = base64String as string;
       } catch (error: any) {
         console.error("Publish error: ", error.message);
       }
 
-      publishInfo.img_type = getFileType(image.type);
+      formData.img_type = getFileType(image.type);
     }
 
-    console.log("Publish:", publishInfo);
+    console.log("Publish:", formData);
 
-    const res = await axios.post("/api/event/add", publishInfo);
+    const res = await axios.post("/api/event/add", formData);
 
     // console.log("Response:", res.data);
 

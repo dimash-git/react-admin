@@ -4,19 +4,15 @@ import EventForm from "../../_components/event-form";
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
 
-const bdEvents = [
-  {
-    to: "/dashboard/my",
-    name: "Главная",
-  },
-  {
-    to: "/dashboard/my/events",
-    name: "Мероприятия",
-  },
-];
+const cat = "events";
+const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
+lastBread.to = `/dashboard/my/${cat}/`;
 
-const SingleEventEditPage = async ({ params }: { params: { id: string } }) => {
+const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
+
+const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -57,11 +53,11 @@ const SingleEventEditPage = async ({ params }: { params: { id: string } }) => {
   //   image: {} as File,
   // };
   return (
-    <div>
-      <Breadcrumbs bd={[...bdEvents, { name: `${id} - Редактирование` }]} />
+    <>
+      <Breadcrumbs bd={[...breadcrumbs, { name: `${id} - Редактирование` }]} />
       <EventForm parsed={event} />
-    </div>
+    </>
   );
 };
 
-export default SingleEventEditPage;
+export default EditPage;

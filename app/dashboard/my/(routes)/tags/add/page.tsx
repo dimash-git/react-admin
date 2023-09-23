@@ -1,5 +1,5 @@
 import React from "react";
-import TagsForm from "../_components/tag-form";
+import Form from "../_components/tag-form";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { homeBreadcrumbs, homeTabs } from "../../../constants";
 
@@ -9,13 +9,13 @@ lastBread.to = `/dashboard/my/${cat}`;
 
 const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
 
-const EventAddPage = () => {
+const AddPage = () => {
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={[...breadcrumbs, { name: "Cоздать тэг" }]} />
-      <TagsForm />
+      <Form />
     </div>
   );
 };
 
-export default EventAddPage;
+export default AddPage;

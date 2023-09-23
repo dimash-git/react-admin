@@ -71,9 +71,9 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
   const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof newsFormSchema>) {
-    const { name, image, tags, desc } = values;
+    const { name, tags, desc } = values;
     console.log(values);
-    const publishInfo = {
+    const formData = {
       name,
       tags: tags.split(","),
       desc,
@@ -85,13 +85,13 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
       const { image } = values;
       try {
         const base64String = await fileToBase64(image);
-        publishInfo.img_base_base64 = base64String as string;
-        publishInfo.img_ext = getFileType(image.type);
+        formData.img_base_base64 = base64String as string;
+        formData.img_ext = getFileType(image.type);
       } catch (error: any) {
         console.error("Publish error: ", error.message);
       }
     }
-    const res = await axios.post("/api/news/add", publishInfo);
+    const res = await axios.post("/api/news/add", formData);
 
     // console.log("Response:", res.data);
 
@@ -254,7 +254,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
             )}
           />
           <div className="flex gap-ten">
-            <Button variant="form" onClick={() => router.back()}>
+            <Button variant="form" type="button" onClick={() => router.back()}>
               Отмена
             </Button>
             <Button

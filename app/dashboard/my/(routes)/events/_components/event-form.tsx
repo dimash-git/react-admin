@@ -66,7 +66,7 @@ const EventForm = ({ parsed }: { parsed?: _Event }) => {
   function onSubmit(values: z.infer<typeof eventFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+    // console.log(values);
     const { name, desc, type, date, image } = values;
     setEvent({
       name,
@@ -177,9 +177,7 @@ const EventForm = ({ parsed }: { parsed?: _Event }) => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={(date) => date < new Date()}
                         initialFocus
                       />
                     </PopoverContent>

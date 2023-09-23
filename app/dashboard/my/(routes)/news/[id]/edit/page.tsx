@@ -13,7 +13,7 @@ lastBread.to = `/dashboard/my/${cat}`;
 
 const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
 
-const SingleNewsEditPage = async ({ params }: { params: { id: string } }) => {
+const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -38,6 +38,7 @@ const SingleNewsEditPage = async ({ params }: { params: { id: string } }) => {
   if (res.data.status.code != 200) return <>Error Loading Single News</>;
 
   const { news } = res.data.content;
+  // console.log(news);
 
   return (
     <div>
@@ -47,4 +48,4 @@ const SingleNewsEditPage = async ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default SingleNewsEditPage;
+export default EditPage;

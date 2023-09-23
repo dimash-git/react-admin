@@ -113,12 +113,12 @@ export const homeSections = {
           {
             name: "Создать категорию",
             icon: Plus,
-            to: homeBaseUrl + "/support/add",
+            to: homeBaseUrl + "/support/cats/add",
           },
           {
             name: "Все категории",
             icon: ArrowRight,
-            to: homeBaseUrl + "/support/",
+            to: homeBaseUrl + "/support/cats",
           },
         ],
       },
@@ -129,12 +129,12 @@ export const homeSections = {
           {
             name: "Создать короткий ответ ",
             icon: Plus,
-            to: homeBaseUrl + "/support/answers/add",
+            to: homeBaseUrl + "/support/qa/add",
           },
           {
             name: "Все короткие ответы",
             icon: ArrowRight,
-            to: homeBaseUrl + "/support/answers",
+            to: homeBaseUrl + "/support/qa",
           },
         ],
       },
@@ -199,6 +199,35 @@ export const homeTabs = {
       name: "Добавить новость",
     },
   ],
+  marketing: [
+    {
+      to: homeBaseUrl + "/marketing",
+      slug: "marketing",
+      name: "Все маркетинг продукты",
+    },
+    {
+      to: homeBaseUrl + "/marketing/add",
+      slug: "add",
+      name: "Добавить маркетинг продукт",
+    },
+  ],
+  support: [
+    {
+      to: homeBaseUrl + "/support/cats",
+      slug: "cats",
+      name: "Категории",
+    },
+    {
+      to: homeBaseUrl + "/support/qa",
+      slug: "qa",
+      name: "Короткие вопросы",
+    },
+    {
+      to: homeBaseUrl + "/support/articles",
+      slug: "articles",
+      name: "Статьи",
+    },
+  ],
 };
 
 export const homeBreadcrumbs = {
@@ -236,6 +265,24 @@ export const homeBreadcrumbs = {
     },
     {
       name: "Тэги",
+    },
+  ],
+  marketing: [
+    {
+      to: "/dashboard/my",
+      name: "Главная",
+    },
+    {
+      name: "Маркетинг",
+    },
+  ],
+  support: [
+    {
+      to: "/dashboard/my",
+      name: "Главная",
+    },
+    {
+      name: "Поддержка",
     },
   ],
 };

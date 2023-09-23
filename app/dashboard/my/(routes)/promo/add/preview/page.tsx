@@ -20,10 +20,10 @@ const PromoPreviewPage = () => {
 
   const handlePublish = async () => {
     const { name } = promo;
-    const publishInfo = {
+    const formData = {
       name,
       img_data_base64: "",
-      img_type: "",
+      img_data_type: "",
       file_data_base64: "",
       file_data_type: "",
     };
@@ -32,8 +32,8 @@ const PromoPreviewPage = () => {
       const { image } = promo;
       try {
         const base64String = await fileToBase64(image);
-        publishInfo.img_data_base64 = base64String as string;
-        publishInfo.img_type = getFileType(image.type);
+        formData.img_data_base64 = base64String as string;
+        formData.img_data_type = getFileType(image.type);
       } catch (error: any) {
         console.error("Publish error: ", error.message);
       }
@@ -43,16 +43,16 @@ const PromoPreviewPage = () => {
       const { file } = promo;
       try {
         const base64String = await fileToBase64(file);
-        publishInfo.file_data_base64 = base64String as string;
-        publishInfo.file_data_type = getFileType(file.type);
+        formData.file_data_base64 = base64String as string;
+        formData.file_data_type = getFileType(file.type);
       } catch (error: any) {
         console.error("Publish error: ", error.message);
       }
     }
 
-    console.log("Publish:", publishInfo);
+    console.log("Publish:", formData);
 
-    const res = await axios.post("/api/promo/add", publishInfo);
+    const res = await axios.post("/api/promo/add", formData);
 
     // console.log("Response:", res.data);
 

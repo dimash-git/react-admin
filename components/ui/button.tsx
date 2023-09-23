@@ -13,6 +13,7 @@ const buttonVariants = cva(
         default:
           "bg-thBlue text-[thGray] text-[12px] leading-[14px] font-bold hover:bg-thBlue/80",
         destructive: "bg-thRed text-white hover:bg-thRed/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
         submit:
           "bg-thBlue hover:bg-thBlue/80 py-ten text-[16px] font-bold text-gray",
         modal: "bg-[#455580] hover:bg-[#455580]/80 text-[16px] font-bold",

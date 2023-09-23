@@ -35,7 +35,6 @@ const CardAction = ({ id, api, children, messages }: CardActionProps) => {
     });
 
     const { status } = res.data;
-    console.log(res.data);
 
     if (status != 200) {
       toast({
@@ -49,6 +48,7 @@ const CardAction = ({ id, api, children, messages }: CardActionProps) => {
       variant: "success",
       title: messages.success,
     });
+
     setOpen(false);
     router.refresh();
   };

@@ -80,7 +80,7 @@ const TagsForm = ({ parsed }: { parsed?: Tags }) => {
           />
 
           <div className="flex gap-ten">
-            <Button variant="form" onClick={() => router.back()}>
+            <Button variant="form" type="button" onClick={() => router.back()}>
               Отмена
             </Button>
             <Button

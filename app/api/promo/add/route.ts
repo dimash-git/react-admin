@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const {
       name,
       img_data_base64,
-      img_type,
+      img_data_type,
       file_data_base64,
       file_data_type,
     } = body;
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       {
         name,
         img_data_base64,
-        img_type,
+        img_data_type,
         file_data_base64,
         file_data_type,
       },

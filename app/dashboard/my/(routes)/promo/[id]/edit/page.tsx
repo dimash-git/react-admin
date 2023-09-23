@@ -17,7 +17,7 @@ const breadcrumbs = [
   },
 ];
 
-const SingleEventEditPage = async ({ params }: { params: { id: string } }) => {
+const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -42,6 +42,7 @@ const SingleEventEditPage = async ({ params }: { params: { id: string } }) => {
   if (res.data.status.code != 200) return <>Error Loading Promo</>;
 
   const { promo_material } = res.data.content;
+  // console.log(promo_material);
 
   return (
     <div>
@@ -51,4 +52,4 @@ const SingleEventEditPage = async ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default SingleEventEditPage;
+export default EditPage;

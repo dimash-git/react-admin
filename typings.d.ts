@@ -62,3 +62,16 @@ interface Tags {
   tag_id: string;
   name: string;
 }
+
+interface SupCategories {
+  category_id: string;
+  name: string;
+  img?: string;
+}
+
+interface Marketing {
+  marketing_id: string;
+  img_url: string;
+  desc: string;
+  name: string;
+}
