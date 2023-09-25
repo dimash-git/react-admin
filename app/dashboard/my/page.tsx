@@ -10,7 +10,7 @@ import { homeSections } from "./constants";
 const MyPage = () => {
   const { data: session } = useSession();
 
-  console.log(session);
+  // console.log(session);
 
   return (
     <>

@@ -21,20 +21,19 @@ function MultiSelect({
   onValueChange: (value: string) => void;
   label?: string;
   defaultValue?: string;
-  // defaultValue?: [];
 }) {
   const FRAMEWORKS = options;
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
 
   const stringValuesToArray = defaultValue?.split(",");
-  console.log("asd", stringValuesToArray);
-  console.log("options", options);
+  // console.log("stringValuesToArray", stringValuesToArray);
+  // console.log("options", options);
 
   const selectValues = options.filter((obj) =>
     stringValuesToArray?.includes(obj.label)
   );
-  console.log("selectValues", selectValues);
+  // console.log("selectValues", selectValues);
 
   const [selected, setSelected] = React.useState<Framework[]>(
     selectValues ?? []

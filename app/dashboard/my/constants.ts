@@ -33,12 +33,12 @@ export const homeSections = {
     icon: Portfel,
     links: [
       {
-        name: "Создать новость",
+        name: "Создать промо материал",
         icon: Plus,
         to: homeBaseUrl + "/promo/add",
       },
       {
-        name: "Все новости",
+        name: "Все промо материалы",
         icon: ArrowRight,
         to: homeBaseUrl + "/promo",
       },
@@ -211,6 +211,23 @@ export const homeTabs = {
       name: "Добавить маркетинг продукт",
     },
   ],
+  products: [
+    {
+      to: homeBaseUrl + "/products",
+      slug: "products",
+      name: "Все продукты",
+    },
+    {
+      to: homeBaseUrl + "/products/cats",
+      slug: "cats",
+      name: "Категории",
+    },
+    {
+      to: homeBaseUrl + "/products/add",
+      slug: "add",
+      name: "Добавить продукт",
+    },
+  ],
   support: [
     {
       to: homeBaseUrl + "/support/cats",
@@ -274,6 +291,15 @@ export const homeBreadcrumbs = {
     },
     {
       name: "Маркетинг",
+    },
+  ],
+  products: [
+    {
+      to: "/dashboard/my",
+      name: "Главная",
+    },
+    {
+      name: "Продукты",
     },
   ],
   support: [

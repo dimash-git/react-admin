@@ -47,6 +47,7 @@ const SignInPage = () => {
       toast({
         variant: "destructive",
         title: "Произошла ошибка при входе.",
+        dir: "top",
       });
     }
   }

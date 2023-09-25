@@ -47,7 +47,7 @@ const TagsForm = ({ parsed }: { parsed?: Tags }) => {
     const { status } = res.data;
     if (status != 200) {
       toast({
-        variant: "success",
+        variant: "destructive",
         title: `Ошибка при ${parsed?.name ? "обновлении" : "добавлении"} тэга!`,
       });
       return;

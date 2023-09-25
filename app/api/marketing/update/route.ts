@@ -16,8 +16,6 @@ export async function POST(req: Request) {
 
     const { marketing_id, name, desc, img_data_base64, img_type } = body;
 
-    console.log("---", marketing_id);
-
     const res = await axiosBack.post(
       "/marketing/edit_marketing",
       {

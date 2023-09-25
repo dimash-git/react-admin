@@ -75,3 +75,41 @@ interface Marketing {
   desc: string;
   name: string;
 }
+
+interface Product {
+  product_id: string;
+  img: string;
+  name: string;
+  price: number;
+  discount: any;
+  is_pack: boolean;
+  is_robot: boolean;
+  desc?: string;
+}
+
+interface ProductCat {
+  category_id: string;
+  name: string;
+}
+
+interface Country {
+  country_id: string;
+  name: string;
+}
+
+interface Fiat {
+  fiat_id: string;
+  name: string;
+}
+interface Bank {
+  bank_id: string;
+  name: string;
+}
+
+interface Symbol {
+  symbol_id: string;
+  name: string;
+  market?: string;
+  is_euro: boolean;
+  is_dollar: boolean;
+}

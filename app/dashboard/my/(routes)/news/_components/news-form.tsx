@@ -11,17 +11,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import newsFormSchema from "../schema";
@@ -32,18 +25,27 @@ import MultiSelect from "@/components/multiselect";
 import { useToast } from "@/components/ui/use-toast";
 import { homeBaseUrl } from "../../../constants";
 
+interface _FormData {
+  name: string;
+  tags: string[];
+  desc: string;
+  img_base_base64?: string;
+  img_ext?: string;
+}
+
 const NewsForm = ({ parsed }: { parsed?: News }) => {
   const [tags, setTags] = useState([]);
 
   const router = useRouter();
 
-  console.log("parsed", parsed);
+  // console.log("parsed", parsed);
 
   const defaultValues = {
     name: parsed?.name ?? "",
-    tags: parsed?.tags ? parsed?.tags.join(",") : "",
-    url: parsed?.url ?? "",
     desc: parsed?.desc ?? "",
+    tags: parsed?.tags ? parsed?.tags.join(",") : "",
+    excerpt: "",
+    url: parsed?.url ?? "",
     // image: parsed?.img_url ? getFileFromUrl(parsed?.img_url) : News?.image,
   };
 
@@ -71,26 +73,24 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
   const { toast } = useToast();
 
   async function onSubmit(values: z.infer<typeof newsFormSchema>) {
-    const { name, tags, desc } = values;
-    console.log(values);
-    const formData = {
+    const { name, tags, desc, image } = values;
+
+    let formData: _FormData = {
       name,
       tags: tags.split(","),
       desc,
-      img_base_base64: "",
-      img_ext: "",
     };
 
-    if (values?.image) {
-      const { image } = values;
+    if (image) {
       try {
         const base64String = await fileToBase64(image);
         formData.img_base_base64 = base64String as string;
         formData.img_ext = getFileType(image.type);
       } catch (error: any) {
-        console.error("Publish error: ", error.message);
+        console.error("Error: ", error.message);
       }
     }
+
     const res = await axios.post("/api/news/add", formData);
 
     // console.log("Response:", res.data);
@@ -98,7 +98,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
     const { status } = res.data;
     if (status != 200) {
       toast({
-        variant: "success",
+        variant: "destructive",
         title: "Ошибка при добавлении новости!",
       });
       return;

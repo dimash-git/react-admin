@@ -64,9 +64,6 @@ const EventForm = ({ parsed }: { parsed?: _Event }) => {
   const { isLoading, isSubmitting } = form.formState;
 
   function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    // console.log(values);
     const { name, desc, type, date, image } = values;
     setEvent({
       name,

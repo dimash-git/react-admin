@@ -37,7 +37,7 @@ const axiosBack = axios.create({
 
 const retrieveApiKey = (tokens: BackendTokens) => {
   if (!tokens) return null;
-  console.log("tokensAPIKEY: ", tokens);
+  // console.log("retrieveApiKey: ", tokens);
 
   const base64ApiKey = btoa(tokens?.access_token + ":" + tokens?.refresh_token);
   return base64ApiKey;

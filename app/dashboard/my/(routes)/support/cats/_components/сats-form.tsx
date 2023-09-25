@@ -79,7 +79,7 @@ const CatsForm = ({ parsed }: { parsed?: SupCategories }) => {
     const { status } = res.data;
     if (status != 200) {
       toast({
-        variant: "success",
+        variant: "destructive",
         title: `Ошибка при ${
           parsed?.name ? "обновлении" : "добавлении"
         } категории!`,

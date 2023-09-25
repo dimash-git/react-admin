@@ -55,7 +55,7 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
 
   async function onSubmit(values: z.infer<typeof MarketingFormSchema>) {
     if (parsed) {
-      console.log(parsed.marketing_id);
+      // console.log(parsed.marketing_id);
 
       const res = await axios.post("/api/marketing/update", {
         ...values,
@@ -64,7 +64,7 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
       const { status } = res.data;
       if (status != 200) {
         toast({
-          variant: "success",
+          variant: "destructive",
           title: "Ошибка при обновлении маркетинг продукта!",
         });
         return;

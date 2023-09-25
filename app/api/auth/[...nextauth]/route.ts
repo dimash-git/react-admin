@@ -24,11 +24,21 @@ async function refreshToken(token: JWT): Promise<JWT> {
     },
   });
 
-  console.log("refresh attempt: ", res.data);
+  // console.log("refresh attempt: ", res.data);
 
   const { access_token, refresh_token } = res.data.content;
 
-  console.log("success refresh");
+  // if (!access_token || !refreshToken) {
+  //   console.log("could not refresh: ", {
+  //     ...token,
+  //   });
+
+  //   return {
+  //     ...token,
+  //   };
+  // }
+
+  // console.log("success refresh");
 
   return {
     ...token,
@@ -110,8 +120,8 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
-      console.log("token jwt: ", token);
-      console.log("user jwt: ", user);
+      // console.log("token jwt: ", token);
+      // console.log("user jwt: ", user);
 
       // Initial sign in
       if (user) return { ...token, ...user };

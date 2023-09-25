@@ -17,15 +17,41 @@ export async function POST(req: Request) {
 
     const { name, img_base_base64, img_ext, tags, desc } = body;
 
+    console.log({
+      name,
+      img_base_base64,
+      img_ext,
+      tags,
+      desc,
+      media_blocks: [
+        {
+          text: "",
+          media: {
+            data_type: "",
+            data_base64: "",
+          },
+        },
+      ],
+    });
+
     const res = await axiosBack.post(
-      "/promo/add_promo_material",
+      "/news/add_news",
       {
         name,
         img_base_base64,
         img_ext,
         tags,
         desc,
-        timestamp: dateToUnix(new Date()),
+        // timestamp: dateToUnix(new Date()),
+        media_blocks: [
+          {
+            text: "",
+            media: {
+              data_type: "",
+              data_base64: "",
+            },
+          },
+        ],
       },
       {
         headers: {
@@ -38,11 +64,11 @@ export async function POST(req: Request) {
       return new NextResponse("News publish failed", { status: 500 });
     }
 
-    console.log(res.data.response);
+    // console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("NEWS_PUBLISH_ERROR", error);
+    // console.log("NEWS_PUBLISH_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

@@ -13,6 +13,7 @@ import {
 } from "redux-persist";
 
 import sidebarReducer from "./features/sidebarSlice";
+import modalDeleteReducer from "./features/modalDeleteSlice";
 
 import storage from "./storage";
 
@@ -23,13 +24,12 @@ const persistConfig = {
 };
 
 const rootReducer = combineReducers({
-  sidebar: sidebarReducer,
+  sidebar: persistReducer(persistConfig, sidebarReducer),
+  modalDelete: modalDeleteReducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

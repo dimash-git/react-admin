@@ -56,7 +56,7 @@ const EventPreviewPage = () => {
     const { status } = res.data;
     if (status != 200) {
       toast({
-        variant: "success",
+        variant: "destructive",
         title: "Ошибка при добавлении мероприятия!",
       });
       return;
