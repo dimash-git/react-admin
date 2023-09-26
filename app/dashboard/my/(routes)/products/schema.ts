@@ -2,7 +2,7 @@ import * as z from "zod";
 import { ACCEPTED_IMAGE_TYPES } from "../../constants";
 const MAX_FILE_SIZE = 3000000;
 
-const tagFormSchema = z.object({
+const formSchema = z.object({
   image: z.optional(
     z
       .any()
@@ -56,4 +56,4 @@ const tagFormSchema = z.object({
   }),
 });
 
-export default tagFormSchema;
+export default formSchema;

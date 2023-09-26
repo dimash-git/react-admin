@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import formSchema from "../productFormSchema";
+import formSchema from "../schema";
 
 import {
   Form,
@@ -27,7 +27,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
 
 import { ProductContext } from "./products-provider";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -49,18 +48,17 @@ interface ProductValues {
   cat?: string;
 }
 
-const MarketingForm = ({ parsed }: { parsed?: Product }) => {
+const ProductsForm = ({ parsed }: { parsed?: Product }) => {
   const router = useRouter();
   const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
   const [cats, setCats] = useState<ProductCat[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
-  const { toast } = useToast();
   const { setProduct } = useContext(ProductContext);
 
   useEffect(() => {
     async function getCategories() {
-      const res = await axios.post("/api/products/cats/get");
+      const res = await axios.post("/api/product/cats/get");
       const { status, content } = res.data;
       if (status != 200) return;
       // console.log(res.data);
@@ -69,7 +67,7 @@ const MarketingForm = ({ parsed }: { parsed?: Product }) => {
       setCats(categories);
     }
     async function getProducts() {
-      const res = await axios.post("/api/products/get");
+      const res = await axios.post("/api/product/get");
       const { status, content } = res.data;
       if (status != 200) return;
       // console.log(res.data);
@@ -218,40 +216,43 @@ const MarketingForm = ({ parsed }: { parsed?: Product }) => {
               )}
             />
           )}
-          <FormField
-            control={form.control}
-            name="cat"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mb-5">Категория</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Выберите категорию" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {cats.length > 0 &&
-                        cats.map((cat, index) => (
-                          <SelectItem
-                            key={index}
-                            value={cat?.category_id}
-                            className="text-white hover:text-black focus:text-black cursor-pointer"
-                          >
-                            {cat?.name}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {cats && (
+            <FormField
+              control={form.control}
+              name="cat"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mb-5">Категория</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Выберите категорию" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {cats.length > 0 &&
+                          cats.map((cat, index) => (
+                            <SelectItem
+                              key={index}
+                              value={cat?.category_id}
+                              className="text-white hover:text-black focus:text-black cursor-pointer"
+                            >
+                              {cat?.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
           <FormField
             control={form.control}
             name="name"
@@ -489,4 +490,4 @@ const MarketingForm = ({ parsed }: { parsed?: Product }) => {
   );
 };
 
-export default MarketingForm;
+export default ProductsForm;

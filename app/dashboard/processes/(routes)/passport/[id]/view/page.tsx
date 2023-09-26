@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import ExpandIcon from "@/public/icons/expand.svg";
 import { processBreadcrumbs } from "@/app/dashboard/processes/nav";
@@ -12,6 +12,7 @@ import ModalPost from "@/components/modal-post";
 import { Button } from "@/components/ui/button";
 import PassportForm from "../../_components/passport-form";
 import ModalApprove from "@/components/modal-approve";
+import { cn } from "@/lib/utils";
 
 const cat = "passport";
 const lastBread = processBreadcrumbs[cat].pop() ?? { name: "nowhere" };
@@ -23,7 +24,20 @@ const EditPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const { passport } = useContext(PassportContext);
-  console.log(passport);
+
+  const toggleFullscreen = (imageId: string) => {
+    const imageContainer = document.querySelector(`#${imageId}`);
+
+    if (imageContainer) {
+      if (document.fullscreenElement) {
+        // Exit fullscreen
+        document.exitFullscreen();
+      } else {
+        // Enter fullscreen for the specific image container
+        imageContainer.requestFullscreen();
+      }
+    }
+  };
 
   return (
     <>
@@ -31,38 +45,50 @@ const EditPage = ({ params }: { params: { id: string } }) => {
       <div className="grid grid-cols-2 gap-x-[30px]">
         <div className="flex flex-col gap-[30px]">
           <span className="text-[20px] font-medium">Главный разворот</span>
-          <div className="rounded-[10px] overflow-hidden relative">
+          <div
+            id="mainImageContainer"
+            className="rounded-[10px] overflow-hidden relative max-h-[300px]"
+          >
             {passport?.user_id ? (
               <Image
                 src={passport?.passport_main}
                 alt={`Front: ${id}`}
                 height={300}
                 width={500}
-                className="max-h-[300px] w-full object-fill"
+                className="w-full object-fill"
               />
             ) : (
               <div className="h-[300px] w-full bg-[#101316]"></div>
             )}
-            <button className="absolute left-[10px] bottom-[10px] px-[15px] py-[5px] text-[#0072FF] hover:text-[#a5c0e2] transition flex items-center gap-[10px] bg-[#4555804D] rounded-[5px]">
+            <button
+              onClick={() => toggleFullscreen("mainImageContainer")}
+              className="absolute left-[10px] bottom-[10px] px-[15px] py-[5px] text-[#0072FF] hover:text-[#a5c0e2] transition flex items-center gap-[10px] bg-[#4555804D] rounded-[5px]"
+            >
               На весь экран <ExpandIcon />
             </button>
           </div>
         </div>
         <div className="flex flex-col gap-[30px]">
           <span className="text-[20px] font-medium">Прописка</span>
-          <div className="rounded-[10px] overflow-hidden relative">
+          <div
+            id="livingImageContainer"
+            className="rounded-[10px] overflow-hidden relative max-h-[300px]"
+          >
             {passport?.user_id ? (
               <Image
                 src={passport?.passport_living}
                 alt={`Back: ${id}`}
                 height={300}
                 width={500}
-                className="max-h-[300px] w-full object-fill"
+                className="w-full object-fill"
               />
             ) : (
               <div className="h-[300px] w-full bg-[#101316]"></div>
             )}
-            <button className="absolute left-[10px] bottom-[10px] px-[15px] py-[5px] text-[#0072FF] hover:text-[#a5c0e2] transition flex items-center gap-[10px] bg-[#4555804D] rounded-[5px]">
+            <button
+              onClick={() => toggleFullscreen("livingImageContainer")}
+              className="absolute left-[10px] bottom-[10px] px-[15px] py-[5px] text-[#0072FF] hover:text-[#a5c0e2] transition flex items-center gap-[10px] bg-[#4555804D] rounded-[5px]"
+            >
               На весь экран <ExpandIcon />
             </button>
           </div>

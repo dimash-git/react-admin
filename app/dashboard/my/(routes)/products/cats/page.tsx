@@ -64,7 +64,9 @@ const ProductCategoriesPage = async ({
       <Breadcrumbs bd={homeBreadcrumbs.products} />
       <Tabs links={homeTabs.products} />
       <Link href="cats/add">
-        <Button variant="formSubmit">Создать категорию</Button>
+        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
+          Создать категорию
+        </Button>
       </Link>
       <div className="flex flex-col space-y-[30px]">
         {categories.map((cat, idx) => (

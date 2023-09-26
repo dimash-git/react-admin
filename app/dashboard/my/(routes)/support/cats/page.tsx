@@ -58,7 +58,7 @@ const SubCategoriesPage = async ({
     throw new Error("Error Loading Categories");
   }
 
-  const { categories, count }: { categories: SupCategories[]; count: number } =
+  const { categories, count }: { categories: SupportCat[]; count: number } =
     content;
 
   return (
@@ -66,7 +66,9 @@ const SubCategoriesPage = async ({
       <Breadcrumbs bd={homeBreadcrumbs.support} />
       <Tabs links={homeTabs.support} />
       <Link href="cats/add">
-        <Button variant="formSubmit">Создать категорию</Button>
+        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
+          Создать категорию
+        </Button>
       </Link>
       <div className="flex flex-col space-y-[30px]">
         {categories.map((cat, idx) => (

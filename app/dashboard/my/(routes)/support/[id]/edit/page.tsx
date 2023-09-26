@@ -5,7 +5,7 @@ import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
-import CatsForm from "../../_components/сats-form";
+import CatsForm from "../../_components/qa-form";
 
 const cat = "support";
 const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };

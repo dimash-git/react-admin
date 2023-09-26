@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
 import formSchema from "../schema";
-import { fileToBase64, getFileFromUrl, getFileType } from "@/lib/utils";
+import { fileToBase64, getFileType } from "@/lib/utils";
 import { homeBaseUrl } from "@/app/dashboard/my/constants";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
@@ -29,7 +29,7 @@ interface DefValues {
   icon?: null;
 }
 
-const CatsForm = ({ parsed }: { parsed?: SupCategories }) => {
+const CatsForm = ({ parsed }: { parsed?: SupportCat }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [isSwitchOn, setSwitchOn] = useState<boolean>(false);

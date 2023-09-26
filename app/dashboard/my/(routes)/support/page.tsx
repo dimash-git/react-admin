@@ -7,12 +7,12 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
-import { homeBreadcrumbs, homeTabs } from "../../../constants";
+import { homeBreadcrumbs, homeTabs } from "../../constants";
 import CatCard from "./_components/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-const QAPage = async ({
+const Page = async ({
   searchParams,
 }: {
   params: { slug: string };
@@ -60,26 +60,28 @@ const QAPage = async ({
     throw new Error("Error Loading Short Questions");
   }
 
-  const { categories, count }: { categories: SupCategories[]; count: number } =
+  const { categories, count }: { categories: SupportCat[]; count: number } =
     content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={homeBreadcrumbs.support} />
       <Tabs links={homeTabs.support} />
-      <Link href="cats/add">
-        <Button variant="formSubmit">Создать категорию</Button>
+      <Link href="support/add">
+        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
+          Создать вопрос
+        </Button>
       </Link>
-      <div className="flex flex-col space-y-[30px]">
+      {/* <div className="flex flex-col space-y-[30px]">
         {categories.map((cat, idx) => (
           <CatCard key={idx} card={cat} />
         ))}
       </div>
       <div>
         <Pagination count={count} currPage={currPage} pageSize={pageSize} />
-      </div>
+      </div> */}
     </div>
   );
 };
 
-export default QAPage;
+export default Page;

@@ -76,7 +76,7 @@ const PreviewPage = () => {
 
     console.log("fields:", formData);
 
-    const res = await axios.post("/api/products/add", formData);
+    const res = await axios.post("/api/product/add", formData);
 
     // console.log("Response:", res.data);
 
@@ -95,7 +95,7 @@ const PreviewPage = () => {
     });
 
     router.refresh();
-    router.push(`${homeBaseUrl}/product`);
+    router.push(`${homeBaseUrl}/products`);
   };
 
   return (

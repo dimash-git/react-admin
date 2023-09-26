@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "../_components/event-form";
+import EventForm from "../_components/event-form";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Tabs from "@/components/tabs";
 import { homeTabs } from "../../../constants";
@@ -20,7 +20,7 @@ const AddPage = () => {
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={[...bdEvents, { name: "Cоздать мероприятие" }]} />
       <Tabs links={homeTabs.events} />
-      <Form />
+      <EventForm />
     </div>
   );
 };

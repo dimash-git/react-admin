@@ -7,7 +7,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
 import Form from "../../_components/products-form";
 
-const cat = "marketing";
+const cat = "products";
 const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
 lastBread.to = `/dashboard/my/${cat}`;
 
@@ -22,9 +22,9 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   if (!apiKey) return;
 
   const res = await axiosBack.post(
-    "/marketing/get_single_marketing",
+    "/product/get_product",
     {
-      marketing_id: id,
+      product_id: id,
     },
     {
       headers: {
@@ -33,16 +33,17 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
     }
   );
 
-  // console.log(res.data);
+  const { status, content } = res.data;
+  console.log(content);
 
-  if (res.data.status.code != 200) return <>Error Loading Marketing</>;
+  if (status.code != 200) return <>Ошибка загрузки поста</>;
 
-  const { single_marketing } = res.data.content;
+  // const { product } = content;
 
   return (
     <>
       <Breadcrumbs bd={[...breadcrumbs, { name: `${id} - Редактирование` }]} />
-      <Form parsed={single_marketing} />
+      {/* <Form parsed={product} /> */}
     </>
   );
 };

@@ -63,7 +63,7 @@ interface Tags {
   name: string;
 }
 
-interface SupCategories {
+interface SupportCat {
   category_id: string;
   name: string;
   img?: string;
@@ -142,4 +142,10 @@ interface WithdrawalInvoice {
   sum: number;
   user_id: string;
   network: string;
+}
+
+interface Question {
+  category_id: string;
+  question: string;
+  answer: string;
 }

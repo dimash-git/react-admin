@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "../_components/products-form";
+import ProductsForm from "../_components/products-form";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { homeBreadcrumbs, homeTabs } from "../../../constants";
 import Tabs from "@/components/tabs";
@@ -15,7 +15,7 @@ const AddPage = () => {
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={[...breadcrumbs, { name: "Cоздать продукт" }]} />
       <Tabs links={homeTabs.products} />
-      <Form />
+      <ProductsForm />
     </div>
   );
 };

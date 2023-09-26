@@ -66,7 +66,7 @@ const Page = async ({
             asChild
             variant="formSubmit"
             size="md"
-            className="text-[16px] h-[40px]"
+            className="text-[16px] h-10"
           >
             <span>Добавить фиат</span>
           </Button>

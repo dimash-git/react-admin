@@ -235,14 +235,9 @@ export const homeTabs = {
       name: "Категории",
     },
     {
-      to: homeBaseUrl + "/support/qa",
-      slug: "qa",
+      to: homeBaseUrl + "/support",
+      slug: "support",
       name: "Короткие вопросы",
-    },
-    {
-      to: homeBaseUrl + "/support/articles",
-      slug: "articles",
-      name: "Статьи",
     },
   ],
 };

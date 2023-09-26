@@ -1,5 +1,5 @@
 import React from "react";
-import Form from "../_components/marketing-form";
+import MarketingForm from "../_components/marketing-form";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { homeBreadcrumbs, homeTabs } from "../../../constants";
 import Tabs from "@/components/tabs";
@@ -17,7 +17,7 @@ const AddPage = () => {
         bd={[...breadcrumbs, { name: "Cоздать маркетинг продукт" }]}
       />
       <Tabs links={homeTabs.marketing} />
-      <Form />
+      <MarketingForm />
     </div>
   );
 };

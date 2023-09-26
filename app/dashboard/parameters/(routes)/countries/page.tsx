@@ -58,13 +58,13 @@ const Page = async ({
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={paramBreadcrumbs.countries} />
-      <div className="max-w-[200px]">
+      <div className="max-w-[240px]">
         <ModalPost Form={CountriesForm} title="Добавить страну">
           <Button
             asChild
             variant="formSubmit"
             size="md"
-            className="text-[16px] h-[40px]"
+            className="text-[16px] h-10"
           >
             <span>Добавить страну</span>
           </Button>

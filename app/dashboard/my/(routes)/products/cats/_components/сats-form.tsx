@@ -23,9 +23,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-const slug = "products";
-
-const CatsForm = ({ parsed }: { parsed?: SupCategories }) => {
+const CatsForm = ({ parsed }: { parsed?: SupportCat }) => {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -44,7 +42,7 @@ const CatsForm = ({ parsed }: { parsed?: SupCategories }) => {
     const { name } = values;
 
     const res = await axios.post(
-      `/api/${slug}/cats/${parsed ? "update" : "add"}`,
+      `/api/product/cats/${parsed ? "update" : "add"}`,
       { name, category_id: parsed?.category_id }
     );
 
@@ -68,7 +66,7 @@ const CatsForm = ({ parsed }: { parsed?: SupCategories }) => {
     });
 
     router.refresh();
-    router.push(`${homeBaseUrl}/${slug}/cats`);
+    router.push(`${homeBaseUrl}/products/cats`);
   }
   return (
     <div>

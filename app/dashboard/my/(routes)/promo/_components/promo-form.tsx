@@ -19,7 +19,6 @@ import { useRouter } from "next/navigation";
 
 import { PromoContext } from "./promo-provider";
 import promoFormSchema from "../schema";
-import { getFileFromUrl } from "@/lib/utils";
 
 const PromoForm = ({ parsed }: { parsed?: Promo }) => {
   const { promo, setPromo } = useContext(PromoContext);
