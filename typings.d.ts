@@ -113,3 +113,33 @@ interface Symbol {
   is_euro: boolean;
   is_dollar: boolean;
 }
+
+interface Passport {
+  passport_main: string;
+  passport_living: string;
+  user_id: string;
+}
+
+interface Mlm {
+  qualification_id: string;
+  name: string;
+}
+
+interface MlmDetails {
+  qualification_id: string;
+  name: string;
+  team_sales: number;
+  personal_sales: number;
+  percent: number;
+  matching: number;
+  is_automatic_upgrade: boolean;
+  robot_count: number;
+}
+
+interface WithdrawalInvoice {
+  invoice_id: string;
+  wallet: string;
+  sum: number;
+  user_id: string;
+  network: string;
+}

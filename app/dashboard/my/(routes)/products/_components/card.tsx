@@ -33,7 +33,7 @@ const ProductCard = ({ card }: { card: Product }) => {
       <div className="flex gap-ten items-center">
         <CardAction
           id={card?.product_id}
-          api="/api/product/delete"
+          apiUrl="/api/product/delete"
           messages={{
             error: "Ошибка при удалении продукта!",
             success: "Продукт успешно удален",

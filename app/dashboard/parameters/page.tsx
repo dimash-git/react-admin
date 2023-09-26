@@ -3,7 +3,7 @@ import NavSection from "@/components/nav-section";
 import { paramSections } from "./nav";
 import AcademySection from "./academy-section";
 
-const MyPage = () => {
+const ParametersPage = () => {
   return (
     <>
       <div className="max-w-[723px] w-full">
@@ -19,4 +19,4 @@ const MyPage = () => {
   );
 };
 
-export default MyPage;
+export default ParametersPage;

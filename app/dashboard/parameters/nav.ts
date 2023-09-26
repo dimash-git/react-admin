@@ -82,21 +82,6 @@ export const paramSections = {
   },
 };
 
-export const paramTabs = {
-  events: [
-    {
-      to: paramBaseUrl + "/events",
-      slug: "events",
-      name: "Все мероприятия",
-    },
-    {
-      to: paramBaseUrl + "/events/add",
-      slug: "add",
-      name: "Создать мероприятие",
-    },
-  ],
-};
-
 export const paramBreadcrumbs = {
   countries: [
     {

@@ -21,7 +21,7 @@ const MarketingCard = ({ card }: { card: Marketing }) => {
       <div className="flex gap-ten items-center">
         <CardAction
           id={card?.marketing_id}
-          api="/api/marketing/delete"
+          apiUrl="/api/marketing/delete"
           messages={{
             error: "Ошибка при удалении маркетинг продукта!",
             success: "Маркетинг продукт успешно удален",

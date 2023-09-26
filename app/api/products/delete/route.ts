@@ -26,14 +26,14 @@ export async function POST(req: Request) {
     );
 
     if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Promo delete failed", { status: 500 });
+      return new NextResponse("Deletefailed", { status: 500 });
     }
 
     // console.log(res.data);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("PROMO_DELETE_ERROR", error);
+    console.log("DELETE_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

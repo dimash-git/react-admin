@@ -26,14 +26,14 @@ export async function POST(req: Request) {
     );
 
     if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("News delete failed", { status: 500 });
+      return new NextResponse("Delete failed", { status: 500 });
     }
 
     // console.log(res.data);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("NEWS_DELETE_ERROR", error);
+    console.log("DELETE_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

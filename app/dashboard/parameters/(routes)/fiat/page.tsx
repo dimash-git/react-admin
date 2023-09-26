@@ -11,6 +11,7 @@ import ModalPost from "@/components/modal-post";
 import { paramBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
 import FiatForm from "./_components/fiat-form";
+import { Button } from "@/components/ui/button";
 
 const Page = async ({
   searchParams,
@@ -61,9 +62,14 @@ const Page = async ({
       <Breadcrumbs bd={paramBreadcrumbs.fiat} />
       <div className="max-w-[200px]">
         <ModalPost Form={FiatForm} title="Добавить фиат">
-          <span className="inline-flex items-center justify-center rounded-[5px] text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-thBlue text-[thGray] text-[12px] leading-[14px] font-bold hover:bg-thBlue/80 h-[39px] py-[10px] px-10">
-            Добавить фиат
-          </span>
+          <Button
+            asChild
+            variant="formSubmit"
+            size="md"
+            className="text-[16px] h-[40px]"
+          >
+            <span>Добавить фиат</span>
+          </Button>
         </ModalPost>
       </div>
       <div className="flex flex-col space-y-[30px]">

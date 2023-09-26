@@ -21,7 +21,7 @@ const CatCard = ({ card }: { card: SupCategories }) => {
       <div className="flex gap-ten items-center">
         <CardAction
           id={card?.category_id}
-          api="/api/products/cats/delete"
+          apiUrl="/api/products/cats/delete"
           messages={{
             error: "Ошибка при удалении категории!",
             success: "Категория успешно удалена",

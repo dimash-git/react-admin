@@ -189,7 +189,7 @@ const EventForm = ({ parsed }: { parsed?: _Event }) => {
             name="image"
             render={({ field: { value, ...field } }) => (
               <FormItem>
-                <FormLabel className="mb-5">Описание мероприятия</FormLabel>
+                <FormLabel className="mb-5">Обложка</FormLabel>
                 <FormControl>
                   <Input
                     type="file"

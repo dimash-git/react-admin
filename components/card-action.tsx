@@ -12,7 +12,7 @@ import { useState } from "react";
 
 interface CardActionProps {
   id: string;
-  api: string;
+  apiUrl: string;
   messages: {
     error: string;
     success: string;
@@ -20,7 +20,7 @@ interface CardActionProps {
   children: React.ReactNode;
 }
 
-const CardAction = ({ id, api, children, messages }: CardActionProps) => {
+const CardAction = ({ id, apiUrl, children, messages }: CardActionProps) => {
   const pathname = usePathname();
   const { toast } = useToast();
   const router = useRouter();
@@ -30,7 +30,7 @@ const CardAction = ({ id, api, children, messages }: CardActionProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
   const handleDelete = async () => {
-    const res = await axios.post(api, {
+    const res = await axios.post(apiUrl, {
       id,
     });
 
