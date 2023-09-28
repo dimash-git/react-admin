@@ -6,12 +6,10 @@ import { BACKEND_URL } from "@/lib/serverConstants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
-import ModalPost from "@/components/modal-post";
 
 import { paramBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
-import CountriesForm from "./_components/countries-form";
-import { Button } from "@/components/ui/button";
+import AddCountry from "./_components/add-country";
 
 const Page = async ({
   searchParams,
@@ -58,18 +56,7 @@ const Page = async ({
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={paramBreadcrumbs.countries} />
-      <div className="max-w-[240px]">
-        <ModalPost Form={CountriesForm} title="Добавить страну">
-          <Button
-            asChild
-            variant="formSubmit"
-            size="md"
-            className="text-[16px] h-10"
-          >
-            <span>Добавить страну</span>
-          </Button>
-        </ModalPost>
-      </div>
+      <AddCountry />
       <div className="flex flex-col space-y-[30px]">
         {countries.map((country, idx) => (
           <Card key={idx} card={country} />

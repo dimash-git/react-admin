@@ -1,11 +1,12 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 import React from "react";
 
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
+import { retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
 import Form from "../../_components/products-form";
+import { BACKEND_URL } from "@/lib/serverConstants";
 
 const cat = "products";
 const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
@@ -21,20 +22,23 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const res = await axiosBack.post(
-    "/product/get_product",
-    {
-      product_id: id,
+  const response = await fetch(BACKEND_URL + "/product/get_product", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: apiKey,
     },
-    {
-      headers: {
-        Authorization: apiKey,
-      },
-    }
-  );
+    body: JSON.stringify({
+      product_id: id,
+    }),
+    next: { tags: ["product"] },
+  });
 
-  const { status, content } = res.data;
-  console.log(content);
+  const data = await response.json();
+
+  const { status, content } = data;
+
+  console.log(data);
 
   if (status.code != 200) return <>Ошибка загрузки поста</>;
 

@@ -1,6 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 
 interface BdLink {
   to?: string | undefined;
@@ -8,6 +10,7 @@ interface BdLink {
 }
 
 const Breadcrumbs = ({ bd }: { bd: BdLink[] }) => {
+  console.log(bd);
   return (
     <div className="flex items-center gap-[5px]">
       {bd.map((bdLink, idx) => (

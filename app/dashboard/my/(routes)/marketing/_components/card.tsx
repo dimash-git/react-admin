@@ -1,9 +1,19 @@
 import CardAction from "@/components/card-action";
+import Image from "next/image";
 
-const MarketingCard = ({ card }: { card: Marketing }) => {
+const Card = ({ card }: { card: Marketing }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
+        <div className="card__cover w-[94px] h-[50px] bg-[#2D3D52]">
+          <Image
+            src={`${card?.img_url}`}
+            alt={card.name}
+            width={94}
+            height={50}
+            className="max-w-none h-full"
+          />
+        </div>
         <div className="flex flex-col gap-[7px]">
           <span className="card__title text-[15px] leading-4 font-semibold">
             {card?.name}
@@ -37,4 +47,4 @@ const MarketingCard = ({ card }: { card: Marketing }) => {
   );
 };
 
-export default MarketingCard;
+export default Card;

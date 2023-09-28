@@ -20,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useContext } from "react";
 import { PassportContext } from "./passport-provider";
+import { processBaseUrl } from "../../../nav";
 
 const formSchema = z.object({
   reason: z.string().min(3, {
@@ -29,8 +30,10 @@ const formSchema = z.object({
 
 const PassportForm = ({
   setOpen,
+  parsed,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  parsed?: Passport;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -70,7 +73,9 @@ const PassportForm = ({
     });
 
     setOpen(false);
+
     router.refresh();
+    router.push(`${processBaseUrl}/passport`);
   }
   return (
     <div>

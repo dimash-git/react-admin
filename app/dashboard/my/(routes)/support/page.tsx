@@ -48,20 +48,18 @@ const Page = async ({
     next: { tags: ["support_qa"] },
   });
 
-  if (!response.ok) {
-    throw new Error("Error Loading Short Questions");
-  }
+  const data = await response.json();
 
-  const { status, content } = await response.json();
+  const { status, content } = data;
 
-  console.log(content);
+  console.log("data", data);
 
-  if (status.code !== 200) {
-    throw new Error("Error Loading Short Questions");
-  }
+  // if (status?.code !== 200) {
+  //   throw new Error("Error Loading Short Questions");
+  // }
 
-  const { categories, count }: { categories: SupportCat[]; count: number } =
-    content;
+  // const { categories, count }: { categories: SupportCat[]; count: number } =
+  //   content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">

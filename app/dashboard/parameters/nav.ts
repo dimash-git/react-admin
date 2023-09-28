@@ -15,7 +15,7 @@ export const paramSections = {
       {
         name: "Добавить фиат",
         icon: Plus,
-        to: paramBaseUrl + "/fiat/add",
+        to: paramBaseUrl + "/fiat?add",
         slug: "add_fiat",
       },
       {
@@ -33,7 +33,7 @@ export const paramSections = {
       {
         name: "Добавить банк",
         icon: Plus,
-        to: paramBaseUrl + "/bank/add",
+        to: paramBaseUrl + "/bank?add",
         slug: "add_bank",
       },
       {
@@ -51,7 +51,7 @@ export const paramSections = {
       {
         name: "Добавить символ",
         icon: Plus,
-        to: paramBaseUrl + "/symbols/add",
+        to: paramBaseUrl + "/symbols?add",
         slug: "add_symbols",
       },
       {
@@ -69,7 +69,7 @@ export const paramSections = {
       {
         name: "Добавить страну",
         icon: Plus,
-        to: paramBaseUrl + "/countries/add",
+        to: paramBaseUrl + "/countries?add",
         slug: "add_countries",
       },
       {

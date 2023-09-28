@@ -7,7 +7,7 @@ import { homeBreadcrumbs, homeTabs } from "../../constants";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
-import MarketingCard from "./_components/card";
+import Card from "./_components/card";
 
 const MarketingPage = async ({
   searchParams,
@@ -56,13 +56,15 @@ const MarketingPage = async ({
   const { marketing, count }: { marketing: Marketing[]; count: number } =
     content;
 
+  console.log(homeBreadcrumbs.marketing);
+
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={homeBreadcrumbs.marketing} />
       <Tabs links={homeTabs.marketing} />
       <div className="flex flex-col space-y-[30px]">
         {marketing.map((singleMarketing, idx) => (
-          <MarketingCard key={idx} card={singleMarketing} />
+          <Card key={idx} card={singleMarketing} />
         ))}
       </div>
       <div>

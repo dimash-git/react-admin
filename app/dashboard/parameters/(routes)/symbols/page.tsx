@@ -6,12 +6,11 @@ import { BACKEND_URL } from "@/lib/serverConstants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
-import ModalPost from "@/components/modal-post";
 
 import { paramBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
-import SymbolsForm from "./_components/symbols-form";
-import { Button } from "@/components/ui/button";
+
+import AddSymbol from "./_components/add-symbol";
 
 const Page = async ({
   searchParams,
@@ -53,25 +52,14 @@ const Page = async ({
 
   const { content } = await response.json();
 
-  console.log(content);
+  // console.log(content);
 
   const { symbols, count }: { symbols: Symbol[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={paramBreadcrumbs.symbols} />
-      <div className="max-w-[240px]">
-        <ModalPost Form={SymbolsForm} title="Добавить символ">
-          <Button
-            asChild
-            variant="formSubmit"
-            size="md"
-            className="text-[16px] h-10"
-          >
-            <span>Добавить символ</span>
-          </Button>
-        </ModalPost>
-      </div>
+      <AddSymbol />
       <div className="flex flex-col space-y-[30px]">
         {symbols.map((symbol, idx) => (
           <Card key={idx} card={symbol} />

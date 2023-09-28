@@ -6,12 +6,10 @@ import { BACKEND_URL } from "@/lib/serverConstants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
-import ModalPost from "@/components/modal-post";
 
 import { paramBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
-import FiatForm from "./_components/fiat-form";
-import { Button } from "@/components/ui/button";
+import AddFiat from "./_components/add-fiat";
 
 const Page = async ({
   searchParams,
@@ -60,18 +58,7 @@ const Page = async ({
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs bd={paramBreadcrumbs.fiat} />
-      <div className="max-w-[200px]">
-        <ModalPost Form={FiatForm} title="Добавить фиат">
-          <Button
-            asChild
-            variant="formSubmit"
-            size="md"
-            className="text-[16px] h-10"
-          >
-            <span>Добавить фиат</span>
-          </Button>
-        </ModalPost>
-      </div>
+      <AddFiat />
       <div className="flex flex-col space-y-[30px]">
         {fiats.map((fiat, idx) => (
           <Card key={idx} card={fiat} />

@@ -129,12 +129,12 @@ export const homeSections = {
           {
             name: "Создать короткий ответ ",
             icon: Plus,
-            to: homeBaseUrl + "/support/qa/add",
+            to: homeBaseUrl + "/support/add",
           },
           {
             name: "Все короткие ответы",
             icon: ArrowRight,
-            to: homeBaseUrl + "/support/qa",
+            to: homeBaseUrl + "/support",
           },
         ],
       },

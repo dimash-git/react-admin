@@ -172,7 +172,7 @@ const PreviewPage = () => {
           <div className="px-8 py-[10px]">
             <button
               type="button"
-              className="flex items-center text-[20px] text-thBlue hover:text-gray-300 transition"
+              className="flex items-center text-[16px] text-thBlue hover:text-gray-300 transition"
               onClick={() => router.back()}
             >
               <PostArrowLeft /> Назад

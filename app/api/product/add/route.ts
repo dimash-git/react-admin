@@ -28,6 +28,15 @@ export async function POST(req: Request) {
       products,
     } = body;
 
+    console.log(
+      JSON.stringify(
+        products.map((product: { product_id: string; count: number }) => ({
+          product_id: product.product_id,
+          count: products.length,
+        }))
+      )
+    );
+
     let addData = {
       category_id: cat,
       img_base64,
@@ -41,10 +50,12 @@ export async function POST(req: Request) {
       advantages: advantages.map((adv: { text: string }) => adv.text),
       pack_product_json: !is_pack
         ? undefined
-        : products.map((product: { product_id: string; count: number }) => ({
-            product_id: product.product_id,
-            count: products.length,
-          })),
+        : JSON.stringify(
+            products.map((product: { product_id: string; count: number }) => ({
+              product_id: product.product_id,
+              count: products.length,
+            }))
+          ),
     };
     console.log(addData);
 

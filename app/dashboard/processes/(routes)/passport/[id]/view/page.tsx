@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 
 import ExpandIcon from "@/public/icons/expand.svg";
 import { processBreadcrumbs } from "@/app/dashboard/processes/nav";
@@ -12,7 +12,6 @@ import ModalPost from "@/components/modal-post";
 import { Button } from "@/components/ui/button";
 import PassportForm from "../../_components/passport-form";
 import ModalApprove from "@/components/modal-approve";
-import { cn } from "@/lib/utils";
 
 const cat = "passport";
 const lastBread = processBreadcrumbs[cat].pop() ?? { name: "nowhere" };
@@ -24,6 +23,7 @@ const EditPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const { passport } = useContext(PassportContext);
+  console.log(passport);
 
   const toggleFullscreen = (imageId: string) => {
     const imageContainer = document.querySelector(`#${imageId}`);
