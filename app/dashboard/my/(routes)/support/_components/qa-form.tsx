@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useRouter } from "next/navigation";
-import { homeBaseUrl } from "@/app/dashboard/my/constants";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";

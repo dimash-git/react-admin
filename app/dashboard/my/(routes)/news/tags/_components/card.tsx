@@ -18,7 +18,7 @@ const TagsCard = ({ card }: { card: Tags }) => {
       <div className="flex gap-ten items-center">
         <CardAction
           id={card?.tag_id}
-          apiUrl="/api/tags/delete"
+          apiUrl="/api/news/tags/delete"
           messages={{
             error: "Ошибка при удалении тэга!",
             success: "Тэг успешно удален",

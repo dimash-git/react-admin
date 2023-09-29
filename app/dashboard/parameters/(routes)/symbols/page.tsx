@@ -7,7 +7,6 @@ import { BACKEND_URL } from "@/lib/serverConstants";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
 
-import { paramBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
 
 import AddSymbol from "./_components/add-symbol";
@@ -58,7 +57,7 @@ const Page = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={paramBreadcrumbs.symbols} />
+      <Breadcrumbs />
       <AddSymbol />
       <div className="flex flex-col space-y-[30px]">
         {symbols.map((symbol, idx) => (

@@ -6,7 +6,7 @@ import MLM from "@/public/icons/mlm.svg";
 import User from "@/public/icons/user.svg";
 import Panel from "@/public/icons/panel.svg";
 
-const menu = [
+export const menu = [
   {
     name: "Главная",
     icon: Home,
@@ -40,8 +40,40 @@ const menu = [
   {
     name: "Админ панель",
     icon: Panel,
-    to: "/dashboard/admin",
+    to: "/dashboard/panel",
   },
 ];
 
-export default menu;
+export const urlSegments = [
+  { slug: "my", name: "Главная" },
+  { slug: "events", name: "Мероприятия" },
+  { slug: "promo", name: "Промо материалы" },
+  { slug: "news", name: "Новости" },
+  { slug: "tags", name: "Тэги" },
+  { slug: "marketing", name: "Маркетинг" },
+  { slug: "support", name: "Поддержка" },
+  { slug: "products", name: "Продукты" },
+
+  { slug: "add", name: "Cоздание" },
+  { slug: "edit", name: "Редактирование" },
+  { slug: "view", name: "Просмотр" },
+
+  { slug: "cats", name: "Категории" },
+
+  { slug: "parameters", name: "Параметры" },
+  { slug: "fiat", name: "Фиат" },
+  { slug: "bank", name: "Банк" },
+  { slug: "symbols", name: "Символы" },
+  { slug: "countries", name: "Страны" },
+
+  { slug: "processes", name: "Процессы" },
+  { slug: "withdrawal", name: "Список инвойсов на вывод средств" },
+  { slug: "passport", name: "Список инвойсов на верификацию" },
+];
+
+export const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];

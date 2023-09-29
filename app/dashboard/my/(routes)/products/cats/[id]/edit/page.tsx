@@ -1,17 +1,10 @@
 import Breadcrumbs from "@/components/breadcrumbs";
-import React from "react";
 
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
+
 import CatsForm from "../../_components/сats-form";
-
-const cat = "products";
-const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
-lastBread.to = `/dashboard/my/${cat}/cats`;
-
-const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -39,7 +32,7 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <Breadcrumbs bd={[...breadcrumbs, { name: `${id} - Редактирование` }]} />
+      <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
       <CatsForm parsed={category} />
     </>
   );

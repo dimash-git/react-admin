@@ -3,7 +3,7 @@
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
-import menu from "@/lib/constants";
+import { menu } from "@/lib/constants";
 import Collapse from "@/public/icons/collapse.svg";
 
 import { cn } from "@/lib/utils";

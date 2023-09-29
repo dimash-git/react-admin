@@ -1,18 +1,11 @@
 import Breadcrumbs from "@/components/breadcrumbs";
-import React from "react";
 
 import { retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
-import Form from "../../_components/products-form";
+
+import ProductForm from "../../_components/product-form";
 import { BACKEND_URL } from "@/lib/serverConstants";
-
-const cat = "products";
-const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
-lastBread.to = `/dashboard/my/${cat}`;
-
-const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -42,12 +35,12 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
 
   if (status.code != 200) return <>Ошибка загрузки поста</>;
 
-  // const { product } = content;
+  const { product } = content;
 
   return (
     <>
-      <Breadcrumbs bd={[...breadcrumbs, { name: `${id} - Редактирование` }]} />
-      {/* <Form parsed={product} /> */}
+      <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
+      <ProductForm parsed={product} />
     </>
   );
 };

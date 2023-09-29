@@ -1,16 +1,9 @@
 import Breadcrumbs from "@/components/breadcrumbs";
-import React from "react";
+
 import EventForm from "../../_components/event-form";
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
-
-const cat = "events";
-const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
-lastBread.to = `/dashboard/my/${cat}/`;
-
-const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -54,7 +47,7 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   // };
   return (
     <>
-      <Breadcrumbs bd={[...breadcrumbs, { name: `${id} - Редактирование` }]} />
+      <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
       <EventForm parsed={event} />
     </>
   );

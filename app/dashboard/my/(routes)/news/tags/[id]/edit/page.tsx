@@ -1,17 +1,9 @@
 import Breadcrumbs from "@/components/breadcrumbs";
-import React from "react";
 
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import TagsForm from "../../../tags/_components/tag-form";
-import { homeBreadcrumbs } from "@/app/dashboard/my/constants";
-
-const cat = "tags";
-const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
-lastBread.to = `/dashboard/my/${cat}`;
-
-const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
+import TagsForm from "../../_components/tag-form";
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -33,17 +25,18 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
     }
   );
 
-  console.log(res.data);
+  // console.log(res.data);
+  const { status, content } = res.data;
 
-  if (res.data.status.code != 200) return <>Error Loading Tag</>;
+  if (status.code != 200) return <>Error Loading Tag</>;
 
-  const { tag } = res.data.content;
+  const { tag } = content;
 
   return (
-    <div>
-      <Breadcrumbs bd={[...breadcrumbs, { name: `${id} - Редактирование` }]} />
+    <>
+      <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
       <TagsForm parsed={tag} />
-    </div>
+    </>
   );
 };
 

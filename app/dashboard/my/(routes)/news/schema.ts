@@ -1,5 +1,5 @@
+import { ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
 import * as z from "zod";
-import { ACCEPTED_IMAGE_TYPES } from "../../constants";
 const MAX_FILE_SIZE = 3000000;
 
 const newsFormSchema = z.object({

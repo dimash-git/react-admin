@@ -4,12 +4,7 @@ import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-import { mlmBreadcrumbs } from "../../nav";
 import MlmForm from "../../_components/mlm-form";
-
-const cat = "mlm";
-const lastBread = mlmBreadcrumbs[cat].pop() ?? { name: "nowhere" };
-const breadcrumbs = [...mlmBreadcrumbs[cat], lastBread] ?? [];
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -41,7 +36,7 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <Breadcrumbs bd={[...breadcrumbs, { name: `${id} - Редактирование` }]} />
+      <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
       <MlmForm parsed={qualification} />
     </>
   );

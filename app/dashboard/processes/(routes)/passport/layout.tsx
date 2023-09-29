@@ -1,4 +1,3 @@
-import React from "react";
 import { PassportProvider } from "./_components/passport-provider";
 
 const PassportLayout = ({ children }: { children: React.ReactNode }) => {

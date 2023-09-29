@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/serverUtils";
 
 import Breadcrumbs from "@/components/breadcrumbs";
-import { homeBreadcrumbs, homeTabs } from "../../constants";
+import { homeTabs } from "../../../nav";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
@@ -59,10 +59,12 @@ const TagsPage = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={homeBreadcrumbs.tags} />
+      <Breadcrumbs />
       <Tabs links={homeTabs.news} />
       <Link href="tags/add">
-        <Button variant="formSubmit">Создать тэг</Button>
+        <Button variant="formSubmit" size="md" className="text-[16px]">
+          Создать тэг
+        </Button>
       </Link>
       <div className="flex flex-col space-y-[30px]">
         {tags.map((tag, idx) => (

@@ -8,7 +8,6 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
 import ModalPost from "@/components/modal-post";
 
-import { processBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
 import FiatForm from "./_components/passport-form";
 import { Button } from "@/components/ui/button";
@@ -59,7 +58,7 @@ const Page = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={processBreadcrumbs.passport} />
+      <Breadcrumbs />
       <div className="flex flex-col space-y-[30px]">
         {users.map((user, idx) => (
           <Card key={idx} card={user} />

@@ -1,4 +1,3 @@
-import React from "react";
 import ChevronRight from "@/public/icons/chevron-right.svg";
 import ChevronLeft from "@/public/icons/chevron-left.svg";
 import Link from "next/link";

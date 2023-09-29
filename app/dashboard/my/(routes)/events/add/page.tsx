@@ -1,24 +1,12 @@
-import React from "react";
 import EventForm from "../_components/event-form";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Tabs from "@/components/tabs";
-import { homeTabs } from "../../../constants";
-
-const bdEvents = [
-  {
-    to: "/dashboard/my",
-    name: "Главная",
-  },
-  {
-    to: "/dashboard/my/events",
-    name: "Мероприятия",
-  },
-];
+import { homeTabs } from "../../../nav";
 
 const AddPage = () => {
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={[...bdEvents, { name: "Cоздать мероприятие" }]} />
+      <Breadcrumbs customLabel="Cоздать мероприятие" />
       <Tabs links={homeTabs.events} />
       <EventForm />
     </div>

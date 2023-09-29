@@ -15,6 +15,7 @@ const ModalApprove = ({
   what,
   messages,
   children,
+  redirectUrl,
 }: {
   id: string;
   apiUrl: string;
@@ -24,6 +25,7 @@ const ModalApprove = ({
     success: string;
   };
   children: React.ReactNode;
+  redirectUrl?: string;
 }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -50,6 +52,9 @@ const ModalApprove = ({
 
     setOpen(false);
     router.refresh();
+
+    if (!redirectUrl) return;
+    router.push(redirectUrl);
   };
   return (
     <Modal open={open} setOpen={setOpen}>

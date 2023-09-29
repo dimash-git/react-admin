@@ -7,7 +7,6 @@ import { BACKEND_URL } from "@/lib/serverConstants";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
 
-import { paramBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
 import AddCountry from "./_components/add-country";
 
@@ -55,7 +54,7 @@ const Page = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={paramBreadcrumbs.countries} />
+      <Breadcrumbs />
       <AddCountry />
       <div className="flex flex-col space-y-[30px]">
         {countries.map((country, idx) => (

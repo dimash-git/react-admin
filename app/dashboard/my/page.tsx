@@ -1,11 +1,9 @@
 "use client";
 
-import React from "react";
-
 import NavSection from "@/components/nav-section";
 
 import { useSession } from "next-auth/react";
-import { homeSections } from "./constants";
+import { homeSections } from "./nav";
 
 const MyPage = () => {
   const { data: session } = useSession();

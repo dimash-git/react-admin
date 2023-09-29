@@ -1,4 +1,3 @@
-import React from "react";
 import TIcon from "@/public/icons/field-t.svg";
 import PhotoIcon from "@/public/icons/field-photo.svg";
 import VideoIcon from "@/public/icons/field-video.svg";

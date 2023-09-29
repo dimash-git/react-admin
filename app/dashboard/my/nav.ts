@@ -56,7 +56,7 @@ export const homeSections = {
       {
         name: "Редактор тегов",
         icon: ArrowRight,
-        to: homeBaseUrl + "/tags",
+        to: homeBaseUrl + "/news/tags",
       },
       {
         name: "Все новости",
@@ -189,7 +189,7 @@ export const homeTabs = {
       name: "Все новости",
     },
     {
-      to: homeBaseUrl + "/tags",
+      to: homeBaseUrl + "/news/tags",
       slug: "tags",
       name: "Тэги",
     },
@@ -241,76 +241,3 @@ export const homeTabs = {
     },
   ],
 };
-
-export const homeBreadcrumbs = {
-  events: [
-    {
-      to: "/dashboard/my",
-      name: "Главная",
-    },
-    {
-      name: "Мероприятия",
-    },
-  ],
-  promo: [
-    {
-      to: "/dashboard/my",
-      name: "Главная",
-    },
-    {
-      name: "промо материалы",
-    },
-  ],
-  news: [
-    {
-      to: "/dashboard/my",
-      name: "Главная",
-    },
-    {
-      name: "Новости",
-    },
-  ],
-  tags: [
-    {
-      to: "/dashboard/my",
-      name: "Главная",
-    },
-    {
-      name: "Тэги",
-    },
-  ],
-  marketing: [
-    {
-      to: "/dashboard/my",
-      name: "Главная",
-    },
-    {
-      name: "Маркетинг",
-    },
-  ],
-  products: [
-    {
-      to: "/dashboard/my",
-      name: "Главная",
-    },
-    {
-      name: "Продукты",
-    },
-  ],
-  support: [
-    {
-      to: "/dashboard/my",
-      name: "Главная",
-    },
-    {
-      name: "Поддержка",
-    },
-  ],
-};
-
-export const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];

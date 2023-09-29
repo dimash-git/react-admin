@@ -1,8 +1,7 @@
+import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../../auth/[...nextauth]/route";
 
 export async function POST(req: Request) {
   try {
@@ -12,11 +11,12 @@ export async function POST(req: Request) {
     const apiKey = retrieveApiKey(session.backendTokens);
     if (!apiKey) return;
 
+    const body = await req.json();
+    const { id } = body;
     const res = await axiosBack.post(
-      "/news/get_tags",
+      "/news/delete_tag",
       {
-        skip: 0,
-        limit: 25,
+        tag_id: id,
       },
       {
         headers: {
@@ -26,14 +26,14 @@ export async function POST(req: Request) {
     );
 
     if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Get tags failed", { status: 500 });
+      return new NextResponse("Delete failed", { status: 500 });
     }
 
     // console.log(res.data);
 
-    return NextResponse.json({ status: 200, content: res?.data?.content });
+    return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("TAGS_GET_ERROR", error);
+    console.log("DELETE_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

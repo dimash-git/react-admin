@@ -4,14 +4,22 @@ import { useState } from "react";
 
 import Modal from "@/components/modal";
 import AcademyForm from "./academy-form";
+import { Button } from "@/components/ui/button";
 
 const AcademyAction = () => {
   const [open, setOpen] = useState<boolean>(false);
   return (
     <div>
       <Modal open={open} setOpen={setOpen}>
-        <Modal.Trigger className="py-ten px-10 w-full text-[16px] leading-[18px] inline-flex items-center justify-center rounded-[5px] font-bold bg-thBlue text-white hover:bg-thBlue/90 ">
-          Изменить данные
+        <Modal.Trigger className="w-full">
+          <Button
+            asChild
+            variant="formSubmit"
+            size="md"
+            className="text-[16px] h-10 w-full"
+          >
+            <span>Изменить данные</span>
+          </Button>
         </Modal.Trigger>
         <Modal.Content className="max-w-[355px] bg-[#2D3D52] p-5 rounded-[20px]">
           <div className="flex flex-col space-y-5">

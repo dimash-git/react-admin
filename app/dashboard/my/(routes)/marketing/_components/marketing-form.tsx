@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import MarketingFormSchema from "../schema";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
-import { homeBaseUrl } from "../../../constants";
+import { homeBaseUrl } from "../../../nav";
 import { Textarea } from "@/components/ui/textarea";
 import { useContext, useState } from "react";
 import Image from "next/image";

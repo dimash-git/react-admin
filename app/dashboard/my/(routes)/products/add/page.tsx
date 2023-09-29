@@ -1,21 +1,14 @@
-import React from "react";
-import ProductsForm from "../_components/products-form";
+import ProductForm from "../_components/product-form";
 import Breadcrumbs from "@/components/breadcrumbs";
-import { homeBreadcrumbs, homeTabs } from "../../../constants";
+import { homeTabs } from "../../../nav";
 import Tabs from "@/components/tabs";
-
-const cat = "products";
-const lastBread = homeBreadcrumbs[cat].pop() ?? { name: "nowhere" };
-lastBread.to = `/dashboard/my/${cat}`;
-
-const breadcrumbs = [...homeBreadcrumbs[cat], lastBread] ?? [];
 
 const AddPage = () => {
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={[...breadcrumbs, { name: "Cоздать продукт" }]} />
+      <Breadcrumbs customLabel="Cоздать продукт" />
       <Tabs links={homeTabs.products} />
-      <ProductsForm />
+      <ProductForm />
     </div>
   );
 };

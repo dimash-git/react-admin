@@ -84,7 +84,8 @@ interface Product {
   discount: any;
   is_pack: boolean;
   is_robot: boolean;
-  desc?: string;
+  description: string;
+  advantages: string[];
 }
 
 interface ProductCat {

@@ -34,9 +34,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface ProductValues {
   name: string;
   desc: string;
-  advantages: {
-    text: string;
-  }[];
+  advantages: string[];
   products?: {
     product_id: string;
   }[];
@@ -48,7 +46,7 @@ interface ProductValues {
   cat?: string;
 }
 
-const ProductsForm = ({ parsed }: { parsed?: Product }) => {
+const ProductForm = ({ parsed }: { parsed?: Product }) => {
   const router = useRouter();
   const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
   const [cats, setCats] = useState<ProductCat[]>([]);
@@ -80,15 +78,17 @@ const ProductsForm = ({ parsed }: { parsed?: Product }) => {
     getProducts();
   }, []);
 
+  console.log(parsed);
+
   let defaultValues: ProductValues = {
     name: parsed?.name ?? "",
-    desc: parsed?.desc ?? "",
-    advantages: [{ text: "" }],
+    desc: parsed?.description ?? "",
+    advantages: parsed?.advantages ?? [" "],
     products: [{ product_id: "" }],
-    price: 100,
-    is_robot: false,
-    is_pack: false,
-    discount: 0,
+    price: parsed?.price ?? 100,
+    is_robot: parsed?.is_robot ?? false,
+    is_pack: parsed?.is_pack ?? false,
+    discount: parsed?.discount ?? 0,
   };
 
   if (!parsed?.img) {
@@ -150,31 +150,7 @@ const ProductsForm = ({ parsed }: { parsed?: Product }) => {
     //   return;
     // }
 
-    const {
-      name,
-      desc,
-      advantages,
-      image,
-      price,
-      is_pack,
-      is_robot,
-      products,
-      discount,
-      cat,
-    } = values;
-
-    setProduct({
-      name,
-      image,
-      desc,
-      advantages,
-      price,
-      is_pack,
-      is_robot,
-      products,
-      discount,
-      cat,
-    });
+    setProduct(values);
 
     router.push("add/preview");
   }
@@ -289,7 +265,7 @@ const ProductsForm = ({ parsed }: { parsed?: Product }) => {
                   <span className="w-[10px]">{index + 1}</span>
                   <FormField
                     control={form.control}
-                    name={`advantages.${index}.text`}
+                    name={`advantages.${index}`}
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
@@ -316,7 +292,7 @@ const ProductsForm = ({ parsed }: { parsed?: Product }) => {
               <Button
                 variant="form"
                 type="button"
-                onClick={() => advsAppend({ text: "" })}
+                onClick={() => advsAppend(" ")}
               >
                 Добавить поле
               </Button>
@@ -490,4 +466,4 @@ const ProductsForm = ({ parsed }: { parsed?: Product }) => {
   );
 };
 
-export default ProductsForm;
+export default ProductForm;

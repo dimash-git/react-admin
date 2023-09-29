@@ -5,9 +5,7 @@ import React, { createContext, useState } from "react";
 interface ProductPreview {
   name: string;
   desc: string;
-  advantages: {
-    text: string;
-  }[];
+  advantages: string[];
   products?: {
     product_id: string;
   }[];
@@ -30,11 +28,7 @@ const ProductProvider = ({ children }: { children: React.ReactNode }) => {
   const [product, setProduct] = useState<ProductPreview>({
     name: "",
     desc: "",
-    advantages: [
-      {
-        text: "",
-      },
-    ],
+    advantages: [""],
     price: 0,
     is_pack: false,
     is_robot: false,

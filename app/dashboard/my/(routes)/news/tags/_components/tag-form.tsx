@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import TagsFormSchema from "../schema";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
-import { homeBaseUrl } from "../../../constants";
+import { homeBaseUrl } from "../../../../nav";
 
 const TagsForm = ({ parsed }: { parsed?: Tags }) => {
   const router = useRouter();
@@ -38,7 +38,7 @@ const TagsForm = ({ parsed }: { parsed?: Tags }) => {
 
   async function onSubmit(values: z.infer<typeof TagsFormSchema>) {
     const { name } = values;
-    const res = await axios.post("/api/tags/add", {
+    const res = await axios.post("/api/news/tags/add", {
       name,
     });
 

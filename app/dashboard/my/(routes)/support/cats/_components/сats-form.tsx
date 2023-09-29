@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 import formSchema from "../schema";
 import { fileToBase64, getFileType } from "@/lib/utils";
-import { homeBaseUrl } from "@/app/dashboard/my/constants";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 import Image from "next/image";

@@ -3,11 +3,11 @@ import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/serverUtils";
 
 import Breadcrumbs from "@/components/breadcrumbs";
-import { homeBreadcrumbs, homeTabs } from "../../constants";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
 import NewsCard from "./_components/card";
+import { homeTabs } from "../../nav";
 
 const NewsPage = async ({
   searchParams,
@@ -59,7 +59,7 @@ const NewsPage = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={homeBreadcrumbs.news} />
+      <Breadcrumbs />
       <Tabs links={homeTabs.news} />
       <div className="flex flex-col space-y-[30px]">
         {news.map((newsSingle, idx) => (

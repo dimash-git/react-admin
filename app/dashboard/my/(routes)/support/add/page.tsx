@@ -1,8 +1,6 @@
-import React from "react";
-
 import Breadcrumbs from "@/components/breadcrumbs";
 import Tabs from "@/components/tabs";
-import { homeBreadcrumbs, homeTabs } from "@/app/dashboard/my/constants";
+import { homeBreadcrumbs, homeTabs } from "@/app/dashboard/my/nav";
 import QAForm from "../_components/qa-form";
 
 const cat = "support";

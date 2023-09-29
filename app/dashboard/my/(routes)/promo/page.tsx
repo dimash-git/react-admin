@@ -4,7 +4,7 @@ import { retrieveApiKey } from "@/lib/serverUtils";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import PromoCard from "./_components/card";
-import { homeBreadcrumbs, homeTabs } from "../../constants";
+import { homeTabs } from "../../nav";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
@@ -63,7 +63,7 @@ const EventsPage = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={homeBreadcrumbs.promo} />
+      <Breadcrumbs />
       <Tabs links={homeTabs.promo} />
       <div className="flex flex-col space-y-[30px]">
         {promo_materials.map((promo, idx) => (

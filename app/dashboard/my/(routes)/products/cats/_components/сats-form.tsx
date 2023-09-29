@@ -17,7 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 import formSchema from "../catsFormSchema";
 import { fileToBase64, getFileType } from "@/lib/utils";
-import { homeBaseUrl } from "@/app/dashboard/my/constants";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 
 import axios from "axios";
 import Image from "next/image";

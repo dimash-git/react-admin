@@ -30,31 +30,3 @@ export const processSections = {
     ],
   },
 };
-
-export const processBreadcrumbs = {
-  withdrawal: [
-    {
-      to: "/dashboard/processes",
-      name: "Процессы",
-    },
-    {
-      name: "Список инвойсов на вывод средств",
-    },
-  ],
-  passport: [
-    {
-      to: "/dashboard/processes",
-      name: "Процессы",
-    },
-    {
-      name: "Список инвойсов на верификацию",
-    },
-  ],
-};
-
-export const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];

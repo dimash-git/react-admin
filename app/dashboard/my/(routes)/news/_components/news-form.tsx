@@ -23,7 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import MultiSelect from "@/components/multiselect";
 import { useToast } from "@/components/ui/use-toast";
-import { homeBaseUrl } from "../../../constants";
+import { homeBaseUrl } from "../../../nav";
 
 interface _FormData {
   name: string;
@@ -51,7 +51,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
 
   useEffect(() => {
     (async function getTags() {
-      const res = await axios.post("/api/tags/get");
+      const res = await axios.post("/api/news/tags/get");
       if (res.data.status != 200) return;
       const { tags: tagsParsed } = res.data.content;
       // console.log("tags fetched: ", tagsParsed);

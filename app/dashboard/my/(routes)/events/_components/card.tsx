@@ -1,5 +1,4 @@
 import { cn, unixToReadableDate } from "@/lib/utils";
-import React from "react";
 
 import CardActions from "./card-actions";
 import Image from "next/image";

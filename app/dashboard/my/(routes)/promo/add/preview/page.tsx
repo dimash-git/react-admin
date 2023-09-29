@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { PromoContext } from "../../_components/promo-provider";
-import { homeBaseUrl } from "@/app/dashboard/my/constants";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 
 const PromoPreviewPage = () => {
   const { promo } = useContext(PromoContext);

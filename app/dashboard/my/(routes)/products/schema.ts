@@ -1,5 +1,5 @@
+import { ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
 import * as z from "zod";
-import { ACCEPTED_IMAGE_TYPES } from "../../constants";
 const MAX_FILE_SIZE = 3000000;
 
 const formSchema = z.object({
@@ -34,11 +34,7 @@ const formSchema = z.object({
       invalid_type_error: "Должна быть цифра",
     })
     .optional(),
-  advantages: z.array(
-    z.object({
-      text: z.string(),
-    })
-  ),
+  advantages: z.array(z.string()),
   products: z
     .array(
       z.object({

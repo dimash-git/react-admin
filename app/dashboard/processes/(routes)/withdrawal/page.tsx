@@ -7,7 +7,6 @@ import { BACKEND_URL } from "@/lib/serverConstants";
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
 
-import { processBreadcrumbs } from "../../nav";
 import Card from "./_components/card";
 
 const Page = async ({
@@ -62,7 +61,7 @@ const Page = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={processBreadcrumbs.withdrawal} />
+      <Breadcrumbs />
 
       <div className="flex flex-col space-y-[30px]">
         {withdrawal_invoice?.map((invoice, idx) => (

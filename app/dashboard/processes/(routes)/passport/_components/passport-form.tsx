@@ -74,7 +74,6 @@ const PassportForm = ({
 
     setOpen(false);
 
-    router.refresh();
     router.push(`${processBaseUrl}/passport`);
   }
   return (

@@ -7,7 +7,7 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
-import { homeBreadcrumbs, homeTabs } from "../../../constants";
+import { homeTabs } from "../../../nav";
 import CatCard from "./_components/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -61,7 +61,7 @@ const ProductCategoriesPage = async ({
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs bd={homeBreadcrumbs.products} />
+      <Breadcrumbs />
       <Tabs links={homeTabs.products} />
       <Link href="cats/add">
         <Button variant="formSubmit" size="md" className="text-[16px] h-10">

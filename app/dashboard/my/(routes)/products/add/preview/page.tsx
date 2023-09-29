@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { ProductContext } from "../../_components/products-provider";
-import { homeBaseUrl } from "@/app/dashboard/my/constants";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 
 interface _FormData {
   cat?: string;
@@ -26,9 +26,7 @@ interface _FormData {
     product_id: string;
   }[];
   discount?: number;
-  advantages: {
-    text: string;
-  }[];
+  advantages: string[];
 }
 
 const PreviewPage = () => {
@@ -143,7 +141,7 @@ const PreviewPage = () => {
                 <div className="shrink-0">
                   <AdvIcon />
                 </div>
-                <p className="text-[15px] font-bold">{adv?.text}</p>
+                <p className="text-[15px] font-bold">{adv}</p>
               </div>
             ))}
         </div>
