@@ -124,33 +124,33 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // if (parsed) {
-    //   // console.log(parsed.marketing_id);
+    // setProduct(values);
 
-    //   const res = await axios.post("/api/marketing/update", {
-    //     ...values,
-    //     marketing_id: parsed.marketing_id,
-    //   });
-    //   const { status } = res.data;
-    //   if (status != 200) {
-    //     toast({
-    //       variant: "success",
-    //       title: "Ошибка при обновлении маркетинг продукта!",
-    //     });
-    //     return;
-    //   }
+    const {
+      name,
+      desc,
+      advantages,
+      image,
+      price,
+      is_pack,
+      is_robot,
+      products,
+      discount,
+      cat,
+    } = values;
 
-    //   toast({
-    //     variant: "success",
-    //     title: "Маркетинг продукт обновлен успешно!",
-    //   });
-
-    //   router.refresh();
-    //   router.push(`${homeBaseUrl}/marketing`);
-    //   return;
-    // }
-
-    setProduct(values);
+    setProduct({
+      name,
+      image,
+      desc,
+      advantages,
+      price,
+      is_pack,
+      is_robot,
+      products,
+      discount,
+      cat,
+    });
 
     router.push("add/preview");
   }

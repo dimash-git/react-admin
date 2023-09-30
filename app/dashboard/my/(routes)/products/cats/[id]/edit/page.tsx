@@ -31,10 +31,10 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   const { category } = res.data.content;
 
   return (
-    <>
+    <div className="flex flex-col space-y-[30px]">
       <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
       <CatsForm parsed={category} />
-    </>
+    </div>
   );
 };
 

@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { ProductContext } from "../../_components/products-provider";
 import { homeBaseUrl } from "@/app/dashboard/my/nav";
+import Container from "@/components/container";
 
 interface _FormData {
   cat?: string;
@@ -97,76 +98,109 @@ const PreviewPage = () => {
   };
 
   return (
-    <div>
-      <div className="bg-thYellow rounded-ten font-bold text-[16px] leading-4 p-ten text-black">
+    <Container variant="productPreview">
+      <div className="bg-thYellow rounded-ten font-bold text-[16px] leading-4 p-ten text-black w-full h-10 flex items-center mb-[30px]">
         Предпросмотр
       </div>
-      <div className="mt-[30px] w-[508px] flex flex-col rounded-twenty bg-[#7bace71a] p-5">
-        <div className="card__cover relative">
-          {product?.image && (
-            <Image
-              width={400}
-              height={238}
-              alt="Image"
-              src={URL.createObjectURL(product.image as File)}
-              className="w-full object-cover rounded-[5px]"
-            />
-          )}
-          <div className="absolute left-[20px] top-[50%] -translate-y-[50%]">
-            <div className="text-[20px] leading-5 font-medium">
-              Торговая система
-            </div>
-            <span className="font-bold text-[35px] leading-9">
-              {product?.name}
-            </span>
-          </div>
-        </div>
-        <div className="card__description mt-5 mb-10 text-[15px] font-medium">
-          <div className="text-[#8F9297] uppercase text-[10px]">
-            Торговая системы
-          </div>
-          <div className="my-[10px] text-[20px] font-bold">{product?.name}</div>
-          <p className="text-[15px] font-medium">{product?.desc}</p>
-        </div>
-        <div className="my-5 grid grid-cols-2 gap-y-5">
-          {advantages &&
-            advantages.map((adv, index) => (
-              <div
-                className={cn(
-                  "flex gap-ten items-center",
-                  index % 2 == 0 ? "max-w-[125px] w-full" : null
-                )}
-                key={index}
-              >
-                <div className="shrink-0">
-                  <AdvIcon />
-                </div>
-                <p className="text-[15px] font-bold">{adv}</p>
+      <div className="grid grid-cols-2 gap-x-[30px]">
+        {/* Card */}
+        <div className="flex flex-col rounded-[20px] bg-thDark p-5 h-max">
+          <div className="card__cover relative">
+            {product?.image && (
+              <Image
+                width={400}
+                height={263}
+                alt="Image"
+                src={URL.createObjectURL(product.image as File)}
+                className="w-full rounded-[5px] h-[263px] object-cover"
+              />
+            )}
+            <div className="absolute left-[20px] top-[50%] -translate-y-[50%]">
+              <div className="text-[20px] leading-5 font-medium">
+                Торговая система
               </div>
-            ))}
-        </div>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-[10px]">
-            <Button
-              variant="form"
-              type="button"
-              className="px-10 cursor-not-allowed"
-            >
-              Добавить в корзину
-            </Button>
-            <Button
-              variant="formSubmit"
-              type="button"
-              className="px-10 cursor-not-allowed"
-            >
-              Купить
-            </Button>
+              <span className="font-bold text-[35px] leading-9">
+                {product?.name}
+              </span>
+            </div>
           </div>
-          <div className="text-[25px] font-bold">{product?.price} $</div>
+          <div className="card__description my-5 text-[15px] font-medium">
+            <div className="text-[#8F9297] uppercase text-[10px]">
+              Торговая системы
+            </div>
+            <div className="my-[10px] text-[20px] font-bold">
+              {product?.name}
+            </div>
+            <p className="text-[15px] font-medium">{product?.desc}</p>
+          </div>
+          <div className="my-5 grid grid-cols-2 gap-y-5">
+            {advantages &&
+              advantages.map((adv, index) => (
+                <div
+                  className={cn(
+                    "flex gap-ten items-center",
+                    index % 2 == 0 ? "max-w-[125px] w-full" : null
+                  )}
+                  key={index}
+                >
+                  <div className="shrink-0">
+                    <AdvIcon />
+                  </div>
+                  <p className="text-[15px] font-bold">{adv}</p>
+                </div>
+              ))}
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-[10px]">
+              <Button
+                variant="form"
+                type="button"
+                className="px-10 cursor-not-allowed"
+              >
+                Добавить в корзину
+              </Button>
+              <Button
+                variant="formSubmit"
+                type="button"
+                className="px-10 cursor-not-allowed"
+              >
+                Купить
+              </Button>
+            </div>
+            <div className="text-[25px] font-bold">{product?.price} $</div>
+          </div>
+        </div>
+
+        {/* Card Skeleton */}
+        <div className="flex flex-col rounded-[20px] bg-thDark p-5 space-y-5">
+          <div className="w-full h-[263px] bg-[#2D3D52] rounded-[5px] animate-pulse"></div>
+
+          <div className="flex flex-col space-y-[10px]">
+            <div className="bg-[#2D3D52] h-[11px] w-[108px] animate-pulse"></div>
+            <div className="bg-[#2D3D52] h-[23px] w-[208px] animate-pulse"></div>
+          </div>
+
+          <div className="bg-[#2D3D52] h-[73px] animate-pulse"></div>
+
+          <div className="grid grid-cols-2 gap-[10px]">
+            <div className="bg-[#2D3D52] h-9 animate-pulse"></div>
+            <div className="bg-[#2D3D52] h-9 animate-pulse"></div>
+            <div className="bg-[#2D3D52] h-9 animate-pulse"></div>
+            <div className="bg-[#2D3D52] h-9 animate-pulse"></div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex gap-[10px]">
+              <div className="bg-[#455580] h-[25px] w-[194px] rounded-[5px] animate-pulse"></div>
+              <div className="bg-[#0072FF] h-[25px] w-[127px] rounded-[5px] animate-pulse"></div>
+            </div>
+            <div className="bg-[#2D3D52] h-[30px] w-16 animate-pulse"></div>
+          </div>
         </div>
       </div>
+
       <div className="flex justify-center">
-        <div className="card__controls flex items-center justify-between bg-[#455580] max-w-[385px] w-full rounded-[5px] mt-10">
+        <div className="card__controls flex items-center justify-between bg-[#455580] max-w-[385px] w-full rounded-[10px] mt-10">
           <div className="px-8 py-[10px]">
             <button
               type="button"
@@ -189,7 +223,7 @@ const PreviewPage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 

@@ -25,7 +25,7 @@ const Sidebar = () => {
   return (
     <div
       className={cn(
-        "p-[15px] rounded-twenty bg-thDark flex flex-col space-y-[30px] h-max max-w-[185px]",
+        "p-[15px] rounded-[20px] bg-thDark flex flex-col space-y-[30px] h-max max-w-[185px]",
         inter.className,
         shrinked ? null : "w-full"
       )}

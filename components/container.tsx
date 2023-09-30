@@ -1,22 +1,33 @@
-// import { cva } from "class-variance-authority";
-// import React from "react";
+import { cn } from "@/lib/utils";
+import { cva, type VariantProps } from "class-variance-authority";
+import React from "react";
 
-// const inputVariants = cva(
-//   "p-5 rounded-[20px] flex flex-col space-y-[30px] w-full",
-//   {
-//     variants: {
-//       variant: {
-//         default: "bg-thDark",
-//       },
-//     },
-//     defaultVariants: {
-//       variant: "default",
-//     },
-//   }
-// );
+const containerVariants = cva("flex flex-col w-full", {
+  variants: {
+    variant: {
+      default: "bg-thDark p-5 rounded-[20px] space-y-[30px",
+      productPreview: "",
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+  },
+});
 
-// const Container = React.forwardRef<HTMLDivElement>((props, ref) => {
-//   return <div ref={ref}>Container</div>;
-// });
+export interface ContainerProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof containerVariants> {}
 
-// export default Container;
+const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
+  ({ variant, children, ...props }, ref) => {
+    return (
+      <div ref={ref} className={cn(containerVariants({ variant }))}>
+        {children}
+      </div>
+    );
+  }
+);
+
+Container.displayName = "Container";
+
+export default Container;

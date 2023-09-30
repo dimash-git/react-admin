@@ -8,6 +8,7 @@ import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
 import ProductCard from "./_components/card";
+import Container from "@/components/container";
 
 const MarketingPage = async ({
   searchParams,
@@ -58,18 +59,20 @@ const MarketingPage = async ({
   const { products, count }: { products: Product[]; count: number } = content;
 
   return (
-    <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs />
-      <Tabs links={homeTabs.products} />
-      <div className="flex flex-col space-y-[30px]">
-        {products.map((product, idx) => (
-          <ProductCard key={idx} card={product} />
-        ))}
+    <Container>
+      <div className="h-fit flex flex-col space-y-[30px]">
+        <Breadcrumbs />
+        <Tabs links={homeTabs.products} />
+        <div className="flex flex-col space-y-[30px]">
+          {products.map((product, idx) => (
+            <ProductCard key={idx} card={product} />
+          ))}
+        </div>
+        <div>
+          <Pagination count={count} currPage={currPage} pageSize={pageSize} />
+        </div>
       </div>
-      <div>
-        <Pagination count={count} currPage={currPage} pageSize={pageSize} />
-      </div>
-    </div>
+    </Container>
   );
 };
 

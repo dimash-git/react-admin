@@ -8,7 +8,7 @@ interface SectionLink {
 
 const NavSection = ({ section }: { section: any }) => {
   return (
-    <div className="p-5 mb-[30px] bg-thDark flex flex-col gap-5 rounded-twenty w-full">
+    <div className="p-5 mb-[30px] bg-thDark flex flex-col gap-5 rounded-[20px] w-full">
       <div className="flex items-center justify-between">
         <span className="text-[23px] font-bold">{section?.name}</span>
         {section?.icon && <section.icon />}

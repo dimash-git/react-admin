@@ -1,6 +1,4 @@
 import * as z from "zod";
-import { ACCEPTED_IMAGE_TYPES } from "../../nav";
-const MAX_FILE_SIZE = 1000000;
 
 const formSchema = z.object({
   question: z.string().min(3, {

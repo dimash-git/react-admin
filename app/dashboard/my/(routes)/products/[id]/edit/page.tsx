@@ -6,6 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import ProductForm from "../../_components/product-form";
 import { BACKEND_URL } from "@/lib/serverConstants";
+import Container from "@/components/container";
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -38,10 +39,12 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   const { product } = content;
 
   return (
-    <>
-      <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
-      <ProductForm parsed={product} />
-    </>
+    <Container>
+      <div className="flex flex-col space-y-[30px]">
+        <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
+        <ProductForm parsed={product} />
+      </div>
+    </Container>
   );
 };
 
