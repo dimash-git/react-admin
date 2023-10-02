@@ -8,22 +8,17 @@ interface BackendTokensWE extends BackendTokens {
 }
 
 type EventType = "online" | "offline";
-interface _Event {
+interface Evt {
   event_id: string;
   is_online: boolean;
   name: string;
   desc: string;
   timestamp: number;
   img_url?: string;
-}
-
-interface EventForm {
-  name: string;
-  desc: string;
-  type: EventType;
-  date: Date;
-  image?: File; // if image was chosen at form
-  img_url?: string; // if image was fetched from backend
+  media_blocks: {
+    text?: string;
+    media?: File;
+  }[];
 }
 
 interface Promo {
@@ -74,6 +69,11 @@ interface Marketing {
   img_url: string;
   desc: string;
   name: string;
+  media_blocks: {
+    text?: string;
+    head_line?: string;
+    media?: File;
+  }[];
 }
 
 interface Product {
@@ -146,7 +146,13 @@ interface WithdrawalInvoice {
 }
 
 interface Question {
-  category_id: string;
+  question_id: string;
   question: string;
   answer: string;
+  article_id?: string;
+}
+
+interface QuestionCat {
+  category_id: string;
+  name: string;
 }

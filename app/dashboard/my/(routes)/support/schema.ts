@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-const formSchema = z.object({
+const qaFormSchema = z.object({
   question: z.string().min(3, {
     message: "Введите вопрос",
   }),
@@ -10,4 +10,4 @@ const formSchema = z.object({
   cat: z.string({ required_error: "Категория обязательна" }),
 });
 
-export default formSchema;
+export default qaFormSchema;

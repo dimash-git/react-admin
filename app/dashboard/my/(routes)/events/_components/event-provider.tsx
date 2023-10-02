@@ -1,21 +1,21 @@
 "use client";
 
 import React, { createContext, useState } from "react";
-
-interface _EventContext {
-  event: EventForm;
-  setEvent: React.Dispatch<React.SetStateAction<EventForm>>;
+import { EventValues } from "../schema";
+interface EvtContext {
+  event: EventValues;
+  setEvent: React.Dispatch<React.SetStateAction<EventValues>>;
 }
 
-const EventContext = createContext<_EventContext>({} as _EventContext);
+const EventContext = createContext<EvtContext>({} as EvtContext);
 
 const EventProvider = ({ children }: { children: React.ReactNode }) => {
-  const [event, setEvent] = useState<EventForm>({
+  const [event, setEvent] = useState<EventValues>({
     name: "",
     desc: "",
     type: "offline",
     date: new Date(),
-  } as EventForm);
+  } as EventValues);
 
   return (
     <EventContext.Provider value={{ event, setEvent }}>

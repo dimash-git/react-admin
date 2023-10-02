@@ -146,11 +146,11 @@ export const homeSections = {
             icon: Plus,
             to: homeBaseUrl + "/support/articles/add",
           },
-          {
-            name: "Все статьти",
-            icon: ArrowRight,
-            to: homeBaseUrl + "/support/articles",
-          },
+          // {
+          //   name: "Все статьти",
+          //   icon: ArrowRight,
+          //   to: homeBaseUrl + "/support/articles",
+          // },
         ],
       },
     ],

@@ -30,15 +30,11 @@ export async function POST(req: Request) {
       }
     );
 
-    if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Categories publish failed", { status: 500 });
-    }
-
-    console.log(res.data.response);
+    // console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("CATS_PUBLISH_ERROR", error);
+    console.log("PUBLISH_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

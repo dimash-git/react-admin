@@ -4,7 +4,7 @@ import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-import CatsForm from "../../_components/qa-form";
+import QAForm from "../../_components/qa-form";
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -15,9 +15,9 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   if (!apiKey) return;
 
   const res = await axiosBack.post(
-    "/support/get_category",
+    "/support/get_question",
     {
-      category_id: id,
+      question_id: id,
     },
     {
       headers: {
@@ -26,14 +26,20 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
     }
   );
 
-  if (res.data.status.code != 200) return <>Error Loading Category</>;
+  const { status, content } = res.data;
+  console.log(content);
 
-  const { category } = res.data.content;
+  if (status.code != 200) return <div>Ошибка загрузки поста</div>;
+
+  const { question } = content;
 
   return (
     <>
-      <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
-      <CatsForm parsed={category} />
+      <Breadcrumbs
+        customLabel={`${id ? id + " - Редактирование" : "Создать статью"}`}
+        slice={2}
+      />
+      <QAForm parsed={question} />
     </>
   );
 };

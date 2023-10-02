@@ -81,3 +81,34 @@ export function getFileType(mimeType: string) {
     return "";
   }
 }
+
+export function mapMediaBlocks(blocks: any[]) {
+  return blocks.map((block) => ({
+    head_line: block?.head_line ?? "",
+    text: block?.text ?? "",
+    media: block?.media ?? undefined,
+  }));
+}
+
+export async function convertMediaBlockToBase64(block: any) {
+  if (block.media) {
+    try {
+      const base64String = await fileToBase64(block.media);
+      return {
+        head_line: block.head_line,
+        text: block.text,
+        media: {
+          data_base64: base64String as string,
+          data_type: getFileType(block.media.type),
+        },
+      };
+    } catch (error) {
+      console.error(`Error: ${error}`);
+    }
+  }
+
+  return {
+    head_line: block.head_line,
+    text: block.text,
+  };
+}

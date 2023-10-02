@@ -14,7 +14,14 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { marketing_id, name, desc, img_data_base64, img_type } = body;
+    const {
+      marketing_id,
+      name,
+      desc,
+      img_data_base64,
+      img_type,
+      media_blocks,
+    } = body;
 
     const res = await axiosBack.post(
       "/marketing/edit_marketing",
@@ -24,16 +31,7 @@ export async function POST(req: Request) {
         desc,
         img_data_base64,
         img_type,
-        media_blocks: [
-          {
-            text: "",
-            head_line: "",
-            media: {
-              data_type: "",
-              data_base64: "",
-            },
-          },
-        ],
+        media_blocks,
       },
       {
         headers: {

@@ -80,36 +80,38 @@ const PromoPreviewPage = () => {
         Предпросмотр
       </div>
       <div>
-        <div className="event__header">
-          <div className="event__name text-[40px] font-bold mt-[5px]">
+        <div className="preview__header">
+          <div className="preview__name text-[40px] font-bold mt-[5px]">
             {promo?.name}
           </div>
         </div>
 
-        <div className="event__cover">
+        <div className="preview__cover">
           {promo?.image && (
             <Image
               width={400}
               height={238}
               alt="Image"
-              src={URL.createObjectURL(promo.image as File)}
+              src={URL.createObjectURL(promo.image)}
               className="w-full object-cover"
             />
           )}
         </div>
       </div>
       <div>
-        <Button
-          variant="formSubmit"
-          type="button"
-          onClick={() =>
-            window.open(URL.createObjectURL(promo.file as File), "_blank")
-          }
-        >
-          Скачать презентацию
-        </Button>
+        {promo?.file && (
+          <Button
+            variant="formSubmit"
+            type="button"
+            onClick={() =>
+              window.open(URL.createObjectURL(promo.file as File), "_blank")
+            }
+          >
+            Скачать презентацию
+          </Button>
+        )}
       </div>
-      <div className="event__controls flex items-center justify-between">
+      <div className="preview__controls flex items-center justify-between">
         <button
           type="button"
           className="flex items-center text-[20px] text-thBlue hover:text-gray-300 transition"

@@ -1,16 +1,11 @@
 "use client";
 
 import React, { createContext, useState } from "react";
-
-interface MarketingPreview {
-  name: string;
-  desc: string;
-  image?: File;
-}
+import { MarketingValues } from "./marketing-form";
 
 interface _MarketingContext {
-  marketing: MarketingPreview;
-  setMarketing: React.Dispatch<React.SetStateAction<MarketingPreview>>;
+  marketing: MarketingValues;
+  setMarketing: React.Dispatch<React.SetStateAction<MarketingValues>>;
 }
 
 const MarketingContext = createContext<_MarketingContext>(
@@ -18,10 +13,10 @@ const MarketingContext = createContext<_MarketingContext>(
 );
 
 const MarketingProvider = ({ children }: { children: React.ReactNode }) => {
-  const [marketing, setMarketing] = useState<MarketingPreview>({
+  const [marketing, setMarketing] = useState<MarketingValues>({
     name: "",
     desc: "",
-  } as MarketingPreview);
+  } as MarketingValues);
 
   return (
     <MarketingContext.Provider value={{ marketing, setMarketing }}>

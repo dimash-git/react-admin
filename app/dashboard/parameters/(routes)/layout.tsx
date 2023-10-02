@@ -1,9 +1,7 @@
-const ParamLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="p-5 bg-thDark rounded-[20px] flex flex-col space-y-[30px] w-full">
-      {children}
-    </div>
-  );
+import Container from "@/components/container";
+
+const ParametersLayout = ({ children }: { children: React.ReactNode }) => {
+  return <Container>{children} </Container>;
 };
 
-export default ParamLayout;
+export default ParametersLayout;

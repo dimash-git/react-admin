@@ -30,11 +30,7 @@ export async function POST(req: Request) {
       }
     );
 
-    if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Publish failed", { status: 500 });
-    }
-
-    // console.log(res.data);
+    // console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {

@@ -29,12 +29,11 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   });
 
   const data = await response.json();
+  // console.log(data);
 
   const { status, content } = data;
 
-  console.log(data);
-
-  if (status.code != 200) return <>Ошибка загрузки поста</>;
+  if (status.code != 200) return <div>Ошибка загрузки поста</div>;
 
   const { product } = content;
 

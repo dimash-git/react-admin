@@ -1,7 +1,11 @@
 "use client";
+
+import { useEffect, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import formSchema from "../schema";
 
 import {
   Form,
@@ -13,16 +17,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import newsFormSchema from "../schema";
-import { fileToBase64, getFileFromUrl, getFileType } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
 import MultiSelect from "@/components/multiselect";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { fileToBase64, getFileType } from "@/lib/utils";
+
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { homeBaseUrl } from "../../../nav";
 
 interface _FormData {
@@ -63,8 +64,8 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
     })();
   }, []);
 
-  const form = useForm<z.infer<typeof newsFormSchema>>({
-    resolver: zodResolver(newsFormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues,
   });
 
@@ -72,7 +73,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
 
   const { toast } = useToast();
 
-  async function onSubmit(values: z.infer<typeof newsFormSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const { name, tags, desc, image } = values;
 
     let formData: _FormData = {
@@ -148,49 +149,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
               </FormItem>
             )}
           />
-          {/* <FormField
-            control={form.control}
-            name="tag"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mb-5">Тэг</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Выберите тэг..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {tags.length > 0 &&
-                        tags.map((tag, idx) => (
-                          <SelectItem
-                            className="text-white hover:text-black"
-                            key={idx}
-                            value={tag?.tag_id.toString()}
-                          >
-                            {tag?.name}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-          {/* <div className="space-y-2">
-            <div className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[12px] font-medium uppercase">
-              Краткое описание
-            </div>
-            <Input
-              className="mt-0"
-              placeholder="Краткое описание"
-              disabled
-              value={form.getValues("desc")}
-            />
-          </div> */}
+
           <FormField
             control={form.control}
             name="excerpt"

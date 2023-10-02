@@ -1,9 +1,7 @@
+import Container from "@/components/container";
+
 const ProcessLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="p-5 bg-thDark rounded-[20px] flex flex-col space-y-[30px] w-full">
-      {children}
-    </div>
-  );
+  return <Container>{children}</Container>;
 };
 
 export default ProcessLayout;

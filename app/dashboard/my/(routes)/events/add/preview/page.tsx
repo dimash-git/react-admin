@@ -1,23 +1,25 @@
 "use client";
 
-import { EventContext } from "@/app/dashboard/my/(routes)/events/_components/event-provider";
+import { useContext } from "react";
+
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import PostArrowLeft from "@/public/icons/post-arrow-left.svg";
 import {
   cn,
+  convertMediaBlockToBase64,
   dateToUnix,
   fileToBase64,
   getFileType,
   readableDate,
-  unixToReadableDate,
 } from "@/lib/utils";
-import PostArrowLeft from "@/public/icons/post-arrow-left.svg";
-import axios from "axios";
-// import { revalidateTag } from "next/cache";
-import Image from "next/image";
+import { EventContext } from "@/app/dashboard/my/(routes)/events/_components/event-provider";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 
+import axios from "axios";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { EventSendData } from "../../schema";
 
 const EventPreviewPage = () => {
   const { event } = useContext(EventContext);
@@ -25,29 +27,29 @@ const EventPreviewPage = () => {
   const router = useRouter();
 
   const handlePublish = async () => {
-    const { name, desc, date, type } = event;
-    const formData = {
+    const { name, desc, date, type, cover, media_blocks } = event;
+
+    const mediaBlocksWithBase64 = await Promise.all(
+      media_blocks.map(convertMediaBlockToBase64)
+    );
+
+    let formData: EventSendData = {
       name,
       desc,
       timestamp: dateToUnix(date),
       is_online: type == "online" ? true : false,
-      img_data_base64: "",
-      img_type: "",
+      media_blocks: mediaBlocksWithBase64,
     };
 
-    if (event?.image) {
-      const { image } = event;
+    if (cover) {
       try {
-        const base64String = await fileToBase64(image);
+        const base64String = await fileToBase64(cover);
         formData.img_data_base64 = base64String as string;
+        formData.img_type = getFileType(cover.type);
       } catch (error: any) {
-        console.error("Publish error: ", error.message);
+        console.log(`Error: ${error}`);
       }
-
-      formData.img_type = getFileType(image.type);
     }
-
-    console.log("Publish:", formData);
 
     const res = await axios.post("/api/event/add", formData);
 
@@ -66,9 +68,9 @@ const EventPreviewPage = () => {
       variant: "success",
       title: "Мероприятие добавлено успешно!",
     });
-    // revalidateTag("events");
+
     router.refresh();
-    router.push("/dashboard/my/events");
+    router.push(`${homeBaseUrl}/events`);
   };
 
   return (
@@ -77,7 +79,7 @@ const EventPreviewPage = () => {
         Предпросмотр
       </div>
       <div>
-        <div className="event__header">
+        <div className="preview__header">
           <div className="flex justify-start gap-[6px] text-[10px] font-medium">
             <div>{readableDate(event?.date)}</div>
             <div
@@ -88,26 +90,45 @@ const EventPreviewPage = () => {
               {event?.type == "online" ? "Онлайн" : "Оффлайн"}
             </div>
           </div>
-          <div className="event__name text-[40px] font-bold mt-[5px]">
+          <div className="preview__name text-[40px] font-bold mt-[5px]">
             {event?.name}
           </div>
         </div>
-        <div className="event__description my-[20px] text-[15px] font-medium">
-          <p>{event?.desc}</p>
-        </div>
-        <div className="event__cover">
-          {event?.image && (
+        <p className="preview__description my-[20px] text-[15px] font-medium">
+          {event?.desc}
+        </p>
+        <div className="preview__cover mb-[20px]">
+          {event?.cover && (
             <Image
               width={400}
               height={238}
               alt="Image"
-              src={URL.createObjectURL(event.image as File)}
-              className="w-full object-cover"
+              src={URL.createObjectURL(event.cover)}
+              className="w-full object-cover max-h-[238px] rounded-[10px]"
             />
           )}
         </div>
+        <div className="preview__media_block flex flex-col space-y-[30px]">
+          {event?.media_blocks &&
+            event?.media_blocks.map((block, idx) => (
+              <div key={idx} className="flex flex-col space-y-[20px]">
+                {block?.text && (
+                  <p className="text-[15px] font-medium">{block?.text}</p>
+                )}
+                {block?.media && (
+                  <Image
+                    width={400}
+                    height={200}
+                    alt="Image"
+                    src={URL.createObjectURL(block.media)}
+                    className="w-full object-cover max-h-[200px] rounded-[10px]"
+                  />
+                )}
+              </div>
+            ))}
+        </div>
       </div>
-      <div className="event__controls flex items-center justify-between">
+      <div className="preview__controls flex items-center justify-between">
         <button
           type="button"
           className="flex items-center text-[20px] text-thBlue hover:text-gray-300 transition"

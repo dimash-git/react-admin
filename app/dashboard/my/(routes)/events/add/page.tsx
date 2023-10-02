@@ -5,11 +5,11 @@ import { homeTabs } from "../../../nav";
 
 const AddPage = () => {
   return (
-    <div className="h-fit flex flex-col space-y-[30px]">
+    <>
       <Breadcrumbs customLabel="Cоздать мероприятие" />
       <Tabs links={homeTabs.events} />
       <EventForm />
-    </div>
+    </>
   );
 };
 

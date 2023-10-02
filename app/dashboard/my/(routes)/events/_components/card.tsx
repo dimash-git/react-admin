@@ -1,9 +1,8 @@
 import { cn, unixToReadableDate } from "@/lib/utils";
-
-import CardActions from "./card-actions";
+import CardAction from "@/components/card-action";
 import Image from "next/image";
 
-const EventCard = ({ card }: { card: _Event }) => {
+const EventCard = ({ card }: { card: Evt }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
@@ -41,7 +40,19 @@ const EventCard = ({ card }: { card: _Event }) => {
         <span className="text-[10px] uppercase">{card?.event_id}</span>
       </div>
       <div className="flex gap-ten items-center">
-        <CardActions id={card?.event_id} />
+        <CardAction
+          id={card?.event_id}
+          apiUrl="/api/event/delete"
+          messages={{
+            error: "Ошибка при удалении мероприятия!",
+            success: "Мероприятие удалено успешно!",
+          }}
+        >
+          <h4 className="text-md font-semibold">Удалить мероприятие</h4>
+          <p className="font-medium text-[14px]">
+            Вы уверены что хотите удалить мероприятие?
+          </p>
+        </CardAction>
       </div>
     </div>
   );

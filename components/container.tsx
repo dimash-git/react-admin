@@ -5,7 +5,7 @@ import React from "react";
 const containerVariants = cva("flex flex-col w-full", {
   variants: {
     variant: {
-      default: "bg-thDark p-5 rounded-[20px] space-y-[30px",
+      default: "bg-thDark p-5 rounded-[20px] space-y-[30px]",
       productPreview: "",
     },
   },

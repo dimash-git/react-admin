@@ -44,36 +44,13 @@ const EventsPage = async ({
     next: { tags: ["events"] },
   });
 
-  if (!response.ok) {
-    throw new Error("Error Loading Events");
-  }
+  const data = await response.json();
+  // console.log(data);
+  const { status, content } = data;
 
-  const { status, content } = await response.json();
+  if (status.code != 200) return <div>Ошибка загрузки списка</div>;
 
-  if (status.code !== 200) {
-    throw new Error("Error Loading Events");
-  }
-
-  const { events, count }: { events: _Event[]; count: number } = content;
-  // const res = await axiosBack.post(
-  //   "/event/get_events",
-  //   {
-  //     skip,
-  //     limit: pageSize,
-  //   },
-  //   {
-  //     headers: {
-  //       Authorization: apiKey,
-  //     },
-  //   }
-  // );
-
-  // // console.log(res.data);
-
-  // if (res.data.status.code != 200) return <>Error Loading Evens</>;
-
-  // const { events, count }: { events: Event[]; count: number } =
-  //   res.data.content;
+  const { events, count }: { events: Evt[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">

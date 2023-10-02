@@ -28,7 +28,7 @@ const ClauseSection = () => {
         </Button>
         <Link
           className="p-ten rounded-[5px] bg-[#2D3D5299] flex items-center justify-between transition hover:bg-[#2D3D5299]/90"
-          href={`${panelBaseUrl}/settings`}
+          href={`${panelBaseUrl}/clause-settings`}
         >
           <span className="text-[16px] font-bold">Настройки</span>
           <ArrowRight />

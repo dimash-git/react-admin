@@ -13,7 +13,7 @@ export const panelSections = {
         name: "Создать аккаунт ",
         icon: Plus,
         to: panelBaseUrl + "/acc/add",
-        slug: "add_acct",
+        slug: "add_acc",
       },
       {
         name: "Все аккаунты администраторов",

@@ -8,7 +8,7 @@ import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
 import { homeTabs } from "../../../nav";
-import CatCard from "./_components/card";
+import Card from "./_components/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -72,7 +72,7 @@ const SubCategoriesPage = async ({
       </Link>
       <div className="flex flex-col space-y-[30px]">
         {categories.map((cat, idx) => (
-          <CatCard key={idx} card={cat} />
+          <Card key={idx} card={cat} />
         ))}
       </div>
       <div>

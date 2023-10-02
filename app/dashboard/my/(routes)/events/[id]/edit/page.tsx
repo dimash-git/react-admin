@@ -25,26 +25,13 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
     }
   );
 
-  // console.log(res.data);
+  const { status, content } = res.data;
+  console.log(content);
 
-  if (res.data.status.code != 200) return <>Error Loading Event</>;
+  if (status.code != 200) return <div>Ошибка загрузки поста</div>;
 
-  const { event } = res.data.content;
-  // let image;
-  // if (event?.img_url) {
-  //   getFileFromUrl(event?.img_url).then((file) => {
-  //     image = file;
-  //   });
-  // }
-  // console.log("file", image);
+  const { event } = content;
 
-  // const formData: EventForm = {
-  //   name: event?.name,
-  //   description: event?.desc,
-  //   type: event?.is_online ? "online" : "offline",
-  //   date: event?.timestamp && new Date(event?.timestamp * 1000),
-  //   image: {} as File,
-  // };
   return (
     <>
       <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />

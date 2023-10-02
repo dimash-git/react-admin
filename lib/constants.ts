@@ -69,6 +69,13 @@ export const urlSegments = [
   { slug: "processes", name: "Процессы" },
   { slug: "withdrawal", name: "Список инвойсов на вывод средств" },
   { slug: "passport", name: "Список инвойсов на верификацию" },
+
+  { slug: "panel", name: "админ панель" },
+  { slug: "clause-settings", name: "Настройки клаузы" },
+  { slug: "acc", name: "Акаунты администраторов" },
+
+  { slug: "appeals", name: "Апелляции" },
+  { slug: "complaints", name: "жалобы на чат" },
 ];
 
 export const ACCEPTED_IMAGE_TYPES = [

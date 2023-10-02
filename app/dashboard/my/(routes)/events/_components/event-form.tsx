@@ -1,8 +1,12 @@
 "use client";
+
+import { useContext, useState } from "react";
+import CrossCircleIcon from "@/public/icons/cross-circle.svg";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import eventFormSchema from "../schema";
+import formSchema, { EventSendData, EventValues } from "../schema";
 import { format } from "date-fns";
 
 import {
@@ -28,50 +32,117 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { cn, dateToUnix, getFileFromUrl } from "@/lib/utils";
-import { CalendarIcon } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { useContext } from "react";
+import { CalendarIcon } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+
 import { EventContext } from "@/app/dashboard/my/(routes)/events/_components/event-provider";
+import {
+  cn,
+  convertMediaBlockToBase64,
+  dateToUnix,
+  fileToBase64,
+  getFileType,
+  mapMediaBlocks,
+} from "@/lib/utils";
+
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import axios from "axios";
+import { homeBaseUrl } from "../../../nav";
+import AddFieldsPanel from "./add-fields-panel";
 
-const EventForm = ({ parsed }: { parsed?: _Event }) => {
-  const { event, setEvent } = useContext(EventContext);
-  // console.log("Event from form", event);
-
+const EventForm = ({ parsed }: { parsed?: Evt }) => {
   const router = useRouter();
+  const { toast } = useToast();
+  const { event, setEvent } = useContext(EventContext);
+  const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
 
-  const defaultValues = {
-    name: parsed?.name ?? event?.name,
-    desc: parsed?.desc ?? event?.desc,
-    // type: (event?.is_online ? "online" : "offline") ?? eventState?.type
-    type: ((parsed?.is_online ? "online" : "offline") ??
-      event?.type) as EventType,
-    date:
-      event?.date ??
-      new Date(parsed?.timestamp ? parsed?.timestamp * 1000 : Date.now()),
-    image: parsed?.img_url ? getFileFromUrl(parsed?.img_url) : event?.image,
-    // form image field should be always File type
-    // 1st case: event data fetched from server, it has url as img_url
-    // 2nd case: event data gotten from state manipulation
+  /* START */
+  let defaultValues: EventValues = {
+    name: parsed?.name ?? event?.name ?? "",
+    desc: parsed?.desc ?? event?.desc ?? "",
+    type: (parsed?.is_online != null
+      ? parsed?.is_online
+        ? "online"
+        : "offline"
+      : event?.type ?? "offline") as EventType,
+    date: parsed?.timestamp
+      ? new Date(parsed.timestamp * 1000)
+      : event?.date ?? new Date(),
+    media_blocks: parsed?.media_blocks
+      ? mapMediaBlocks(parsed?.media_blocks)
+      : event?.media_blocks ?? [],
   };
 
-  const form = useForm<z.infer<typeof eventFormSchema>>({
-    resolver: zodResolver(eventFormSchema),
+  if (!parsed?.img_url) {
+    defaultValues.cover = {} as File;
+  }
+  if (event?.cover) {
+    defaultValues.cover = event?.cover;
+  }
+  /* END */
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues,
   });
 
   const { isLoading, isSubmitting } = form.formState;
 
-  function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    const { name, desc, type, date, image } = values;
-    setEvent({
-      name,
-      desc,
-      type,
-      date,
-      image,
-    });
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "media_blocks",
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (parsed) {
+      const { name, desc, date, type, media_blocks, cover } = values;
+      const mediaBlocksWithBase64 = await Promise.all(
+        media_blocks.map(convertMediaBlockToBase64)
+      );
+      const formData: EventSendData = {
+        name,
+        desc,
+        timestamp: dateToUnix(date),
+        is_online: type == "online" ? true : false,
+        media_blocks: mediaBlocksWithBase64,
+        event_id: parsed.event_id,
+      };
+
+      if (cover) {
+        try {
+          const base64String = await fileToBase64(cover);
+          formData.img_data_base64 = base64String as string;
+          formData.img_type = getFileType(cover.type);
+        } catch (error: any) {
+          console.log(`Error: ${error}`);
+        }
+      }
+
+      const res = await axios.post("/api/event/update", formData);
+
+      const { status } = res.data;
+      if (status != 200) {
+        toast({
+          variant: "destructive",
+          title: "Ошибка при обновлении мероприятия!",
+        });
+        return;
+      }
+
+      toast({
+        variant: "success",
+        title: "Мероприятие обновлено успешно!",
+      });
+
+      router.refresh();
+      router.push(`${homeBaseUrl}/events`);
+      return;
+    }
+
+    // If adding new entry but not updating
+    setEvent(values);
     router.push("add/preview");
   }
   return (
@@ -184,27 +255,100 @@ const EventForm = ({ parsed }: { parsed?: _Event }) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field: { value, ...field } }) => (
-              <FormItem>
-                <FormLabel className="mb-5">Обложка</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    {...field}
-                    // spreading value is important cause you do not want default value change
-                    onChange={(e) => {
-                      if (!e.target.files) return;
-                      field.onChange(e.target.files[0]);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {parsed?.img_url && !isSwitchOn ? (
+            <>
+              <Image
+                src={`${parsed?.img_url}`}
+                width={200}
+                height={100}
+                alt={parsed?.name}
+                className="w-[200px] h-[100px] object-cover cursor-not-allowed"
+                onClick={() => setSwitchOn(true)}
+              />
+            </>
+          ) : (
+            <FormField
+              control={form.control}
+              name="cover"
+              render={({ field: { value, ...field } }) => (
+                <FormItem>
+                  <FormLabel className="mb-5">Обложка</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      {...field}
+                      // spreading value is important cause you do not want default value change
+                      onChange={(e) => {
+                        if (!e.target.files) return;
+                        field.onChange(e.target.files[0]);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          {fields.map((field, idx) => (
+            <div className="relative" key={field.id}>
+              <span
+                onClick={() => {
+                  if (fields.length > 0) remove(idx);
+                }}
+                className="text-thRed absolute right-0 top-0 hover:text-thRed/80 transition cursor-pointer"
+              >
+                <CrossCircleIcon />
+              </span>
+              <div className="flex flex-col space-y-[30px]">
+                {field.text && (
+                  <div className="flex gap-5 items-center">
+                    <FormField
+                      control={form.control}
+                      name={`media_blocks.${idx}.text`}
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-5">Текст</FormLabel>
+                          <FormControl>
+                            <Textarea rows={8} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+
+                {field.media && (
+                  <div className="flex gap-5 items-center">
+                    <FormField
+                      control={form.control}
+                      name={`media_blocks.${idx}.media`}
+                      render={({ field: { value, ...field } }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-5">Медиафайл</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              {...field}
+                              onChange={(e) => {
+                                if (!e.target.files) return;
+                                field.onChange(e.target.files[0]);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+
+          <AddFieldsPanel name="мероприятие" append={append} />
+
           <div className="flex gap-ten">
             <Button variant="form" onClick={() => router.back()}>
               Отмена

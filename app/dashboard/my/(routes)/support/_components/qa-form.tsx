@@ -29,11 +29,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 
-interface QuestionCat {
-  category_id: string;
-  name: string;
-}
-
 const QAForm = ({ parsed }: { parsed?: Question }) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -68,7 +63,7 @@ const QAForm = ({ parsed }: { parsed?: Question }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const res = await axios.post(
       `/api/support/${parsed ? "update" : "add"}`,
-      values
+      parsed ? { ...values, question_id: parsed.question_id } : values
     );
 
     // console.log("Response:", res.data);
@@ -77,14 +72,16 @@ const QAForm = ({ parsed }: { parsed?: Question }) => {
     if (status != 200) {
       toast({
         variant: "success",
-        title: `Ошибка при ${parsed ? "обновлении" : "добавлении"} вопроса!`,
+        title: `Ошибка при ${
+          parsed ? "обновлении" : "добавлении"
+        } короткого вопроса!`,
       });
       return;
     }
 
     toast({
       variant: "success",
-      title: `Вопрос ${parsed ? "обновлена" : "добавлена"} успешно!`,
+      title: `Короткий вопрос ${parsed ? "обновлен" : "добавлен"} успешно!`,
     });
 
     router.refresh();

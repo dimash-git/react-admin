@@ -1,13 +1,5 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import * as z from "zod";
-import formSchema from "../schema";
 
 import {
   Form,
@@ -27,9 +19,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
+import * as z from "zod";
+import formSchema from "../schema";
 
 import { ProductContext } from "./products-provider";
-import { Checkbox } from "@/components/ui/checkbox";
+import axios from "axios";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface ProductValues {
   name: string;
@@ -77,8 +77,6 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
     getCategories();
     getProducts();
   }, []);
-
-  console.log(parsed);
 
   let defaultValues: ProductValues = {
     name: parsed?.name ?? "",
@@ -211,9 +209,9 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
                       </FormControl>
                       <SelectContent>
                         {cats.length > 0 &&
-                          cats.map((cat, index) => (
+                          cats.map((cat, idx) => (
                             <SelectItem
-                              key={index}
+                              key={idx}
                               value={cat?.category_id}
                               className="text-white hover:text-black focus:text-black cursor-pointer"
                             >
@@ -260,12 +258,12 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
               Преимущества
             </div>
             <div className="flex flex-col space-y-5">
-              {advs.map((adv, index) => (
+              {advs.map((adv, idx) => (
                 <div className="flex gap-5 items-center" key={adv.id}>
-                  <span className="w-[10px]">{index + 1}</span>
+                  <span className="w-[10px]">{idx + 1}</span>
                   <FormField
                     control={form.control}
-                    name={`advantages.${index}`}
+                    name={`advantages.${idx}`}
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
@@ -387,12 +385,12 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
                 Название продуктов
               </div>
               <div className="flex flex-col space-y-5">
-                {prods.map((prod, index) => (
+                {prods.map((prod, idx) => (
                   <div className="flex gap-5 items-center" key={prod.id}>
-                    <span className="w-[10px]">{index + 1}</span>
+                    <span className="w-[10px]">{idx + 1}</span>
                     <FormField
                       control={form.control}
-                      name={`products.${index}.product_id`}
+                      name={`products.${idx}.product_id`}
                       render={({ field }) => (
                         <FormItem className="w-full">
                           <FormControl>
@@ -407,9 +405,9 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
                               </FormControl>
                               <SelectContent>
                                 {products.length > 0 &&
-                                  products.map((product, index) => (
+                                  products.map((product, idx) => (
                                     <SelectItem
-                                      key={index}
+                                      key={idx}
                                       value={product?.product_id}
                                       className="text-white hover:text-black focus:text-black cursor-pointer"
                                     >
