@@ -32,7 +32,7 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/p2p_complain/get_complains", {
+  const response = await fetch(BACKEND_URL + "/p2p_complain/get_appeals", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
