@@ -114,16 +114,14 @@ const CatsForm = ({ parsed }: { parsed?: SupportCat }) => {
           />
 
           {parsed?.img && !isSwitchOn ? (
-            <>
-              <Image
-                src={`${parsed?.img}`}
-                width={200}
-                height={100}
-                alt={parsed?.name}
-                className="w-[200px] h-[100px] object-cover cursor-not-allowed"
-                onClick={() => setSwitchOn(true)}
-              />
-            </>
+            <Image
+              src={`${parsed?.img}`}
+              width={200}
+              height={100}
+              alt={parsed?.name}
+              className="w-[200px] h-[100px] object-cover cursor-not-allowed"
+              onClick={() => setSwitchOn(true)}
+            />
           ) : (
             <FormField
               control={form.control}

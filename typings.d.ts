@@ -7,7 +7,7 @@ interface BackendTokensWE extends BackendTokens {
   expiresIn: number;
 }
 
-type EventType = "online" | "offline";
+type EvtType = "online" | "offline";
 interface Evt {
   event_id: string;
   is_online: boolean;
@@ -17,7 +17,10 @@ interface Evt {
   img_url?: string;
   media_blocks: {
     text?: string;
-    media?: File;
+    media?: {
+      type: string;
+      url: string;
+    };
   }[];
 }
 
@@ -28,32 +31,23 @@ interface Promo {
   file_url?: string;
 }
 
-interface PromoForm {
-  name: string;
-  image?: File;
-  file?: File;
-}
-
-interface NewsForm {
-  name: string;
-  tag: string;
-  excerpt: string;
-  desc: string;
-  image?: File;
-  url: string;
-}
-
 interface News {
   news_id: string;
   name: string;
-  img: string;
-  timestamp: number;
   desc: string;
+  img: string;
   tags?: string[];
-  url?: string;
+  timestamp: number;
+  media_blocks: {
+    text?: string;
+    media?: {
+      type: string;
+      url: string;
+    };
+  }[];
 }
 
-interface Tags {
+interface NewsTag {
   tag_id: string;
   name: string;
 }
@@ -72,12 +66,16 @@ interface Marketing {
   media_blocks: {
     text?: string;
     head_line?: string;
-    media?: File;
+    media?: {
+      type: string;
+      url: string;
+    };
   }[];
 }
 
 interface Product {
   product_id: string;
+  category_id: string;
   img: string;
   name: string;
   price: number;
@@ -86,9 +84,25 @@ interface Product {
   is_robot: boolean;
   description: string;
   advantages: string[];
+  pack_product_json?: {
+    product_id: string;
+    count: number;
+  }[];
 }
 
 interface ProductCat {
+  category_id: string;
+  name: string;
+}
+
+interface Question {
+  question_id: string;
+  question: string;
+  answer: string;
+  article_id?: string;
+}
+
+interface QuestionCat {
   category_id: string;
   name: string;
 }
@@ -145,14 +159,10 @@ interface WithdrawalInvoice {
   network: string;
 }
 
-interface Question {
-  question_id: string;
-  question: string;
-  answer: string;
-  article_id?: string;
-}
-
-interface QuestionCat {
-  category_id: string;
-  name: string;
+interface Appeal {
+  appeal_id: string;
+  user_id: string;
+  user_login: string;
+  is_fixed: false;
+  create_timestamp: number;
 }

@@ -30,7 +30,7 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/bank/get_banks", {
+  const response = await fetch(BACKEND_URL + "/p2p_appeal/get_appeals", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,26 +39,26 @@ const Page = async ({
     body: JSON.stringify({
       skip,
       limit: pageSize,
+      is_fixed: false,
     }),
-    next: { tags: ["banks"] },
+    next: { tags: ["appeals"] },
   });
 
-  if (!response.ok) {
-    return <div>Ошибка загрузки списка</div>;
-  }
+  // if (!response.ok) {
+  //   return <div>Ошибка загрузки списка</div>;
+  // }
 
-  const { content } = await response.json();
+  const data = await response.json();
+  const { content } = data;
 
-  // console.log(content);
-
-  const { banks, count }: { banks: Bank[]; count: number } = content;
+  const { appeals, count }: { appeals: Appeal[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
       <div className="flex flex-col space-y-[30px]">
-        {banks.map((bank, idx) => (
-          <Card key={idx} card={bank} />
+        {appeals.map((appeal, idx) => (
+          <Card key={idx} card={appeal} />
         ))}
       </div>
 

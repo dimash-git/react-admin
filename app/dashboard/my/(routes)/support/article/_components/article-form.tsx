@@ -32,6 +32,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { homeBaseUrl } from "@/app/dashboard/my/nav";
 import AddFieldsPanel from "./add-fields-panel";
+import { convertMediaBlockToBase64 } from "@/lib/utils";
 
 const ArticleForm = ({ parsed }: { parsed?: Question }) => {
   const router = useRouter();
@@ -71,9 +72,25 @@ const ArticleForm = ({ parsed }: { parsed?: Question }) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { media_blocks, ...restValues } = values;
+
+    const mediaBlocksWithBase64 = await Promise.all(
+      media_blocks.map(convertMediaBlockToBase64)
+    );
+
+    console.log({
+      ...restValues,
+      media_blocks: mediaBlocksWithBase64,
+      question_id: params.get("question_id"),
+    });
+
     const res = await axios.post(
       `/api/support/article/${parsed ? "update" : "add"}`,
-      { ...values, question_id: params.get("question_id") }
+      {
+        ...restValues,
+        media_blocks: mediaBlocksWithBase64,
+        question_id: params.get("question_id"),
+      }
     );
 
     // console.log("Response:", res.data);

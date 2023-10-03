@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState } from "react";
-import { MarketingValues } from "./marketing-form";
+import { MarketingValues } from "../schema";
 
 interface _MarketingContext {
   marketing: MarketingValues;

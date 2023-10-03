@@ -6,6 +6,8 @@ import Breadcrumbs from "@/components/breadcrumbs";
 
 import ArticleForm from "./_components/article-form";
 
+import ArticleDelButton from "./_components/article-del-button";
+
 const SubCategoriesPage = async ({
   searchParams,
 }: {
@@ -39,8 +41,13 @@ const SubCategoriesPage = async ({
   return (
     <>
       <Breadcrumbs
-        customLabel={`${searchParams?.question_id} - Редактирование`}
+        customLabel={
+          article
+            ? `${searchParams?.question_id} - Редактирование`
+            : "Создать статью"
+        }
       />
+      <ArticleDelButton id="" />
       {article ? <ArticleForm parsed={article} /> : <ArticleForm />}
     </>
   );

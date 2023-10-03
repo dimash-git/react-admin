@@ -1,6 +1,6 @@
 import CardAction from "@/components/card-action";
 
-const TagsCard = ({ card }: { card: Tags }) => {
+const Card = ({ card }: { card: NewsTag }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
@@ -34,4 +34,4 @@ const TagsCard = ({ card }: { card: Tags }) => {
   );
 };
 
-export default TagsCard;
+export default Card;

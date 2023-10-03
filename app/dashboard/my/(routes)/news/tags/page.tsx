@@ -7,7 +7,7 @@ import { homeTabs } from "../../../nav";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/serverConstants";
-import TagsCard from "./_components/card";
+import Card from "./_components/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -42,7 +42,7 @@ const TagsPage = async ({
       skip,
       limit: pageSize,
     }),
-    next: { tags: ["tags"] },
+    next: { tags: ["news_tags"] },
   });
 
   if (!response.ok) {
@@ -55,7 +55,7 @@ const TagsPage = async ({
     throw new Error("Error Loading Tags");
   }
 
-  const { tags, count }: { tags: Tags[]; count: number } = content;
+  const { tags, count }: { tags: NewsTag[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
@@ -68,7 +68,7 @@ const TagsPage = async ({
       </Link>
       <div className="flex flex-col space-y-[30px]">
         {tags.map((tag, idx) => (
-          <TagsCard key={idx} card={tag} />
+          <Card key={idx} card={tag} />
         ))}
       </div>
       <div>

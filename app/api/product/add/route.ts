@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       discount,
       is_pack,
       is_robot,
-      advantages: advantages.map((adv: { text: string }) => adv.text),
+      advantages,
       pack_product_json: !is_pack
         ? undefined
         : JSON.stringify(

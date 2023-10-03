@@ -32,7 +32,7 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/p2p_complain/get_appeals", {
+  const response = await fetch(BACKEND_URL + "/p2p_complain/get_complains", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -46,15 +46,15 @@ const Page = async ({
     next: { tags: ["complaints"] },
   });
 
-  if (!response.ok) {
-    return <div>Ошибка загрузки списка</div>;
-  }
+  // if (!response.ok) {
+  //   return <div>Ошибка загрузки списка</div>;
+  // }
 
   const data = await response.json();
 
   const { status, content } = data;
 
-  console.log(data);
+  console.log("data", data);
 
   // const { countries, count }: { countries: Country[]; count: number } = content;
 

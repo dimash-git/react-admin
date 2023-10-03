@@ -1,8 +1,7 @@
+import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../../auth/[...nextauth]/route";
 
 export async function POST(req: Request) {
   try {
@@ -13,16 +12,11 @@ export async function POST(req: Request) {
     if (!apiKey) return;
 
     const body = await req.json();
-
-    const { cat, question, question_id, answer } = body;
-
+    const { id } = body;
     const res = await axiosBack.post(
-      "/support/edit_question",
+      "/support/delete_article",
       {
-        category_id: cat,
-        question_id,
-        question,
-        answer,
+        question_id: id,
       },
       {
         headers: {
@@ -31,11 +25,11 @@ export async function POST(req: Request) {
       }
     );
 
-    // console.log(res.data);
+    // console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("UPDATE_ERROR", error);
+    console.log("DELETE_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

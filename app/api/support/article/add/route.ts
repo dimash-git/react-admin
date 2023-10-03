@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../../auth/[...nextauth]/route";
 
 export async function POST(req: Request) {
   try {
@@ -14,15 +14,15 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { cat, question, question_id, answer } = body;
+    const { cat, question, question_id, media_blocks } = body;
 
     const res = await axiosBack.post(
-      "/support/edit_question",
+      "/support/add_article",
       {
         category_id: cat,
         question_id,
         question,
-        answer,
+        media_blocks,
       },
       {
         headers: {
@@ -31,11 +31,11 @@ export async function POST(req: Request) {
       }
     );
 
-    // console.log(res.data);
+    // console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("UPDATE_ERROR", error);
+    console.log("PUBLISH_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

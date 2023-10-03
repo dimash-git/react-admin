@@ -18,21 +18,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 import { MarketingContext } from "../../_components/marketing-provider";
-
-interface _FormData {
-  name: string;
-  desc: string;
-  img_data_base64?: string;
-  img_type?: string;
-  media_blocks: {
-    head_line?: string;
-    text?: string;
-    media?: {
-      data_type: string;
-      data_base64: string;
-    };
-  }[];
-}
+import { MarketingSendData } from "../../schema";
 
 const PreviewPage = () => {
   const { marketing } = useContext(MarketingContext);
@@ -46,7 +32,7 @@ const PreviewPage = () => {
       media_blocks.map(convertMediaBlockToBase64)
     );
 
-    let formData: _FormData = {
+    let formData: MarketingSendData = {
       name,
       desc,
       media_blocks: mediaBlocksWithBase64,

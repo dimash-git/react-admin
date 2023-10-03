@@ -27,4 +27,10 @@ const promoFormSchema = z.object({
     ),
 });
 
+export interface PromoValues {
+  name: string;
+  image?: File;
+  file?: File;
+}
+
 export default promoFormSchema;

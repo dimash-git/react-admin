@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import CrossCircleIcon from "@/public/icons/cross-circle.svg";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import formSchema from "../schema";
+import formSchema, { NewsSendData, NewsValues } from "../schema";
 
 import {
   Form,
@@ -20,35 +21,39 @@ import { Button } from "@/components/ui/button";
 import MultiSelect from "@/components/multiselect";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { fileToBase64, getFileType } from "@/lib/utils";
+import AddFieldsPanel from "./add-fields-panel";
+import {
+  convertMediaBlockToBase64,
+  fileToBase64,
+  getFileType,
+  mapMediaBlocks,
+} from "@/lib/utils";
 
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { homeBaseUrl } from "../../../nav";
 
-interface _FormData {
-  name: string;
-  tags: string[];
-  desc: string;
-  img_base_base64?: string;
-  img_ext?: string;
-}
-
 const NewsForm = ({ parsed }: { parsed?: News }) => {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [selectedCover, setSelectedCover] = useState<boolean>(false);
   const [tags, setTags] = useState([]);
 
-  const router = useRouter();
+  console.log(parsed);
 
-  // console.log("parsed", parsed);
-
-  const defaultValues = {
+  let defaultValues: NewsValues = {
     name: parsed?.name ?? "",
     desc: parsed?.desc ?? "",
     tags: parsed?.tags ? parsed?.tags.join(",") : "",
-    excerpt: "",
-    url: parsed?.url ?? "",
-    // image: parsed?.img_url ? getFileFromUrl(parsed?.img_url) : News?.image,
+    media_blocks: parsed?.media_blocks
+      ? mapMediaBlocks(parsed?.media_blocks)
+      : [],
   };
+
+  if (!parsed?.img) {
+    defaultValues.cover = {} as File;
+  }
 
   useEffect(() => {
     (async function getTags() {
@@ -56,7 +61,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
       if (res.data.status != 200) return;
       const { tags: tagsParsed } = res.data.content;
       // console.log("tags fetched: ", tagsParsed);
-      const formatted = tagsParsed.map((tag: Tags) => {
+      const formatted = tagsParsed.map((tag: NewsTag) => {
         return { label: tag.name, value: tag.tag_id };
       });
 
@@ -71,24 +76,31 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
 
   const { isLoading, isSubmitting } = form.formState;
 
-  const { toast } = useToast();
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "media_blocks",
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { name, tags, desc, image } = values;
+    const { tags, media_blocks, cover, ...restValues } = values;
 
-    let formData: _FormData = {
-      name,
+    const mediaBlocksWithBase64 = await Promise.all(
+      media_blocks.map(convertMediaBlockToBase64)
+    );
+
+    let formData: NewsSendData = {
       tags: tags.split(","),
-      desc,
+      media_blocks: mediaBlocksWithBase64,
+      ...restValues,
     };
 
-    if (image) {
+    if (cover) {
       try {
-        const base64String = await fileToBase64(image);
+        const base64String = await fileToBase64(cover);
         formData.img_base_base64 = base64String as string;
-        formData.img_ext = getFileType(image.type);
-      } catch (error: any) {
-        console.error("Error: ", error.message);
+        formData.img_ext = getFileType(cover.type);
+      } catch (error) {
+        console.error(`Error: ${error}`);
       }
     }
 
@@ -100,7 +112,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
     if (status != 200) {
       toast({
         variant: "destructive",
-        title: "Ошибка при добавлении новости!",
+        title: "Ошибка при добавлении новости",
       });
       return;
     }
@@ -152,23 +164,10 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
 
           <FormField
             control={form.control}
-            name="excerpt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mb-5">Краткое описание</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
             name="desc"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mb-5">Текст</FormLabel>
+                <FormLabel className="mb-5">Описание</FormLabel>
                 <FormControl>
                   <Textarea rows={13} {...field} />
                 </FormControl>
@@ -176,42 +175,114 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field: { value, ...field } }) => (
-              <FormItem>
-                <FormLabel className="mb-5">Обложка</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    {...field}
-                    // spreading value is important cause you do not want default value change
-                    onChange={(e) => {
-                      if (!e.target.files) return;
-                      field.onChange(e.target.files[0]);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="url"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mb-5">
-                  Видео (вставьте ссылку на видео)
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {parsed?.img && !selectedCover ? (
+            <div className="flex flex-col space-y-2">
+              <span className="block text-[12px] font-medium uppercase ">
+                Обложка
+              </span>
+              <Image
+                src={`${parsed.img}`}
+                width={200}
+                height={100}
+                alt={parsed?.name}
+                className="w-[200px] h-[100px] object-cover rounded-[5px] cursor-not-allowed"
+                onClick={() => setSelectedCover(true)}
+              />
+            </div>
+          ) : (
+            <FormField
+              control={form.control}
+              name="cover"
+              render={({ field: { value, ...field } }) => (
+                <FormItem>
+                  <FormLabel className="mb-5">Обложка</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      {...field}
+                      // spreading value is important cause you do not want default value change
+                      onChange={(e) => {
+                        if (!e.target.files) return;
+                        field.onChange(e.target.files[0]);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+          {fields.map((field, idx) => (
+            <div className="relative" key={field.id}>
+              <span
+                onClick={() => {
+                  if (fields.length > 0) remove(idx);
+                }}
+                className="text-thRed absolute right-0 top-0 hover:text-thRed/80 transition cursor-pointer"
+              >
+                <CrossCircleIcon />
+              </span>
+              <div className="flex flex-col space-y-[30px]">
+                {field.text && (
+                  <div className="flex gap-5 items-center">
+                    <FormField
+                      control={form.control}
+                      name={`media_blocks.${idx}.text`}
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-5">Текст</FormLabel>
+                          <FormControl>
+                            <Textarea rows={8} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+
+                {field.media &&
+                  (parsed?.media_blocks[idx]?.media?.url ? (
+                    <div className="flex flex-col space-y-2">
+                      <span className="block text-[12px] font-medium uppercase ">
+                        Медиафайл
+                      </span>
+                      <Image
+                        src={`${parsed.media_blocks[idx]?.media?.url}`}
+                        width={200}
+                        height={100}
+                        alt={parsed?.name}
+                        className="w-[200px] h-[100px] object-cover rounded-[5px]"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex gap-5 items-center">
+                      <FormField
+                        control={form.control}
+                        name={`media_blocks.${idx}.media`}
+                        render={({ field: { value, ...field } }) => (
+                          <FormItem className="w-full">
+                            <FormLabel className="mb-5">Медиафайл</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="file"
+                                {...field}
+                                onChange={(e) => {
+                                  if (!e.target.files) return;
+                                  field.onChange(e.target.files[0]);
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  ))}
+              </div>
+            </div>
+          ))}
+          <AddFieldsPanel name="новость" append={append} />
           <div className="flex gap-ten">
             <Button variant="form" type="button" onClick={() => router.back()}>
               Отмена

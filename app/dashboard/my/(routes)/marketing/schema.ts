@@ -40,4 +40,30 @@ const formSchema = z.object({
   ),
 });
 
+export interface MarketingValues {
+  name: string;
+  desc: string;
+  cover?: File;
+  media_blocks: {
+    head_line?: string;
+    text?: string;
+    media?: File;
+  }[];
+}
+
+export interface MarketingSendData {
+  name: string;
+  desc: string;
+  img_data_base64?: string;
+  img_type?: string;
+  media_blocks: {
+    head_line?: string;
+    text?: string;
+    media?: {
+      data_type: string;
+      data_base64: string;
+    };
+  }[];
+}
+
 export default formSchema;

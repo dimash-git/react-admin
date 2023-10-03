@@ -19,7 +19,7 @@ const AddFieldsButton = ({
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <div className="uppercase text-[12px] leading-4 font-medium text-white tracking-[0.36px]">
-        вы можете добавить текст, фото или видео в {name}
+        вы можете добавить текст или фото в {name}
       </div>
       <div className="flex gap-[1px] mt-[30px]">
         {text && (

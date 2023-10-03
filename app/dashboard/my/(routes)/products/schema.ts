@@ -3,7 +3,7 @@ import * as z from "zod";
 const MAX_FILE_SIZE = 3000000;
 
 const productFormSchema = z.object({
-  image: z.optional(
+  cover: z.optional(
     z
       .any()
       .refine((file) => file?.name, "Файл не выбран")
@@ -51,5 +51,20 @@ const productFormSchema = z.object({
     invalid_type_error: "Должен быть boolean",
   }),
 });
+
+export interface ProductValues {
+  name: string;
+  desc: string;
+  advantages: string[];
+  products?: {
+    product_id: string;
+  }[];
+  cover?: File;
+  price: number;
+  is_pack: boolean;
+  is_robot: boolean;
+  discount?: number;
+  cat?: string;
+}
 
 export default productFormSchema;

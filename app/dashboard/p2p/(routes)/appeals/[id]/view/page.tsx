@@ -1,12 +1,12 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 
-import EventForm from "../../_components/event-form";
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-const EditPage = async ({ params }: { params: { id: string } }) => {
+const ViewPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  console.log(id);
 
   const session = await getServerSession(authOptions);
   if (!session) return;
@@ -14,9 +14,9 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
   if (!apiKey) return;
 
   const res = await axiosBack.post(
-    "/event/get_event",
+    "/p2p_appeal/get_appeal",
     {
-      event_id: id,
+      appeal_id: id,
     },
     {
       headers: {
@@ -24,20 +24,21 @@ const EditPage = async ({ params }: { params: { id: string } }) => {
       },
     }
   );
+  console.log(res.data);
 
-  const { status, content } = res.data;
-  // console.log(content);
+  const { content, status } = res.data;
 
-  if (status.code != 200) return <div>Ошибка загрузки поста</div>;
+  // console.log(res.data);
 
-  const { event } = content;
+  if (status.code != 200) return <>Ошибка загрузки поста</>;
+
+  // const { qualification } = content;
 
   return (
     <>
       <Breadcrumbs customLabel={`${id} - Редактирование`} slice={2} />
-      <EventForm parsed={event} />
     </>
   );
 };
 
-export default EditPage;
+export default ViewPage;

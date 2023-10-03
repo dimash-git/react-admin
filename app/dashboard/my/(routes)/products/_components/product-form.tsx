@@ -24,27 +24,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import formSchema from "../schema";
+import formSchema, { ProductValues } from "../schema";
 
 import { ProductContext } from "./products-provider";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-interface ProductValues {
-  name: string;
-  desc: string;
-  advantages: string[];
-  products?: {
-    product_id: string;
-  }[];
-  image?: null;
-  price: number;
-  is_pack: boolean;
-  is_robot: boolean;
-  discount?: number;
-  cat?: string;
-}
 
 const ProductForm = ({ parsed }: { parsed?: Product }) => {
   const router = useRouter();
@@ -52,7 +37,7 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
   const [cats, setCats] = useState<ProductCat[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
-  const { setProduct } = useContext(ProductContext);
+  const { product, setProduct } = useContext(ProductContext);
 
   useEffect(() => {
     async function getCategories() {
@@ -78,20 +63,29 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
     getProducts();
   }, []);
 
+  // console.log(parsed);
+
+  /* START */
   let defaultValues: ProductValues = {
-    name: parsed?.name ?? "",
-    desc: parsed?.description ?? "",
-    advantages: parsed?.advantages ?? [" "],
-    products: [{ product_id: "" }],
-    price: parsed?.price ?? 100,
-    is_robot: parsed?.is_robot ?? false,
-    is_pack: parsed?.is_pack ?? false,
-    discount: parsed?.discount ?? 0,
+    name: parsed?.name ?? product?.name ?? "",
+    desc: parsed?.description ?? product?.desc ?? "",
+    advantages: parsed?.advantages ?? product?.advantages ?? [" "],
+    products: parsed?.pack_product_json ??
+      product?.products ?? [{ product_id: "" }],
+    price: parsed?.price ?? product?.price ?? 100,
+    is_robot: parsed?.is_robot ?? product?.is_robot ?? false,
+    is_pack: parsed?.is_pack ?? product?.is_pack ?? false,
+    discount: parsed?.discount ?? product?.discount ?? 0,
+    cat: parsed?.category_id ?? product?.cat ?? "",
   };
 
   if (!parsed?.img) {
-    defaultValues.image = null;
+    defaultValues.cover = {} as File;
   }
+  if (product?.cover) {
+    defaultValues.cover = product.cover;
+  }
+  /* END */
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -110,7 +104,6 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
   });
 
   const isPack = form.watch("is_pack");
-  // console.log(isPack);
 
   const {
     fields: prods,
@@ -122,33 +115,7 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // setProduct(values);
-
-    const {
-      name,
-      desc,
-      advantages,
-      image,
-      price,
-      is_pack,
-      is_robot,
-      products,
-      discount,
-      cat,
-    } = values;
-
-    setProduct({
-      name,
-      image,
-      desc,
-      advantages,
-      price,
-      is_pack,
-      is_robot,
-      products,
-      discount,
-      cat,
-    });
+    setProduct(values);
 
     router.push("add/preview");
   }
@@ -157,20 +124,23 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[30px]">
           {parsed?.img && !isSwitchOn ? (
-            <>
+            <div className="flex flex-col space-y-2">
+              <span className="block text-[12px] font-medium uppercase ">
+                Обложка
+              </span>
               <Image
                 src={`${parsed?.img}`}
                 width={200}
                 height={100}
                 alt={parsed?.name}
-                className="w-[200px] h-[100px] object-cover cursor-not-allowed"
+                className="w-[200px] h-[100px] object-cover rounded-[5px] cursor-not-allowed"
                 onClick={() => setSwitchOn(true)}
               />
-            </>
+            </div>
           ) : (
             <FormField
               control={form.control}
-              name="image"
+              name="cover"
               render={({ field: { value, ...field } }) => (
                 <FormItem>
                   <FormLabel className="mb-5">Обложка</FormLabel>

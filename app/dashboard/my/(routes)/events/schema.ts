@@ -52,7 +52,7 @@ const eventFormSchema = z.object({
 export interface EventValues {
   name: string;
   desc: string;
-  type: EventType;
+  type: EvtType;
   date: Date;
   cover?: File;
   media_blocks: {

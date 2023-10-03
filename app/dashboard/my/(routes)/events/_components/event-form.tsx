@@ -56,7 +56,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
   const router = useRouter();
   const { toast } = useToast();
   const { event, setEvent } = useContext(EventContext);
-  const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
+  const [selectedCover, setSelectedCover] = useState<boolean>(false);
 
   /* START */
   let defaultValues: EventValues = {
@@ -66,7 +66,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
       ? parsed?.is_online
         ? "online"
         : "offline"
-      : event?.type ?? "offline") as EventType,
+      : event?.type ?? "offline") as EvtType,
     date: parsed?.timestamp
       ? new Date(parsed.timestamp * 1000)
       : event?.date ?? new Date(),
@@ -255,17 +255,20 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
               </FormItem>
             )}
           />
-          {parsed?.img_url && !isSwitchOn ? (
-            <>
+          {parsed?.img_url && !selectedCover ? (
+            <div className="flex flex-col space-y-2">
+              <span className="block text-[12px] font-medium uppercase ">
+                Обложка
+              </span>
               <Image
                 src={`${parsed?.img_url}`}
                 width={200}
                 height={100}
                 alt={parsed?.name}
-                className="w-[200px] h-[100px] object-cover cursor-not-allowed"
-                onClick={() => setSwitchOn(true)}
+                className="w-[200px] h-[100px] object-cover rounded-[5px] cursor-not-allowed"
+                onClick={() => setSelectedCover(true)}
               />
-            </>
+            </div>
           ) : (
             <FormField
               control={form.control}
@@ -319,30 +322,44 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
                   </div>
                 )}
 
-                {field.media && (
-                  <div className="flex gap-5 items-center">
-                    <FormField
-                      control={form.control}
-                      name={`media_blocks.${idx}.media`}
-                      render={({ field: { value, ...field } }) => (
-                        <FormItem className="w-full">
-                          <FormLabel className="mb-5">Медиафайл</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="file"
-                              {...field}
-                              onChange={(e) => {
-                                if (!e.target.files) return;
-                                field.onChange(e.target.files[0]);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
+                {field.media &&
+                  (parsed?.media_blocks[idx]?.media?.url ? (
+                    <div className="flex flex-col space-y-2">
+                      <span className="block text-[12px] font-medium uppercase ">
+                        Медиафайл
+                      </span>
+                      <Image
+                        src={`${parsed.media_blocks[idx]?.media?.url}`}
+                        width={200}
+                        height={100}
+                        alt={parsed?.name}
+                        className="w-[200px] h-[100px] object-cover rounded-[5px]"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex gap-5 items-center">
+                      <FormField
+                        control={form.control}
+                        name={`media_blocks.${idx}.media`}
+                        render={({ field: { value, ...field } }) => (
+                          <FormItem className="w-full">
+                            <FormLabel className="mb-5">Медиафайл</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="file"
+                                {...field}
+                                onChange={(e) => {
+                                  if (!e.target.files) return;
+                                  field.onChange(e.target.files[0]);
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           ))}

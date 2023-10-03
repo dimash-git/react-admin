@@ -38,7 +38,7 @@ const PreviewPage = () => {
   const {
     name,
     desc,
-    image,
+    cover,
     advantages,
     price,
     discount,
@@ -63,11 +63,11 @@ const PreviewPage = () => {
       advantages,
     };
 
-    if (image) {
+    if (cover) {
       try {
-        const base64String = await fileToBase64(image);
+        const base64String = await fileToBase64(cover);
         formData.img_base64 = base64String as string;
-        formData.img_type = getFileType(image.type);
+        formData.img_type = getFileType(cover.type);
       } catch (error) {
         console.log(`Error: ${error}`);
       }
@@ -106,12 +106,12 @@ const PreviewPage = () => {
         {/* Card */}
         <div className="flex flex-col rounded-[20px] bg-thDark p-5 h-max">
           <div className="card__cover relative">
-            {product?.image && (
+            {product?.cover && (
               <Image
                 width={400}
                 height={263}
                 alt="Image"
-                src={URL.createObjectURL(product.image as File)}
+                src={URL.createObjectURL(product.cover)}
                 className="w-full rounded-[5px] h-[263px] object-cover"
               />
             )}

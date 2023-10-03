@@ -22,6 +22,8 @@ function MultiSelect({
   label?: string;
   defaultValue?: string;
 }) {
+  console.log(options);
+
   const FRAMEWORKS = options;
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);

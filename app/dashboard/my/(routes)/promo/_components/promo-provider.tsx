@@ -1,16 +1,17 @@
 import React, { createContext, useState } from "react";
+import { PromoValues } from "../schema";
 
 interface _PromoContext {
-  promo: PromoForm;
-  setPromo: React.Dispatch<React.SetStateAction<PromoForm>>;
+  promo: PromoValues;
+  setPromo: React.Dispatch<React.SetStateAction<PromoValues>>;
 }
 
 const PromoContext = createContext<_PromoContext>({} as _PromoContext);
 
 const PromoProvider = ({ children }: { children: React.ReactNode }) => {
-  const [promo, setPromo] = useState<PromoForm>({
+  const [promo, setPromo] = useState<PromoValues>({
     name: "",
-  } as PromoForm);
+  } as PromoValues);
 
   return (
     <PromoContext.Provider value={{ promo, setPromo }}>

@@ -16,12 +16,12 @@ import { Button } from "@/components/ui/button";
 
 import { useRouter } from "next/navigation";
 
-import TagsFormSchema from "../schema";
+import formSchema from "../schema";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { homeBaseUrl } from "../../../../nav";
 
-const TagsForm = ({ parsed }: { parsed?: Tags }) => {
+const TagForm = ({ parsed }: { parsed?: NewsTag }) => {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -29,14 +29,14 @@ const TagsForm = ({ parsed }: { parsed?: Tags }) => {
     name: parsed?.name ?? "",
   };
 
-  const form = useForm<z.infer<typeof TagsFormSchema>>({
-    resolver: zodResolver(TagsFormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues,
   });
 
   const { isLoading, isSubmitting } = form.formState;
 
-  async function onSubmit(values: z.infer<typeof TagsFormSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const { name } = values;
     const res = await axios.post("/api/news/tags/add", {
       name,
@@ -59,7 +59,7 @@ const TagsForm = ({ parsed }: { parsed?: Tags }) => {
     });
 
     router.refresh();
-    router.push(`${homeBaseUrl}/tags`);
+    router.push(`${homeBaseUrl}/news/tags`);
   }
   return (
     <div>
@@ -97,4 +97,4 @@ const TagsForm = ({ parsed }: { parsed?: Tags }) => {
   );
 };
 
-export default TagsForm;
+export default TagForm;
