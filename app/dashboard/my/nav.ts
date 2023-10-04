@@ -138,21 +138,21 @@ export const homeSections = {
           },
         ],
       },
-      {
-        name: "Статьи",
-        links: [
-          {
-            name: "Создать статью",
-            icon: Plus,
-            to: homeBaseUrl + "/support/articles/add",
-          },
-          // {
-          //   name: "Все статьти",
-          //   icon: ArrowRight,
-          //   to: homeBaseUrl + "/support/articles",
-          // },
-        ],
-      },
+      // {
+      //   name: "Статьи",
+      //   links: [
+      //     {
+      //       name: "Создать статью",
+      //       icon: Plus,
+      //       to: homeBaseUrl + "/support/articles/add",
+      //     },
+      //     {
+      //       name: "Все статьти",
+      //       icon: ArrowRight,
+      //       to: homeBaseUrl + "/support/articles",
+      //     },
+      //   ],
+      // },
     ],
   },
 };
