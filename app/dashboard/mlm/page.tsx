@@ -54,8 +54,10 @@ const Page = async ({
 
   // console.log(content);
 
-  const { qualifications, count }: { qualifications: Mlm[]; count: number } =
-    content;
+  const {
+    qualifications,
+    count,
+  }: { qualifications: MlmList[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">

@@ -8,6 +8,8 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
 
 import Card from "./_components/card";
+import Tabs from "@/components/tabs";
+import { p2pTabs } from "../../nav";
 
 const Page = async ({
   searchParams,
@@ -44,18 +46,22 @@ const Page = async ({
     next: { tags: ["appeals"] },
   });
 
-  // if (!response.ok) {
-  //   return <div>Ошибка загрузки списка</div>;
-  // }
+  if (!response.ok) {
+    return <div>Ошибка загрузки списка</div>;
+  }
 
   const data = await response.json();
+  console.log(data);
+
   const { content } = data;
 
-  const { appeals, count }: { appeals: Appeal[]; count: number } = content;
+  const { appeals, count }: { appeals: AppealList[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
+      <Tabs links={p2pTabs.appeals_complaints} />
+
       <div className="flex flex-col space-y-[30px]">
         {appeals.map((appeal, idx) => (
           <Card key={idx} card={appeal} />
@@ -63,9 +69,10 @@ const Page = async ({
       </div>
 
       {/* PAGINATION */}
-      <div>
+
+      {count > 0 && (
         <Pagination count={count} currPage={currPage} pageSize={pageSize} />
-      </div>
+      )}
     </div>
   );
 };

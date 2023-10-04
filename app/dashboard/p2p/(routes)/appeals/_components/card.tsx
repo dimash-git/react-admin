@@ -6,7 +6,7 @@ import { p2pBaseUrl } from "../../../nav";
 import { Button } from "@/components/ui/button";
 import PinIcon from "@/public/icons/pin.svg";
 
-const Card = ({ card }: { card: Appeal }) => {
+const Card = ({ card }: { card: AppealList }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex items-center space-x-[20px] max-w-[280px] w-full">

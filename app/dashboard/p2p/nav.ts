@@ -5,7 +5,7 @@ export const p2pTabs = {
     {
       to: p2pBaseUrl + "/appeals",
       slug: "appeals",
-      name: "Все мероприятия",
+      name: "апелляции",
     },
     {
       to: p2pBaseUrl + "/complaints",

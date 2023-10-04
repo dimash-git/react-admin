@@ -135,12 +135,12 @@ interface Passport {
   user_id: string;
 }
 
-interface Mlm {
+interface MlmList {
   qualification_id: string;
   name: string;
 }
 
-interface MlmDetails {
+interface Mlm {
   qualification_id: string;
   name: string;
   team_sales: number;
@@ -159,10 +159,26 @@ interface WithdrawalInvoice {
   network: string;
 }
 
-interface Appeal {
+interface AppealList {
   appeal_id: string;
   user_id: string;
   user_login: string;
   is_fixed: false;
+  create_timestamp: number;
+}
+
+interface Appeal {
+  user_order_owner_id: string;
+  user_offer_owner_id: string;
+  order_id: string;
+  offer_id: string;
+  appeal_id: string;
+  appeal_owner_id: string;
+  reason: string;
+  description: string;
+  media_data: [];
+  order_contact: [Object];
+  offer_contact: [Object];
+  comments: null;
   create_timestamp: number;
 }

@@ -1,12 +1,8 @@
 "use client";
 
 import CardAction from "@/components/card-action";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useContext } from "react";
 
-const Card = ({ card }: { card: Mlm }) => {
+const Card = ({ card }: { card: MlmList }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">

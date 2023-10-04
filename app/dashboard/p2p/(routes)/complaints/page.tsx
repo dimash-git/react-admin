@@ -46,9 +46,9 @@ const Page = async ({
     next: { tags: ["complaints"] },
   });
 
-  // if (!response.ok) {
-  //   return <div>Ошибка загрузки списка</div>;
-  // }
+  if (!response.ok) {
+    return <div>Ошибка загрузки списка</div>;
+  }
 
   const data = await response.json();
 

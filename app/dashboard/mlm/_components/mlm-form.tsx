@@ -23,7 +23,7 @@ import axios from "axios";
 import { mlmBaseUrl } from "../nav";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const MlmForm = ({ parsed }: { parsed?: MlmDetails }) => {
+const MlmForm = ({ parsed }: { parsed?: Mlm }) => {
   const router = useRouter();
   const { toast } = useToast();
 

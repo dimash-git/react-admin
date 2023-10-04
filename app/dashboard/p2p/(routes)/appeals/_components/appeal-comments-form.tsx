@@ -1,5 +1,9 @@
 "use client";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
 import {
   Form,
   FormControl,
@@ -8,35 +12,31 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import { Textarea } from "@/components/ui/textarea";
 
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-
 const formSchema = z.object({
-  name: z.string().min(3, {
+  comments: z.string().min(10, {
     message: "Введите название",
   }),
 });
 
-const BankForm = ({
-  setOpen,
-  parsed,
+const AppealCommentsForm = ({
+  comments,
+  id,
 }: {
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  parsed?: Bank;
+  comments?: string;
+  id: string;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
 
   const defaultValues = {
-    name: parsed?.name ?? "",
+    comments,
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,10 +47,10 @@ const BankForm = ({
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await axios.post(
-      `/api/bank/${parsed ? "update" : "add"}`,
-      parsed ? { ...values, id: parsed.bank_id } : values
-    );
+    const res = await axios.post("/api/appeal/comments/save", {
+      ...values,
+      id,
+    });
 
     // console.log("Response:", res.data);
 
@@ -58,17 +58,16 @@ const BankForm = ({
     if (status != 200) {
       toast({
         variant: "destructive",
-        title: `Ошибка при ${parsed?.name ? "обновлении" : "добавлении"} банк`,
+        title: "Ошибка при сохранении комментариев",
       });
       return;
     }
 
     toast({
       variant: "success",
-      title: `Банк ${parsed?.name ? "обновлен" : "добавлен"} успешно!`,
+      title: "Комментарии сохранены успешно!",
     });
 
-    setOpen(false);
     router.refresh();
   }
   return (
@@ -77,12 +76,12 @@ const BankForm = ({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormField
             control={form.control}
-            name="name"
+            name="comments"
             render={({ field }) => (
               <FormItem className="space-y-5">
-                <FormLabel>название банка</FormLabel>
+                <FormLabel>Комментарии</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea rows={7} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,20 +90,11 @@ const BankForm = ({
 
           <div className="flex gap-ten w-full justify-between">
             <Button
-              variant="form"
-              type="button"
-              onClick={() => setOpen(false)}
-              className="w-full"
-            >
-              Отмена
-            </Button>
-            <Button
               variant="formSubmit"
               type="submit"
               disabled={isLoading || isSubmitting}
-              className="w-full"
             >
-              Сохранить
+              Сохранить Комментарии
             </Button>
           </div>
         </form>
@@ -113,4 +103,4 @@ const BankForm = ({
   );
 };
 
-export default BankForm;
+export default AppealCommentsForm;
