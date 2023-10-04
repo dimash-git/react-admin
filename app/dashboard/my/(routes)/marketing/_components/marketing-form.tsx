@@ -52,9 +52,9 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
 
   if (parsed?.img_url) {
     fetch(parsed.img_url).then(async (response) => {
-      const contentType = response.headers.get("content-type");
+      // const contentType = response.headers.get("content-type");
       const blob = await response.blob();
-      const file = new File([blob], fileName, { contentType });
+      const file = new File([blob], fileName);
       // access file here
       console.log(file);
     });
