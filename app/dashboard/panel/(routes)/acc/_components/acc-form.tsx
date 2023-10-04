@@ -32,7 +32,7 @@ import { useRouter } from "next/navigation";
 import { panelBaseUrl } from "../../../nav";
 import MultiSelect from "@/components/multiselect";
 
-const AccForm = ({ parsed }: { parsed: any }) => {
+const AccForm = ({ parsed }: { parsed?: any }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [favorites, setFavorites] = useState([]);
