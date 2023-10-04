@@ -55,7 +55,6 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
       // const contentType = response.headers.get("content-type");
       const blob = await response.blob();
       const file = new File([blob], fileName);
-      // access file here
       console.log("file", file);
     });
   }
