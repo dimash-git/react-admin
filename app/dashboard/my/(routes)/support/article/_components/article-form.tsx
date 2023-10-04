@@ -32,9 +32,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { homeBaseUrl } from "@/app/dashboard/my/nav";
 import AddFieldsPanel from "./add-fields-panel";
-import { convertMediaBlockToBase64 } from "@/lib/utils";
+import { convertMediaBlockToBase64, mapMediaBlocks } from "@/lib/utils";
+import Image from "next/image";
 
-const ArticleForm = ({ parsed }: { parsed?: Question }) => {
+const ArticleForm = ({ parsed }: { parsed?: Article }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [cats, setCats] = useState<QuestionCat[]>([]);
@@ -57,7 +58,12 @@ const ArticleForm = ({ parsed }: { parsed?: Question }) => {
 
   const defaultValues = {
     question: parsed?.question ?? "",
+    media_blocks: parsed?.media_blocks
+      ? mapMediaBlocks(parsed?.media_blocks)
+      : [],
+    cat: parsed?.category_id ?? "",
   };
+  console.log(parsed);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -196,30 +202,44 @@ const ArticleForm = ({ parsed }: { parsed?: Question }) => {
                   </div>
                 )}
 
-                {field.media && (
-                  <div className="flex gap-5 items-center">
-                    <FormField
-                      control={form.control}
-                      name={`media_blocks.${idx}.media`}
-                      render={({ field: { value, ...field } }) => (
-                        <FormItem className="w-full">
-                          <FormLabel className="mb-5">Медиафайл</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="file"
-                              {...field}
-                              onChange={(e) => {
-                                if (!e.target.files) return;
-                                field.onChange(e.target.files[0]);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                )}
+                {field.media &&
+                  (parsed?.media_blocks[idx]?.media?.url ? (
+                    <div className="flex flex-col space-y-2">
+                      <span className="block text-[12px] font-medium uppercase ">
+                        Медиафайл
+                      </span>
+                      <Image
+                        src={`${parsed.media_blocks[idx]?.media?.url}`}
+                        width={200}
+                        height={100}
+                        alt={`Медиафайл - ${idx}`}
+                        className="w-[200px] h-[100px] object-cover rounded-[5px]"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex gap-5 items-center">
+                      <FormField
+                        control={form.control}
+                        name={`media_blocks.${idx}.media`}
+                        render={({ field: { value, ...field } }) => (
+                          <FormItem className="w-full">
+                            <FormLabel className="mb-5">Медиафайл</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="file"
+                                {...field}
+                                onChange={(e) => {
+                                  if (!e.target.files) return;
+                                  field.onChange(e.target.files[0]);
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           ))}

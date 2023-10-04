@@ -58,7 +58,7 @@ const SubCategoriesPage = async ({
     throw new Error("Error Loading Categories");
   }
 
-  const { categories, count }: { categories: SupportCat[]; count: number } =
+  const { categories, count }: { categories: QuestionCat[]; count: number } =
     content;
 
   return (

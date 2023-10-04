@@ -29,7 +29,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 
-const QAForm = ({ parsed }: { parsed?: Question }) => {
+const QuestionForm = ({ parsed }: { parsed?: Question }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [cats, setCats] = useState<QuestionCat[]>([]);
@@ -51,6 +51,7 @@ const QAForm = ({ parsed }: { parsed?: Question }) => {
   const defaultValues = {
     question: parsed?.question ?? "",
     answer: parsed?.answer ?? "",
+    cat: parsed?.category_id ?? "",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -172,4 +173,4 @@ const QAForm = ({ parsed }: { parsed?: Question }) => {
   );
 };
 
-export default QAForm;
+export default QuestionForm;

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 
 const ArticleDelButton = ({ id }: { id: string }) => {
   const { toast } = useToast();
@@ -31,6 +32,7 @@ const ArticleDelButton = ({ id }: { id: string }) => {
     });
 
     router.refresh();
+    router.push(`${homeBaseUrl}/support`);
   };
 
   return (

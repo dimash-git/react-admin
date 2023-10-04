@@ -18,25 +18,24 @@ const SubCategoriesPage = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  // const res = await axiosBack.post(
-  //   "/support/get_article",
-  //   {
-  //     question_id: searchParams?.question_id,
-  //   },
-  //   {
-  //     headers: {
-  //       Authorization: apiKey,
-  //     },
-  //   }
-  // );
+  const res = await axiosBack.post(
+    "/support/get_article",
+    {
+      question_id: searchParams?.question_id,
+    },
+    {
+      headers: {
+        Authorization: apiKey,
+      },
+    }
+  );
 
-  // const { status, content } = res.data;
-  // console.log(content);
+  // console.log(res.data);
+  const { status, content } = res.data;
 
-  // if (status.code != 200) return <div>Ошибка загрузки поста</div>;
+  if (status.code != 200) return <div>Ошибка загрузки поста</div>;
 
-  // const { article } = content;
-  const article = false;
+  const { article } = content;
 
   return (
     <>
@@ -47,7 +46,7 @@ const SubCategoriesPage = async ({
             : "Создать статью"
         }
       />
-      <ArticleDelButton id="" />
+      {article && <ArticleDelButton id={article.question_id} />}
       {article ? <ArticleForm parsed={article} /> : <ArticleForm />}
     </>
   );

@@ -52,7 +52,7 @@ interface NewsTag {
   name: string;
 }
 
-interface SupportCat {
+interface QuestionCat {
   category_id: string;
   name: string;
   img?: string;
@@ -97,14 +97,24 @@ interface ProductCat {
 
 interface Question {
   question_id: string;
+  article_id: string;
+  category_id: string;
   question: string;
   answer: string;
-  article_id?: string;
 }
 
-interface QuestionCat {
+interface Article {
   category_id: string;
-  name: string;
+  question_id: string;
+  article_id: string;
+  question: string;
+  media_blocks: {
+    text?: string;
+    media?: {
+      type: string;
+      url: string;
+    };
+  }[];
 }
 
 interface Country {

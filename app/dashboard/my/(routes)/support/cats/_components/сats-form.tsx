@@ -29,7 +29,7 @@ interface DefValues {
   icon?: null;
 }
 
-const CatsForm = ({ parsed }: { parsed?: SupportCat }) => {
+const CatsForm = ({ parsed }: { parsed?: QuestionCat }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [isSwitchOn, setSwitchOn] = useState<boolean>(false);

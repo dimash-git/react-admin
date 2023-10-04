@@ -1,7 +1,7 @@
 import Image from "next/image";
 import CardAction from "@/components/card-action";
 
-const Card = ({ card }: { card: SupportCat }) => {
+const Card = ({ card }: { card: QuestionCat }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
