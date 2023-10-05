@@ -18,6 +18,8 @@ import { signIn } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 
 const SignInPage = () => {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,7 +29,7 @@ const SignInPage = () => {
     },
   });
 
-  const { toast } = useToast();
+  const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { username: login, password, code } = values;
@@ -51,6 +53,7 @@ const SignInPage = () => {
       });
     }
   }
+
   return (
     <div className="flex flex-col space-y-[20px]">
       <h3 className="text-[20px] text-gray text-center block border-b-[1px] border-b-[#0072FF] pb-5">
@@ -98,7 +101,13 @@ const SignInPage = () => {
               </FormItem>
             )}
           />
-          <Button variant="submit" size="md" type="submit" className="w-full">
+          <Button
+            variant="submit"
+            size="md"
+            type="submit"
+            className="w-full"
+            disabled={isLoading || isSubmitting}
+          >
             Вход
           </Button>
         </form>

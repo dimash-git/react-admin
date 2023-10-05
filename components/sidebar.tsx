@@ -16,12 +16,12 @@ import StyledIcon from "./styled-icon";
 const Sidebar = () => {
   const pathname = usePathname();
   const shrinked = useAppSelector((state) => state.sidebar.shrinked);
-  // const shrinked = false
   const dispatch = useAppDispatch();
 
   const toggleSidebar = () => {
     dispatch(toggle());
   };
+
   return (
     <div
       className={cn(
@@ -30,7 +30,6 @@ const Sidebar = () => {
         shrinked ? null : "w-full"
       )}
     >
-      {/* {shrinked ? "shrinked" : "not shrinked"} */}
       <button
         className="flex gap-4 items-center rounded-[5px] transition hover:text-thBlue"
         onClick={toggleSidebar}
@@ -50,7 +49,7 @@ const Sidebar = () => {
           key={idx}
           className={cn(
             "flex items-center gap-4 rounded-[5px] px-2 py-[6px] transition hover:bg-[#2D3D52] hover:text-thBlue",
-            pathname === menuItem.to ? "bg-[#2D3D52] text-thBlue" : null
+            pathname.includes(menuItem.to) ? "bg-[#2D3D52] text-thBlue" : null
           )}
           href={menuItem.to}
         >
