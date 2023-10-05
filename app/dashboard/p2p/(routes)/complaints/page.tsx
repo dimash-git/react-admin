@@ -32,41 +32,77 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/p2p_complain/get_complains", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: apiKey,
-    },
-    body: JSON.stringify({
-      skip,
-      limit: pageSize,
-      is_fixed: false,
-    }),
-    next: { tags: ["complaints"] },
-  });
+  let complaints: ComplaintList[] = [];
+  let count: number = 0;
+  try {
+    const fixed_response = await fetch(
+      BACKEND_URL + "/p2p_complain/get_fixed_complains",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: apiKey,
+        },
+        body: JSON.stringify({
+          skip,
+          limit: pageSize,
+        }),
+        next: { tags: ["fixed_complaints"] },
+      }
+    );
 
-  if (!response.ok) {
-    return <div>Ошибка загрузки списка</div>;
+    if (!fixed_response.ok) {
+      throw new Error("Не удалось получить закфиксированные жалобы");
+    }
+
+    const non_fixed_response = await fetch(
+      BACKEND_URL + "/p2p_complain/get_complains",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: apiKey,
+        },
+        body: JSON.stringify({
+          skip,
+          limit: pageSize,
+          is_fixed: false,
+        }),
+        next: { tags: ["non_foxed_complaints"] },
+      }
+    );
+
+    if (!non_fixed_response.ok) {
+      throw new Error("Не удалось получить незакфиксированные жалобы");
+    }
+
+    // Combine fixed and non fixed appeals.
+    // There was a need for backend devs to make separate endpoint not single
+    const non_fixed_data = await non_fixed_response.json();
+    const fixed_data = await fixed_response.json();
+
+    complaints = [
+      ...non_fixed_data.content.complains,
+      ...fixed_data.content.complains,
+    ];
+
+    console.log(complaints);
+
+    count = non_fixed_data.content.count + fixed_data.content.count;
+
+    complaints.sort((a, b) => b.create_timestamp - a.create_timestamp);
+  } catch (error: unknown) {
+    return <div>Ошибка загрузки списка: {String(error)}</div>;
   }
-
-  const data = await response.json();
-
-  const { status, content } = data;
-
-  console.log("data", data);
-
-  // const { countries, count }: { countries: Country[]; count: number } = content;
-
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
       <Tabs links={p2pTabs.appeals_complaints} />
-      {/* <div className="flex flex-col space-y-[30px]">
-        {countries.map((country, idx) => (
-          <Card key={idx} card={country} />
+      <div className="flex flex-col space-y-[30px]">
+        {complaints.map((complaint, idx) => (
+          <Card key={idx} card={complaint} />
         ))}
-      </div> */}
+      </div>
 
       {/* PAGINATION */}
       <div>

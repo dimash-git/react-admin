@@ -155,6 +155,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
                     onValueChange={field.onChange}
                     label="тэги"
                     defaultValue={field.value}
+                    byLabel={true}
                   />
                 </FormControl>
                 <FormMessage />

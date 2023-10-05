@@ -3,6 +3,7 @@
 import CountriesForm from "./countries-form";
 import ModalDelete from "@/components/modal-delete";
 import ModalPost from "@/components/modal-post";
+import { Button } from "@/components/ui/button";
 
 const Card = ({ card }: { card: Country }) => {
   return (
@@ -22,9 +23,14 @@ const Card = ({ card }: { card: Country }) => {
 
       <div className="flex gap-ten items-center">
         <ModalPost Form={CountriesForm} title="Изменить страну" card={card}>
-          <span className="inline-flex items-center justify-center rounded-[5px] text-sm ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-thBlue text-[thGray] text-[12px] leading-[14px] font-bold hover:bg-thBlue/80 h-[25px] py-[5px] px-5">
-            Редактировать
-          </span>
+          <Button
+            asChild
+            variant="formSubmit"
+            size="md"
+            className="text-[16px] h-10"
+          >
+            <span>Редактировать</span>
+          </Button>
         </ModalPost>
         <ModalDelete
           id={card?.country_id}

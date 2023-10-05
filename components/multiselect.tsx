@@ -16,26 +16,28 @@ function MultiSelect({
   onValueChange,
   label,
   defaultValue,
+  byLabel,
 }: {
   options: Framework[];
   onValueChange: (value: string) => void;
   label?: string;
   defaultValue?: string;
+  byLabel?: boolean;
 }) {
-  console.log(options);
+  // console.log(options);
 
   const FRAMEWORKS = options;
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(false);
 
   const stringValuesToArray = defaultValue?.split(",");
-  // console.log("stringValuesToArray", stringValuesToArray);
+  console.log("stringValuesToArray", stringValuesToArray);
   // console.log("options", options);
 
   const selectValues = options.filter((obj) =>
     stringValuesToArray?.includes(obj.label)
   );
-  // console.log("selectValues", selectValues);
+  console.log("selectValues", selectValues);
 
   const [selected, setSelected] = React.useState<Framework[]>(
     selectValues ?? []
@@ -111,7 +113,7 @@ function MultiSelect({
             onValueChange={setInputValue}
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
-            placeholder={`Выберите ${label ? label : "опции"}`}
+            placeholder={label && `Выберите ${label ?? "опции"}`}
             className="ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
           />
         </div>
@@ -131,8 +133,15 @@ function MultiSelect({
                     onSelect={(value) => {
                       setInputValue("");
                       setSelected((prev) => [...prev, framework]);
-                      const frValues = selected.map((fr) => fr.label);
-                      onValueChange([...frValues, framework.label].join(","));
+                      const frValues = selected.map((fr) =>
+                        byLabel ? fr.label : fr.value
+                      );
+                      onValueChange(
+                        [
+                          ...frValues,
+                          byLabel ? framework.label : framework.value,
+                        ].join(",")
+                      );
                     }}
                     className={"cursor-pointer"}
                   >

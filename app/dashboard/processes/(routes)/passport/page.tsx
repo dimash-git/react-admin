@@ -6,11 +6,8 @@ import { BACKEND_URL } from "@/lib/serverConstants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
-import ModalPost from "@/components/modal-post";
 
 import Card from "./_components/card";
-import FiatForm from "./_components/passport-form";
-import { Button } from "@/components/ui/button";
 
 const Page = async ({
   searchParams,

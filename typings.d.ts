@@ -187,8 +187,21 @@ interface Appeal {
   reason: string;
   description: string;
   media_data: [];
-  order_contact: [Object];
-  offer_contact: [Object];
+  order_contact: {
+    email: string;
+    phone: string;
+    telegram: string;
+  };
+  offer_contact: {
+    email: string;
+    phone: string;
+    telegram: string;
+  };
   comments: null;
+  create_timestamp: number;
+}
+
+interface ComplaintList {
+  complaint_id: string;
   create_timestamp: number;
 }

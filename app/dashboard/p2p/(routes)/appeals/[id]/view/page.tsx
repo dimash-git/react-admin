@@ -3,10 +3,23 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { AppealViewItem } from "../../_components/appeal-view";
-import MediaPhotoIcon from "@/public/icons/media-photo.svg";
+
+import {
+  AppealContactItem,
+  AppealOrderItem,
+} from "../../_components/appeal-view";
 import AppealCommentsForm from "../../_components/appeal-comments-form";
+
+import EmailIcon from "@/public/icons/email.svg";
+import TgIcon from "@/public/icons/telegram.svg";
+import PhoneIcon from "@/public/icons/phone.svg";
+
 import { unixToReadableDate } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import AppealCloseModal from "../../_components/appeal-close-modal";
+import AppealCloseForm from "../../_components/appeal-close-form";
+import Link from "next/link";
+import { p2pBaseUrl } from "@/app/dashboard/p2p/nav";
 
 const ViewPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -28,17 +41,13 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
     }
   );
 
-  console.log(res.data);
-
   const { content, status } = res.data;
 
-  console.log(res.data);
+  // console.log(res.data);
 
   if (status.code != 200) return <>Ошибка загрузки поста</>;
 
   const { appeals: appeal }: { appeals: Appeal } = content;
-  console.log(appeal.order_contact, appeal.offer_contact);
-
   // backend wrong name for single appeal
 
   const viewItems = [
@@ -50,17 +59,50 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
     { label: "id владельца апелляции", value: appeal?.appeal_owner_id },
   ];
 
+  const orderContactItems = [
+    {
+      icon: EmailIcon,
+      value: appeal?.order_contact?.email,
+    },
+    {
+      icon: PhoneIcon,
+      value: appeal?.order_contact?.phone,
+    },
+    {
+      icon: TgIcon,
+      value: appeal?.order_contact?.telegram,
+    },
+  ];
+
+  const offerContactItems = [
+    {
+      icon: EmailIcon,
+      value: appeal?.offer_contact?.email,
+    },
+    {
+      icon: PhoneIcon,
+      value: appeal?.offer_contact?.phone,
+    },
+    {
+      icon: TgIcon,
+      value: appeal?.offer_contact?.telegram,
+    },
+  ];
+
   return (
     <>
       <Breadcrumbs customLabel={`ID апелляции: ${id}`} slice={2} />
 
       <div className="grid grid-cols-2 gap-y-[30px]">
         {viewItems?.map((item, idx) => (
-          <AppealViewItem key={idx} label={item.label} value={item.value} />
+          <AppealOrderItem key={idx} label={item.label} value={item.value} />
         ))}
       </div>
-      <AppealViewItem label="Причина подачи апелляции" value={appeal?.reason} />
-      <AppealViewItem
+      <AppealOrderItem
+        label="Причина подачи апелляции"
+        value={appeal?.reason}
+      />
+      <AppealOrderItem
         label="Пояснение от создателя апелляции"
         value={appeal?.description}
       />
@@ -78,7 +120,7 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
         comments={appeal?.comments ?? ""}
         id={appeal?.appeal_id}
       />
-      <AppealViewItem
+      <AppealOrderItem
         label="дата создания апелляции"
         value={
           appeal?.create_timestamp
@@ -86,6 +128,58 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
             : ""
         }
       />
+      <div className="grid grid-cols-2">
+        <div className="flex flex-col space-y-5">
+          <span className="font-medium text-[12px] leading-3 uppercase">
+            Контакты владельца ордера
+          </span>
+          <div className="flex flex-col space-y-[10px]">
+            {orderContactItems.map((contact, idx) =>
+              contact.value ? (
+                <AppealContactItem
+                  key={idx}
+                  Icon={contact.icon}
+                  value={contact.value}
+                />
+              ) : null
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col space-y-5">
+          <span className="font-medium text-[12px] leading-3 uppercase">
+            Контакты владельца оффера
+          </span>
+          <div className="flex flex-col space-y-[10px]">
+            {offerContactItems.map((contact, idx) =>
+              contact.value ? (
+                <AppealContactItem
+                  key={idx}
+                  Icon={contact.icon}
+                  value={contact.value}
+                />
+              ) : null
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-[10px] items-center">
+        <Button variant="form" type="button" asChild>
+          <Link href={`${p2pBaseUrl}/appeals`} className="mt-[2px]">
+            Отмена
+          </Link>
+        </Button>
+        <AppealCloseModal
+          Form={AppealCloseForm}
+          title={`Закрыть апелляцию ${appeal?.appeal_id}`}
+          maxWidth="max-w-[520px]"
+          parsed={appeal}
+        >
+          <Button asChild variant="formSubmit">
+            <span>Закрыть аппеляцию</span>
+          </Button>
+        </AppealCloseModal>
+      </div>
     </>
   );
 };

@@ -63,7 +63,7 @@ const ArticleForm = ({ parsed }: { parsed?: Article }) => {
       : [],
     cat: parsed?.category_id ?? "",
   };
-  console.log(parsed);
+  // console.log(parsed);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
