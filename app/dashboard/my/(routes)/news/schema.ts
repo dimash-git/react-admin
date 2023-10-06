@@ -42,6 +42,7 @@ const newsFormSchema = z.object({
 });
 
 export interface NewsSendData {
+  news_id?: string;
   name: string;
   tags: string[];
   desc: string;

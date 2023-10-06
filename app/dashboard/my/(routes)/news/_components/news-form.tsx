@@ -103,6 +103,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
       let formData: NewsSendData = {
         tags: tags.split(","),
         media_blocks: mediaBlocksWithBase64,
+        news_id: parsed?.news_id,
         ...restValues,
       };
 

@@ -40,7 +40,7 @@ const formSchema = z.object({
 });
 
 export interface MarketingSendData {
-  marketing_id: string;
+  marketing_id?: string;
   name: string;
   desc: string;
   img_data_base64?: string;
