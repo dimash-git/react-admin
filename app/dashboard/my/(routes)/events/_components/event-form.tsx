@@ -6,7 +6,7 @@ import CrossCircleIcon from "@/public/icons/cross-circle.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import formSchema, { EventSendData, EventValues } from "../schema";
+import formSchema, { EventSendData } from "../schema";
 import { format } from "date-fns";
 
 import {
@@ -59,7 +59,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
   const [selectedCover, setSelectedCover] = useState<boolean>(false);
 
   /* START */
-  let defaultValues: EventValues = {
+  let defaultValues: z.infer<typeof formSchema> = {
     name: parsed?.name ?? event?.name ?? "",
     desc: parsed?.desc ?? event?.desc ?? "",
     type: (parsed?.is_online != null
@@ -97,51 +97,50 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (parsed) {
-      const { name, desc, date, type, media_blocks, cover } = values;
-      const mediaBlocksWithBase64 = await Promise.all(
-        media_blocks.map(convertMediaBlockToBase64)
-      );
-      const formData: EventSendData = {
-        name,
-        desc,
-        timestamp: dateToUnix(date),
-        is_online: type == "online" ? true : false,
-        media_blocks: mediaBlocksWithBase64,
-        event_id: parsed.event_id,
-      };
+      const { date, type, media_blocks, cover, ...restValues } = values;
+      try {
+        const mediaBlocksWithBase64 = await Promise.all(
+          media_blocks.map(convertMediaBlockToBase64)
+        );
+        const sendData: EventSendData = {
+          ...restValues,
+          timestamp: dateToUnix(date),
+          is_online: type == "online" ? true : false,
+          media_blocks: mediaBlocksWithBase64,
+          event_id: parsed.event_id,
+        };
 
-      if (cover) {
-        try {
+        if (cover) {
           const base64String = await fileToBase64(cover);
-          formData.img_data_base64 = base64String as string;
-          formData.img_type = getFileType(cover.type);
-        } catch (error: any) {
-          console.log(`Error: ${error}`);
+          sendData.img_data_base64 = base64String as string;
+          sendData.img_type = getFileType(cover.type);
         }
-      }
+        console.log(sendData);
 
-      const res = await axios.post("/api/event/update", formData);
+        const res = await axios.post("/api/event/update", sendData);
 
-      const { status } = res.data;
-      if (status != 200) {
+        const { status } = res.data;
+        if (status !== 200) {
+          throw new Error("Error updating event");
+        }
+
+        toast({
+          variant: "success",
+          title: "Мероприятие обновлено успешно!",
+        });
+        router.push(`${homeBaseUrl}/events`);
+      } catch (error) {
+        console.error(error);
         toast({
           variant: "destructive",
-          title: "Ошибка при обновлении мероприятия!",
+          title: "Ошибка при обновлении мероприятия",
         });
+      } finally {
+        router.refresh();
         return;
       }
-
-      toast({
-        variant: "success",
-        title: "Мероприятие обновлено успешно!",
-      });
-
-      router.refresh();
-      router.push(`${homeBaseUrl}/events`);
-      return;
     }
 
-    // If adding new entry but not updating
     setEvent(values);
     router.push("add/preview");
   }
@@ -322,44 +321,44 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
                   </div>
                 )}
 
-                {field.media &&
-                  (parsed?.media_blocks[idx]?.media?.url ? (
-                    <div className="flex flex-col space-y-2">
-                      <span className="block text-[12px] font-medium uppercase ">
-                        Медиафайл
-                      </span>
-                      <Image
-                        src={`${parsed.media_blocks[idx]?.media?.url}`}
-                        width={200}
-                        height={100}
-                        alt={parsed?.name}
-                        className="w-[200px] h-[100px] object-cover rounded-[5px]"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex gap-5 items-center">
-                      <FormField
-                        control={form.control}
-                        name={`media_blocks.${idx}.media`}
-                        render={({ field: { value, ...field } }) => (
-                          <FormItem className="w-full">
-                            <FormLabel className="mb-5">Медиафайл</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="file"
-                                {...field}
-                                onChange={(e) => {
-                                  if (!e.target.files) return;
-                                  field.onChange(e.target.files[0]);
-                                }}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  ))}
+                {field.media && (
+                  <div className="flex gap-5 items-center">
+                    <FormField
+                      control={form.control}
+                      name={`media_blocks.${idx}.media`}
+                      render={({ field: { value, ...field } }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-5">Медиафайл</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              {...field}
+                              onChange={(e) => {
+                                if (!e.target.files) return;
+                                field.onChange(e.target.files[0]);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+                {field?.media_url && (
+                  <div className="flex flex-col space-y-2">
+                    <span className="block text-[12px] font-medium uppercase ">
+                      Медиафайл
+                    </span>
+                    <Image
+                      src={`${field.media_url}`}
+                      width={200}
+                      height={100}
+                      alt={`Медиафайл - ${idx + 1}`}
+                      className="w-[200px] h-[100px] object-cover rounded-[5px]"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))}

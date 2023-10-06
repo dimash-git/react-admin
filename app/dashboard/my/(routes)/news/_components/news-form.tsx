@@ -3,11 +3,6 @@
 import { useEffect, useState } from "react";
 import CrossCircleIcon from "@/public/icons/cross-circle.svg";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import * as z from "zod";
-import formSchema, { NewsSendData, NewsValues } from "../schema";
-
 import {
   Form,
   FormControl,
@@ -29,9 +24,14 @@ import {
   mapMediaBlocks,
 } from "@/lib/utils";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
+import * as z from "zod";
+import formSchema, { NewsSendData } from "../schema";
+
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { homeBaseUrl } from "../../../nav";
 
 const NewsForm = ({ parsed }: { parsed?: News }) => {
@@ -42,7 +42,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
 
   console.log(parsed);
 
-  let defaultValues: NewsValues = {
+  let defaultValues: z.infer<typeof formSchema> = {
     name: parsed?.name ?? "",
     desc: parsed?.desc ?? "",
     tags: parsed?.tags ? parsed?.tags.join(",") : "",
@@ -56,17 +56,28 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
   }
 
   useEffect(() => {
-    (async function getTags() {
-      const res = await axios.post("/api/news/tags/get");
-      if (res.data.status != 200) return;
-      const { tags: tagsParsed } = res.data.content;
-      // console.log("tags fetched: ", tagsParsed);
-      const formatted = tagsParsed.map((tag: NewsTag) => {
-        return { label: tag.name, value: tag.tag_id };
-      });
+    async function getTags() {
+      try {
+        const res = await axios.post("/api/news/tags/get");
+        const { status, content } = res.data;
 
-      setTags(formatted);
-    })();
+        if (status !== 200) {
+          throw new Error("Failed to fetch tags");
+        }
+
+        const { tags: fetchedTags } = content;
+
+        const tagObjects = fetchedTags.map((tag: Tag) => {
+          return { label: tag.name, value: tag.tag_id };
+        });
+
+        setTags(tagObjects);
+      } catch (error) {
+        console.error("Error fetching tags:", error);
+      }
+    }
+
+    getTags();
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -84,43 +95,56 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { tags, media_blocks, cover, ...restValues } = values;
 
-    const mediaBlocksWithBase64 = await Promise.all(
-      media_blocks.map(convertMediaBlockToBase64)
-    );
+    try {
+      const mediaBlocksWithBase64 = await Promise.all(
+        media_blocks.map(convertMediaBlockToBase64)
+      );
 
-    let formData: NewsSendData = {
-      tags: tags.split(","),
-      media_blocks: mediaBlocksWithBase64,
-      ...restValues,
-    };
+      let formData: NewsSendData = {
+        tags: tags.split(","),
+        media_blocks: mediaBlocksWithBase64,
+        ...restValues,
+      };
 
-    if (cover) {
-      try {
-        const base64String = await fileToBase64(cover);
-        formData.img_base_base64 = base64String as string;
-        formData.img_ext = getFileType(cover.type);
-      } catch (error) {
-        console.error(`Error: ${error}`);
+      if (cover) {
+        try {
+          const base64String = await fileToBase64(cover);
+          formData.img_base_base64 = base64String as string;
+          formData.img_ext = getFileType(cover.type);
+        } catch (error) {
+          console.error(`Error: ${error}`);
+        }
       }
-    }
 
-    const res = await axios.post("/api/news/add", formData);
+      const res = await axios.post(
+        `/api/news/ ${parsed ? "update" : "add"}`,
+        formData
+      );
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+
+      if (status !== 200) {
+        throw new Error("Error updating single news");
+      }
+
       toast({
-        variant: "destructive",
-        title: "Ошибка при добавлении новости",
+        variant: "success",
+        title: `Ошибка при  ${parsed ? "обновлении" : "добавлении"} новости`,
       });
+
+      router.push(`${homeBaseUrl}/news`);
+      return;
+    } catch (error) {
+      toast({
+        variant: "success",
+        title: `Новость ${parsed ? "обновлена" : "добавлена"} успешно!`,
+      });
+    } finally {
+      router.refresh();
       return;
     }
-
-    toast({
-      variant: "success",
-      title: "Новость добавлено успешно!",
-    });
 
     router.refresh();
     router.push(`${homeBaseUrl}/news`);
@@ -243,16 +267,16 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
                 )}
 
                 {field.media &&
-                  (parsed?.media_blocks[idx]?.media?.url ? (
+                  (field.media?.url ? (
                     <div className="flex flex-col space-y-2">
                       <span className="block text-[12px] font-medium uppercase ">
                         Медиафайл
                       </span>
                       <Image
-                        src={`${parsed.media_blocks[idx]?.media?.url}`}
+                        src={`${field.media?.url}`}
                         width={200}
                         height={100}
-                        alt={parsed?.name}
+                        alt={`Медиафайл - ${idx + 1}`}
                         className="w-[200px] h-[100px] object-cover rounded-[5px]"
                       />
                     </div>

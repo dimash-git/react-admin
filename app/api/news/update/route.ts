@@ -14,23 +14,18 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const {
-      marketing_id,
-      name,
-      desc,
-      img_data_base64,
-      img_type,
-      media_blocks,
-    } = body;
+    const { id, name, img_base_base64, img_ext, tags, desc, media_blocks } =
+      body;
 
     const res = await axiosBack.post(
-      "/marketing/edit_marketing",
+      "/admin/news/edit_single_news",
       {
-        marketing_id,
+        news_id: id,
         name,
+        img_base_base64,
+        img_ext,
+        tags,
         desc,
-        img_data_base64,
-        img_type,
         media_blocks,
       },
       {

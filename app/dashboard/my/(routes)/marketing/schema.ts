@@ -1,7 +1,5 @@
-import { ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 import * as z from "zod";
-
-const MAX_FILE_SIZE = 3000000;
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -36,22 +34,13 @@ const formSchema = z.object({
           )
       ),
       text: z.optional(z.string()),
+      media_url: z.optional(z.string()),
     })
   ),
 });
 
-export interface MarketingValues {
-  name: string;
-  desc: string;
-  cover?: File;
-  media_blocks: {
-    head_line?: string;
-    text?: string;
-    media?: File;
-  }[];
-}
-
 export interface MarketingSendData {
+  marketing_id: string;
   name: string;
   desc: string;
   img_data_base64?: string;

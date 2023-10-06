@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../../auth/[...nextauth]/route";
 
 export async function POST(req: Request) {
   try {
@@ -14,23 +14,14 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const {
-      marketing_id,
-      name,
-      desc,
-      img_data_base64,
-      img_type,
-      media_blocks,
-    } = body;
+    const { cat, question, question_id, media_blocks } = body;
 
     const res = await axiosBack.post(
-      "/marketing/edit_marketing",
+      "/support/edit_article",
       {
-        marketing_id,
-        name,
-        desc,
-        img_data_base64,
-        img_type,
+        category_id: cat,
+        question_id,
+        question,
         media_blocks,
       },
       {
@@ -40,11 +31,11 @@ export async function POST(req: Request) {
       }
     );
 
+    // console.log(res.data.response);
+
     if (res.status != 200 || res.data.status.code != 200) {
       return new NextResponse("Update failed", { status: 500 });
     }
-
-    // console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {

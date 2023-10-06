@@ -83,32 +83,54 @@ export function getFileType(mimeType: string) {
 }
 
 export function mapMediaBlocks(blocks: any[]) {
-  return blocks.map((block) => ({
-    head_line: block?.head_line ?? "",
-    text: block?.text ?? "",
-    media: block?.media ?? undefined,
-  }));
+  return blocks.map((block) => {
+    const result: any = {};
+
+    if (block?.head_line) {
+      result.head_line = block.head_line;
+    }
+    if (block?.text) {
+      result.text = block?.text;
+    }
+
+    if (block?.media) {
+      if (block.media?.url) {
+        result.media_url = block.media?.url;
+      } else {
+        result.media = block.media;
+      }
+    }
+
+    return result;
+  });
 }
 
 export async function convertMediaBlockToBase64(block: any) {
-  if (block.media) {
+  const result: any = {};
+
+  if (block?.head_line) {
+    result.head_line = block.head_line;
+  }
+  if (block?.text) {
+    result.text = block?.text;
+  }
+
+  if (block?.media_url) {
+    result.media_url = new URL(block.media_url).pathname;
+    return result;
+  }
+
+  if (block?.media) {
     try {
       const base64String = await fileToBase64(block.media);
-      return {
-        head_line: block.head_line,
-        text: block.text,
-        media: {
-          data_base64: base64String as string,
-          data_type: getFileType(block.media.type),
-        },
+      result.media = {
+        data_base64: base64String as string,
+        data_type: getFileType(block.media.type),
       };
     } catch (error) {
       console.error(`Error: ${error}`);
     }
   }
 
-  return {
-    head_line: block.head_line,
-    text: block.text,
-  };
+  return result;
 }

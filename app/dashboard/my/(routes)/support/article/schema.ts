@@ -20,6 +20,7 @@ const formSchema = z.object({
           )
       ),
       text: z.optional(z.string()),
+      media_url: z.optional(z.string()),
     })
   ),
 });

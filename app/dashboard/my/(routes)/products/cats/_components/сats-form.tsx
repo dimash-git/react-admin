@@ -1,7 +1,4 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 import {
   Form,
@@ -15,13 +12,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
-import formSchema from "../catsFormSchema";
-import { fileToBase64, getFileType } from "@/lib/utils";
-import { homeBaseUrl } from "@/app/dashboard/my/nav";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import formSchema from "../schema";
 
 import axios from "axios";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
 
 const CatsForm = ({ parsed }: { parsed?: QuestionCat }) => {
   const router = useRouter();

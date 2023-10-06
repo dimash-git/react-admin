@@ -34,14 +34,14 @@ export async function POST(req: Request) {
     );
 
     if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Marketing publish failed", { status: 500 });
+      return new NextResponse("Publish failed", { status: 500 });
     }
 
     console.log(res.data.response);
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("MARKETING_PUBLISH_ERROR", error);
+    console.log("PUBLISH_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

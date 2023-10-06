@@ -1,7 +1,5 @@
-import { ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 import * as z from "zod";
-
-const MAX_FILE_SIZE = 3000000;
 
 const eventFormSchema = z.object({
   name: z.string().min(3, {
@@ -45,21 +43,10 @@ const eventFormSchema = z.object({
           )
       ),
       text: z.optional(z.string()),
+      media_url: z.optional(z.string()),
     })
   ),
 });
-
-export interface EventValues {
-  name: string;
-  desc: string;
-  type: EvtType;
-  date: Date;
-  cover?: File;
-  media_blocks: {
-    text?: string;
-    media?: File;
-  }[];
-}
 
 export interface EventSendData {
   name: string;

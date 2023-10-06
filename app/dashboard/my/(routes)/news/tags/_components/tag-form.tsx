@@ -21,7 +21,7 @@ import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { homeBaseUrl } from "../../../../nav";
 
-const TagForm = ({ parsed }: { parsed?: NewsTag }) => {
+const TagForm = ({ parsed }: { parsed?: Tag }) => {
   const router = useRouter();
   const { toast } = useToast();
 

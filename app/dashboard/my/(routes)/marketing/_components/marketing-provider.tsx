@@ -1,11 +1,14 @@
 "use client";
 
 import React, { createContext, useState } from "react";
-import { MarketingValues } from "../schema";
+import * as z from "zod";
+import formSchema from "../schema";
 
 interface _MarketingContext {
-  marketing: MarketingValues;
-  setMarketing: React.Dispatch<React.SetStateAction<MarketingValues>>;
+  marketing: z.infer<typeof formSchema>;
+  setMarketing: React.Dispatch<
+    React.SetStateAction<z.infer<typeof formSchema>>
+  >;
 }
 
 const MarketingContext = createContext<_MarketingContext>(
@@ -13,10 +16,10 @@ const MarketingContext = createContext<_MarketingContext>(
 );
 
 const MarketingProvider = ({ children }: { children: React.ReactNode }) => {
-  const [marketing, setMarketing] = useState<MarketingValues>({
+  const [marketing, setMarketing] = useState<z.infer<typeof formSchema>>({
     name: "",
     desc: "",
-  } as MarketingValues);
+  } as z.infer<typeof formSchema>);
 
   return (
     <MarketingContext.Provider value={{ marketing, setMarketing }}>

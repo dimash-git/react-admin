@@ -1,6 +1,5 @@
-import { ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 import * as z from "zod";
-const MAX_FILE_SIZE = 3000000;
 
 const productFormSchema = z.object({
   cover: z.optional(

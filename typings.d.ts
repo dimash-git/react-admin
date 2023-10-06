@@ -47,7 +47,7 @@ interface News {
   }[];
 }
 
-interface NewsTag {
+interface Tag {
   tag_id: string;
   name: string;
 }

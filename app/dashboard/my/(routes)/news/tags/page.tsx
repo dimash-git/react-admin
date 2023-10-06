@@ -55,7 +55,7 @@ const TagsPage = async ({
     throw new Error("Error Loading Tags");
   }
 
-  const { tags, count }: { tags: NewsTag[]; count: number } = content;
+  const { tags, count }: { tags: Tag[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">

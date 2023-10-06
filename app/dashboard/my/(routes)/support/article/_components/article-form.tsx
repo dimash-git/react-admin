@@ -27,13 +27,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-
-import { useRouter, useSearchParams } from "next/navigation";
-import axios from "axios";
-import { homeBaseUrl } from "@/app/dashboard/my/nav";
 import AddFieldsPanel from "./add-fields-panel";
-import { convertMediaBlockToBase64, mapMediaBlocks } from "@/lib/utils";
+
+import axios from "axios";
 import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
+import { convertMediaBlockToBase64, mapMediaBlocks } from "@/lib/utils";
 
 const ArticleForm = ({ parsed }: { parsed?: Article }) => {
   const router = useRouter();
@@ -56,7 +56,7 @@ const ArticleForm = ({ parsed }: { parsed?: Article }) => {
     getCategories();
   }, []);
 
-  const defaultValues = {
+  const defaultValues: z.infer<typeof formSchema> = {
     question: parsed?.question ?? "",
     media_blocks: parsed?.media_blocks
       ? mapMediaBlocks(parsed?.media_blocks)
@@ -80,43 +80,49 @@ const ArticleForm = ({ parsed }: { parsed?: Article }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { media_blocks, ...restValues } = values;
 
-    const mediaBlocksWithBase64 = await Promise.all(
-      media_blocks.map(convertMediaBlockToBase64)
-    );
+    try {
+      const mediaBlocksWithBase64 = await Promise.all(
+        media_blocks.map(convertMediaBlockToBase64)
+      );
 
-    console.log({
-      ...restValues,
-      media_blocks: mediaBlocksWithBase64,
-      question_id: params.get("question_id"),
-    });
-
-    const res = await axios.post(
-      `/api/support/article/${parsed ? "update" : "add"}`,
-      {
+      console.log({
         ...restValues,
         media_blocks: mediaBlocksWithBase64,
         question_id: params.get("question_id"),
+      });
+
+      const res = await axios.post(
+        `/api/support/article/${parsed ? "update" : "add"}`,
+        {
+          ...restValues,
+          media_blocks: mediaBlocksWithBase64,
+          question_id: params.get("question_id"),
+        }
+      );
+
+      // console.log("Response:", res.data);
+
+      const { status } = res.data;
+
+      if (status !== 200) {
+        throw new Error("Error updating article");
       }
-    );
 
-    // console.log("Response:", res.data);
-
-    const { status } = res.data;
-    if (status != 200) {
       toast({
         variant: "success",
+        title: `Статья ${parsed ? "обновлен" : "добавлен"} успешно!`,
+      });
+
+      router.push(`${homeBaseUrl}/support`);
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
         title: `Ошибка при ${parsed ? "обновлении" : "добавлении"} статьи!`,
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `Статья ${parsed ? "обновлен" : "добавлен"} успешно!`,
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/support`);
   }
   return (
     <div>
@@ -202,44 +208,44 @@ const ArticleForm = ({ parsed }: { parsed?: Article }) => {
                   </div>
                 )}
 
-                {field.media &&
-                  (parsed?.media_blocks[idx]?.media?.url ? (
-                    <div className="flex flex-col space-y-2">
-                      <span className="block text-[12px] font-medium uppercase ">
-                        Медиафайл
-                      </span>
-                      <Image
-                        src={`${parsed.media_blocks[idx]?.media?.url}`}
-                        width={200}
-                        height={100}
-                        alt={`Медиафайл - ${idx}`}
-                        className="w-[200px] h-[100px] object-cover rounded-[5px]"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex gap-5 items-center">
-                      <FormField
-                        control={form.control}
-                        name={`media_blocks.${idx}.media`}
-                        render={({ field: { value, ...field } }) => (
-                          <FormItem className="w-full">
-                            <FormLabel className="mb-5">Медиафайл</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="file"
-                                {...field}
-                                onChange={(e) => {
-                                  if (!e.target.files) return;
-                                  field.onChange(e.target.files[0]);
-                                }}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  ))}
+                {field.media && (
+                  <div className="flex gap-5 items-center">
+                    <FormField
+                      control={form.control}
+                      name={`media_blocks.${idx}.media`}
+                      render={({ field: { value, ...field } }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-5">Медиафайл</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              {...field}
+                              onChange={(e) => {
+                                if (!e.target.files) return;
+                                field.onChange(e.target.files[0]);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+                {field?.media_url && (
+                  <div className="flex flex-col space-y-2">
+                    <span className="block text-[12px] font-medium uppercase ">
+                      Медиафайл
+                    </span>
+                    <Image
+                      src={`${field.media_url}`}
+                      width={200}
+                      height={100}
+                      alt={`Медиафайл - ${idx + 1}`}
+                      className="w-[200px] h-[100px] object-cover rounded-[5px]"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))}

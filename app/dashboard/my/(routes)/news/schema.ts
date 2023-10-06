@@ -1,6 +1,5 @@
-import { ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
+import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE } from "@/lib/constants";
 import * as z from "zod";
-const MAX_FILE_SIZE = 3000000;
 
 const newsFormSchema = z.object({
   name: z.string().min(3, {
@@ -27,7 +26,6 @@ const newsFormSchema = z.object({
   ),
   media_blocks: z.array(
     z.object({
-      head_line: z.optional(z.string()),
       media: z.optional(
         z
           .any()
@@ -38,20 +36,10 @@ const newsFormSchema = z.object({
           )
       ),
       text: z.optional(z.string()),
+      media_url: z.optional(z.string()),
     })
   ),
 });
-
-export interface NewsValues {
-  name: string;
-  desc: string;
-  tags: string;
-  cover?: File;
-  media_blocks: {
-    text?: string;
-    media?: File;
-  }[];
-}
 
 export interface NewsSendData {
   name: string;
@@ -65,6 +53,7 @@ export interface NewsSendData {
       data_type: string;
       data_base64: string;
     };
+    media_url?: string;
   }[];
 }
 

@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import formSchema, { MarketingValues } from "../schema";
+import formSchema, { MarketingSendData } from "../schema";
 
 import axios from "axios";
 import { homeBaseUrl } from "../../../nav";
@@ -27,7 +27,12 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { MarketingContext } from "./marketing-provider";
 import AddFieldsPanel from "./add-fields-panel";
-import { mapMediaBlocks } from "@/lib/utils";
+import {
+  convertMediaBlockToBase64,
+  fileToBase64,
+  getFileType,
+  mapMediaBlocks,
+} from "@/lib/utils";
 
 const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
   const router = useRouter();
@@ -36,28 +41,13 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
   const [selectedCover, setSelectedCover] = useState<boolean>(false);
 
   /* START */
-  let defaultValues: MarketingValues = {
+  let defaultValues: z.infer<typeof formSchema> = {
     name: parsed?.name ?? marketing?.name ?? "",
     desc: parsed?.desc ?? marketing?.desc ?? "",
     media_blocks: parsed?.media_blocks
       ? mapMediaBlocks(parsed?.media_blocks)
       : marketing?.media_blocks ?? [],
   };
-
-  console.log(parsed);
-
-  const url =
-    "https://cdn.shopify.com/s/files/1/0234/8017/2591/products/young-man-in-bright-fashion_925x_f7029e2b-80f0-4a40-a87b-834b9a283c39.jpg?v=1572867553";
-  const fileName = "myFile.jpg";
-
-  if (parsed?.img_url) {
-    fetch(parsed.img_url).then(async (response) => {
-      // const contentType = response.headers.get("content-type");
-      const blob = await response.blob();
-      const file = new File([blob], fileName);
-      console.log("file", file);
-    });
-  }
 
   if (!parsed?.img_url) {
     defaultValues.cover = {} as File;
@@ -66,7 +56,7 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
     defaultValues.cover = marketing?.cover;
   }
   /* END */
-  console.log(parsed);
+  // console.log(parsed);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -80,35 +70,55 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
     name: "media_blocks",
   });
 
+  console.log("fields", fields);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (parsed) {
-      // console.log(values);
+      const { cover, media_blocks, ...restValues } = values;
 
-      const res = await axios.post("/api/marketing/update", {
-        ...values,
-        marketing_id: parsed.marketing_id,
-      });
-      const { status } = res.data;
-      if (status != 200) {
+      try {
+        const mediaBlocksWithBase64 = await Promise.all(
+          media_blocks.map(convertMediaBlockToBase64)
+        );
+
+        const sendData: MarketingSendData = {
+          ...restValues,
+          media_blocks: mediaBlocksWithBase64,
+          marketing_id: parsed.marketing_id,
+        };
+
+        if (cover) {
+          const base64String = await fileToBase64(cover);
+          sendData.img_data_base64 = base64String as string;
+          sendData.img_type = getFileType(cover.type);
+        }
+
+        const res = await axios.post("/api/marketing/update", sendData);
+
+        const { status } = res.data;
+        if (status !== 200) {
+          throw new Error("Error updating marketing product");
+        }
+
+        toast({
+          variant: "success",
+          title: "Маркетинг продукт обновлен успешно!",
+        });
+
+        router.push(`${homeBaseUrl}/marketing`);
+      } catch (error) {
+        console.error(error);
         toast({
           variant: "destructive",
-          title: "Ошибка при обновлении маркетинг продукта!",
+          title: "Ошибка при обновлении маркетинг продукта",
         });
+      } finally {
+        router.refresh();
         return;
       }
-
-      toast({
-        variant: "success",
-        title: "Маркетинг продукт обновлен успешно!",
-      });
-
-      router.refresh();
-      router.push(`${homeBaseUrl}/marketing`);
-      return;
     }
 
     setMarketing(values);
-
     router.push("add/preview");
   }
   return (
@@ -224,44 +234,44 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
                   </>
                 )}
 
-                {field.media &&
-                  (parsed?.media_blocks[idx]?.media?.url ? (
-                    <div className="flex flex-col space-y-2">
-                      <span className="block text-[12px] font-medium uppercase ">
-                        Медиафайл
-                      </span>
-                      <Image
-                        src={`${parsed.media_blocks[idx]?.media?.url}`}
-                        width={200}
-                        height={100}
-                        alt={parsed?.name}
-                        className="w-[200px] h-[100px] object-cover rounded-[5px]"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex gap-5 items-center">
-                      <FormField
-                        control={form.control}
-                        name={`media_blocks.${idx}.media`}
-                        render={({ field: { value, ...field } }) => (
-                          <FormItem className="w-full">
-                            <FormLabel className="mb-5">Медиафайл</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="file"
-                                {...field}
-                                onChange={(e) => {
-                                  if (!e.target.files) return;
-                                  field.onChange(e.target.files[0]);
-                                }}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  ))}
+                {field.media && (
+                  <div className="flex gap-5 items-center">
+                    <FormField
+                      control={form.control}
+                      name={`media_blocks.${idx}.media`}
+                      render={({ field: { value, ...field } }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-5">Медиафайл</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              {...field}
+                              onChange={(e) => {
+                                if (!e.target.files) return;
+                                field.onChange(e.target.files[0]);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+                {field?.media_url && (
+                  <div className="flex flex-col space-y-2">
+                    <span className="block text-[12px] font-medium uppercase ">
+                      Медиафайл
+                    </span>
+                    <Image
+                      src={`${field.media_url}`}
+                      width={200}
+                      height={100}
+                      alt={`Медиафайл - ${idx + 1}`}
+                      className="w-[200px] h-[100px] object-cover rounded-[5px]"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))}
