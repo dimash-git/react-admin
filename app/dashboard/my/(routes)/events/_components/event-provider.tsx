@@ -1,21 +1,22 @@
 "use client";
 
 import React, { createContext, useState } from "react";
-import { EventValues } from "../schema";
+import * as z from "zod";
+import formSchema from "../schema";
 interface EvtContext {
-  event: EventValues;
-  setEvent: React.Dispatch<React.SetStateAction<EventValues>>;
+  event: z.infer<typeof formSchema>;
+  setEvent: React.Dispatch<React.SetStateAction<z.infer<typeof formSchema>>>;
 }
 
 const EventContext = createContext<EvtContext>({} as EvtContext);
 
 const EventProvider = ({ children }: { children: React.ReactNode }) => {
-  const [event, setEvent] = useState<EventValues>({
+  const [event, setEvent] = useState<z.infer<typeof formSchema>>({
     name: "",
     desc: "",
     type: "offline",
     date: new Date(),
-  } as EventValues);
+  } as z.infer<typeof formSchema>);
 
   return (
     <EventContext.Provider value={{ event, setEvent }}>
