@@ -23,25 +23,15 @@ function MultiSelect({
   defaultValue?: string;
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState<Option[]>([]);
   const [inputValue, setInputValue] = React.useState("");
-
-  const defaultArray = defaultValue?.split(",");
-  const preselected = OPTIONS.filter((obj) =>
-    defaultArray?.includes(obj.value)
+  const [open, setOpen] = React.useState(false);
+  const [selected, setSelected] = React.useState<Option[]>(() =>
+    defaultValue
+      ? OPTIONS.filter((obj) => defaultValue?.split(",")?.includes(obj.value))
+      : []
   );
 
   const selectables = OPTIONS.filter((option) => !selected.includes(option));
-
-  React.useEffect(() => {
-    const isSelectValuesChanged =
-      JSON.stringify(preselected) !== JSON.stringify(selected);
-
-    if (isSelectValuesChanged) {
-      setSelected(preselected);
-    }
-  }, [preselected, selected]);
 
   const handleUnselect = React.useCallback((option: Option) => {
     setSelected((prev) => prev.filter((s) => s.value !== option.value));

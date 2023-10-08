@@ -77,7 +77,7 @@ export const homeSections = {
       {
         name: "Редактор категорий",
         icon: ArrowRight,
-        to: homeBaseUrl + "/products/edit",
+        to: homeBaseUrl + "/products/cats",
       },
       {
         name: "Все продукты",

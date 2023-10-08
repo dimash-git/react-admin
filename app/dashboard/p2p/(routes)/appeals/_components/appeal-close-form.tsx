@@ -97,30 +97,36 @@ const AppealCloseForm = ({
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await axios.post("/api/p2p/appeal/close", {
-      ...values,
-      id: parsed?.appeal_id,
-    });
+    try {
+      const res = await axios.post("/api/p2p/appeal/close", {
+        ...values,
+        id: parsed?.appeal_id,
+      });
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status !== 200) {
+        throw new Error("Error updating appeal");
+      }
+
+      toast({
+        variant: "success",
+        title: "Аппеляция закрыта успешно!",
+      });
+
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Ошибка при закрытии аппеляции",
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: "Аппеляция закрыта успешно!",
-    });
-
-    setOpen(false);
-    router.refresh();
   }
+
   return (
     <div>
       <Form {...form}>

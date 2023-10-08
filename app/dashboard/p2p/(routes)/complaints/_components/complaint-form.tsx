@@ -18,25 +18,27 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { Textarea } from "@/components/ui/textarea";
+import { p2pBaseUrl } from "../../../nav";
 
 const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Введите название",
+  decision: z.string().min(3, {
+    message: "Введите ваше решение",
   }),
 });
 
-const CountriesForm = ({
+const ComplaintForm = ({
   setOpen,
   parsed,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  parsed?: Country;
+  parsed?: Complaint;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
 
   const defaultValues = {
-    name: parsed?.name ?? "",
+    decision: "",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,31 +49,32 @@ const CountriesForm = ({
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await axios.post(
-      `/api/country/${parsed ? "update" : "add"}`,
-      parsed ? { ...values, id: parsed.country_id } : values
-    );
+    try {
+      const res = await axios.post("/api/p2p/complaint/save", {
+        ...values,
+        id: parsed?.complain_id,
+      });
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
+      const { status } = res.data;
+      if (status !== 200) {
+        throw new Error("Error saving decision for complaint");
+      }
 
-    const { status } = res.data;
-    if (status != 200) {
+      toast({
+        variant: "success",
+        title: "Решение сохранено успешно",
+      });
+      setOpen(false);
+    } catch (error) {
       toast({
         variant: "destructive",
-        title: `Ошибка при ${
-          parsed?.name ? "обновлении" : "добавлении"
-        } страны`,
+        title: "Ошибка при сохранении решения",
       });
-      return;
+    } finally {
+      router.refresh();
+      router.push(`${p2pBaseUrl}/complaints`);
     }
-
-    toast({
-      variant: "success",
-      title: `Страна ${parsed?.name ? "обновлена" : "добавлена"} успешно!`,
-    });
-
-    setOpen(false);
-    router.refresh();
   }
   return (
     <div>
@@ -79,12 +82,12 @@ const CountriesForm = ({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <FormField
             control={form.control}
-            name="name"
+            name="decision"
             render={({ field }) => (
               <FormItem className="space-y-5">
-                <FormLabel>название страны</FormLabel>
+                <FormLabel>Ваше решение</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Textarea rows={7} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -96,7 +99,7 @@ const CountriesForm = ({
               variant="form"
               type="button"
               onClick={() => setOpen(false)}
-              className="w-full"
+              className="w-full h-10 text-[16px]"
             >
               Отмена
             </Button>
@@ -104,7 +107,7 @@ const CountriesForm = ({
               variant="formSubmit"
               type="submit"
               disabled={isLoading || isSubmitting}
-              className="w-full"
+              className="w-full h-10 text-[16px]"
             >
               Сохранить
             </Button>
@@ -115,4 +118,4 @@ const CountriesForm = ({
   );
 };
 
-export default CountriesForm;
+export default ComplaintForm;

@@ -47,28 +47,32 @@ const AppealCommentsForm = ({
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await axios.post("/api/appeal/comments/save", {
-      ...values,
-      id,
-    });
+    try {
+      const res = await axios.post("/api/appeal/comments/save", {
+        ...values,
+        id,
+      });
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error saving comments for appeal");
+      }
+
+      toast({
+        variant: "success",
+        title: "Комментарии сохранены успешно!",
+      });
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Ошибка при сохранении комментариев",
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: "Комментарии сохранены успешно!",
-    });
-
-    router.refresh();
   }
   return (
     <div>

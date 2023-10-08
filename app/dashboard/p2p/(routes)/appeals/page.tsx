@@ -82,13 +82,17 @@ const Page = async ({
     const non_fixed_data = await non_fixed_response.json();
     const fixed_data = await fixed_response.json();
 
-    appeals = [
-      ...non_fixed_data.content.appeals,
-      ...fixed_data.content.appeals,
-    ];
+    const fixedAppeals = fixed_data.content.appeals.map((appeal: Appeal) => ({
+      ...appeal,
+      is_fixed: true,
+    }));
+
+    appeals = [...non_fixed_data.content.appeals, ...fixedAppeals];
+    appeals.sort((a, b) => b.create_timestamp - a.create_timestamp);
+
     count = non_fixed_data.content.count + fixed_data.content.count;
 
-    appeals.sort((a, b) => b.create_timestamp - a.create_timestamp);
+    console.log("count =", count, pageSize);
   } catch (error: unknown) {
     return <div>Ошибка загрузки списка: {String(error)}</div>;
   }

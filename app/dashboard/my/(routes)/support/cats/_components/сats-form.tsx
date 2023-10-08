@@ -119,7 +119,7 @@ const CatsForm = ({ parsed }: { parsed?: QuestionCat }) => {
               width={200}
               height={100}
               alt={parsed?.name}
-              className="w-[200px] h-[100px] object-cover cursor-not-allowed"
+              className="w-[200px] h-[100px] object-cover rounded-[5px] cursor-not-allowed"
               onClick={() => setSwitchOn(true)}
             />
           ) : (

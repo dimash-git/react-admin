@@ -40,7 +40,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
   const [selectedCover, setSelectedCover] = useState<boolean>(false);
   const [tags, setTags] = useState([]);
 
-  console.log(parsed);
+  // console.log(parsed);
 
   let defaultValues: z.infer<typeof formSchema> = {
     name: parsed?.name ?? "",
@@ -100,7 +100,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
         media_blocks.map(convertMediaBlockToBase64)
       );
 
-      let formData: NewsSendData = {
+      let sendData: NewsSendData = {
         tags: tags.split(","),
         media_blocks: mediaBlocksWithBase64,
         news_id: parsed?.news_id,
@@ -110,16 +110,18 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
       if (cover) {
         try {
           const base64String = await fileToBase64(cover);
-          formData.img_base_base64 = base64String as string;
-          formData.img_ext = getFileType(cover.type);
+          sendData.img_base_base64 = base64String as string;
+          sendData.img_ext = getFileType(cover.type);
         } catch (error) {
           console.error(`Error: ${error}`);
         }
       }
 
+      console.log(sendData);
+
       const res = await axios.post(
-        `/api/news/ ${parsed ? "update" : "add"}`,
-        formData
+        `/api/news/${parsed ? "update" : "add"}`,
+        sendData
       );
 
       // console.log("Response:", res.data);
@@ -127,28 +129,24 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
       const { status } = res.data;
 
       if (status !== 200) {
-        throw new Error("Error updating single news");
+        throw new Error(`Error ${parsed ? "updating" : "adding"} single news`);
       }
 
       toast({
         variant: "success",
-        title: `Ошибка при  ${parsed ? "обновлении" : "добавлении"} новости`,
+        title: `Новость ${parsed ? "обновлена" : "добавлена"} успешно!`,
       });
 
       router.push(`${homeBaseUrl}/news`);
-      return;
     } catch (error) {
       toast({
-        variant: "success",
-        title: `Новость ${parsed ? "обновлена" : "добавлена"} успешно!`,
+        variant: "destructive",
+        title: `Ошибка при  ${parsed ? "обновлении" : "добавлении"} новости`,
       });
     } finally {
       router.refresh();
       return;
     }
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/news`);
   }
 
   return (
@@ -168,25 +166,30 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="tags"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mb-5">Тэги</FormLabel>
-                <FormControl>
-                  <MultiSelect
-                    options={tags}
-                    onValueChange={field.onChange}
-                    label="тэги"
-                    defaultValue={field.value}
-                    byLabel={true}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {tags.length > 0 ? (
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mb-5">Тэги</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={tags}
+                      onValueChange={field.onChange}
+                      label="тэги"
+                      defaultValue={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <div className="text-[12px] font-medium mb-5">
+              Загрзука тэгов ...
+            </div>
+          )}
 
           <FormField
             control={form.control}
@@ -267,44 +270,44 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
                   </div>
                 )}
 
-                {field.media &&
-                  (field.media?.url ? (
-                    <div className="flex flex-col space-y-2">
-                      <span className="block text-[12px] font-medium uppercase ">
-                        Медиафайл
-                      </span>
-                      <Image
-                        src={`${field.media?.url}`}
-                        width={200}
-                        height={100}
-                        alt={`Медиафайл - ${idx + 1}`}
-                        className="w-[200px] h-[100px] object-cover rounded-[5px]"
-                      />
-                    </div>
-                  ) : (
-                    <div className="flex gap-5 items-center">
-                      <FormField
-                        control={form.control}
-                        name={`media_blocks.${idx}.media`}
-                        render={({ field: { value, ...field } }) => (
-                          <FormItem className="w-full">
-                            <FormLabel className="mb-5">Медиафайл</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="file"
-                                {...field}
-                                onChange={(e) => {
-                                  if (!e.target.files) return;
-                                  field.onChange(e.target.files[0]);
-                                }}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  ))}
+                {field.media && (
+                  <div className="flex gap-5 items-center">
+                    <FormField
+                      control={form.control}
+                      name={`media_blocks.${idx}.media`}
+                      render={({ field: { value, ...field } }) => (
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-5">Медиафайл</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="file"
+                              {...field}
+                              onChange={(e) => {
+                                if (!e.target.files) return;
+                                field.onChange(e.target.files[0]);
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
+                {field?.media_url && (
+                  <div className="flex flex-col space-y-2">
+                    <span className="block text-[12px] font-medium uppercase ">
+                      Медиафайл
+                    </span>
+                    <Image
+                      src={`${field.media_url}`}
+                      width={200}
+                      height={100}
+                      alt={`Медиафайл - ${idx + 1}`}
+                      className="w-[200px] h-[100px] object-cover rounded-[5px]"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))}

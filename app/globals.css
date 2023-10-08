@@ -75,6 +75,24 @@
   }
 }
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 10px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #2d3d52;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #455580;
+    border-radius: 10px;
+    border: 1px solid #576a9d;
+  }
+}
+
 body {
   background: #000;
   color: #fff;

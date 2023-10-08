@@ -202,6 +202,35 @@ interface Appeal {
 }
 
 interface ComplaintList {
-  complaint_id: string;
+  complain_id: string;
+  user_id: string;
+  user_login: string;
+  is_fixed: boolean;
   create_timestamp: number;
+}
+
+interface Message {
+  user_id: string;
+  text: string;
+  create_timestamp: number;
+  media_data: {
+    url: string;
+    type: string;
+  }[];
+}
+
+interface Complaint {
+  user_order_owner_id: string;
+  user_offer_owner_id: string;
+  order_id: string;
+  offer_id: string;
+  complain_id: string;
+  complain_owner_id: string;
+  reason: string;
+  description: "тестовое описание";
+  media_data: {
+    url: string;
+    type: string;
+  }[];
+  messages: Message[];
 }

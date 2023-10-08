@@ -22,7 +22,7 @@ const Page = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 8;
+  const pageSize = Math.floor(8 / 2);
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize
@@ -31,6 +31,8 @@ const Page = async ({
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? parseInt(searchParams.page)
       : 1;
+
+  console.log(skip, currPage);
 
   let complaints: ComplaintList[] = [];
   let count: number = 0;
@@ -68,7 +70,7 @@ const Page = async ({
           limit: pageSize,
           is_fixed: false,
         }),
-        next: { tags: ["non_foxed_complaints"] },
+        next: { tags: ["non_fixed_complaints"] },
       }
     );
 
@@ -76,8 +78,9 @@ const Page = async ({
       throw new Error("Не удалось получить незакфиксированные жалобы");
     }
 
-    // Combine fixed and non fixed appeals.
+    // Combine fixed and non fixed complaints.
     // There was a need for backend devs to make separate endpoint not single
+    // complain typo from backend
     const non_fixed_data = await non_fixed_response.json();
     const fixed_data = await fixed_response.json();
 
@@ -85,12 +88,10 @@ const Page = async ({
       ...non_fixed_data.content.complains,
       ...fixed_data.content.complains,
     ];
-
-    console.log(complaints);
+    complaints.sort((a, b) => b.create_timestamp - a.create_timestamp);
+    // console.log(complaints);
 
     count = non_fixed_data.content.count + fixed_data.content.count;
-
-    complaints.sort((a, b) => b.create_timestamp - a.create_timestamp);
   } catch (error: unknown) {
     return <div>Ошибка загрузки списка: {String(error)}</div>;
   }
@@ -105,9 +106,9 @@ const Page = async ({
       </div>
 
       {/* PAGINATION */}
-      <div>
-        {/* <Pagination count={count} currPage={currPage} pageSize={pageSize} /> */}
-      </div>
+      {count > 0 && (
+        <Pagination count={count} currPage={currPage} pageSize={pageSize * 2} />
+      )}
     </div>
   );
 };
