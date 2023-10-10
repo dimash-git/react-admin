@@ -118,7 +118,7 @@ const QuestionForm = ({ parsed }: { parsed?: Question }) => {
               </FormItem>
             )}
           />
-          {cats && (
+          {cats.length > 0 ? (
             <FormField
               control={form.control}
               name="cat"
@@ -153,6 +153,10 @@ const QuestionForm = ({ parsed }: { parsed?: Question }) => {
                 </FormItem>
               )}
             />
+          ) : (
+            <div className="text-[12px] font-medium mb-5">
+              Загрузка категорий ...
+            </div>
           )}
 
           <div className="flex gap-ten">

@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     console.log({
       appeal_id: id,
-      user_id_p2p_ban: user_id_p2p_ban.split(","),
+      user_id_p2p_ban: user_id_p2p_ban ? user_id_p2p_ban.split(",") : undefined,
       appeal_status,
       msg_offer,
       msg_order,
@@ -28,7 +28,9 @@ export async function POST(req: Request) {
       "/p2p_appeal/close_appeal",
       {
         appeal_id: id,
-        user_id_p2p_ban: user_id_p2p_ban.split(","),
+        user_id_p2p_ban: user_id_p2p_ban
+          ? user_id_p2p_ban.split(",")
+          : undefined,
         appeal_status,
         msg_offer,
         msg_order,

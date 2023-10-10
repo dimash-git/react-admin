@@ -24,15 +24,19 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
-import formSchema, { ProductValues } from "../schema";
+import formSchema, { ProductSendData } from "../schema";
 
 import { ProductContext } from "./products-provider";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+import { fileToBase64, getFileType } from "@/lib/utils";
+import { homeBaseUrl } from "../../../nav";
 
 const ProductForm = ({ parsed }: { parsed?: Product }) => {
   const router = useRouter();
+  const { toast } = useToast();
   const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
   const [cats, setCats] = useState<ProductCat[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -66,17 +70,17 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
   // console.log(parsed);
 
   /* START */
-  let defaultValues: ProductValues = {
+  let defaultValues: z.infer<typeof formSchema> = {
+    category_id: parsed?.category_id ?? product?.category_id ?? "",
     name: parsed?.name ?? product?.name ?? "",
-    desc: parsed?.description ?? product?.desc ?? "",
+    description: parsed?.description ?? product?.description ?? "",
+    price: parsed?.price ?? product?.price ?? 100,
+    discount: parsed?.discount ?? product?.discount ?? 0,
+    is_robot: parsed?.is_robot ?? product?.is_robot ?? false,
+    is_pack: parsed?.is_pack ?? product?.is_pack ?? false,
     advantages: parsed?.advantages ?? product?.advantages ?? [" "],
     products: parsed?.pack_product_json ??
       product?.products ?? [{ product_id: "" }],
-    price: parsed?.price ?? product?.price ?? 100,
-    is_robot: parsed?.is_robot ?? product?.is_robot ?? false,
-    is_pack: parsed?.is_pack ?? product?.is_pack ?? false,
-    discount: parsed?.discount ?? product?.discount ?? 0,
-    cat: parsed?.category_id ?? product?.cat ?? "",
   };
 
   if (!parsed?.img) {
@@ -115,8 +119,47 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setProduct(values);
+    const { price, discount, cover, ...restValues } = values;
 
+    if (parsed) {
+      try {
+        const sendData: ProductSendData = {
+          ...restValues,
+          price: price.toString(),
+          discount: discount.toString(),
+          product_id: parsed.product_id,
+        };
+
+        if (cover) {
+          const base64String = await fileToBase64(cover);
+          sendData.img_base64 = base64String as string;
+          sendData.img_type = getFileType(cover.type);
+        }
+        console.log(sendData);
+        const res = await axios.post("/api/product/update", sendData);
+
+        const { status } = res.data;
+        if (status !== 200) {
+          throw new Error("Error updating product");
+        }
+
+        toast({
+          variant: "success",
+          title: "Продукт обновлен успешно!",
+        });
+        router.push(`${homeBaseUrl}/products`);
+      } catch (error) {
+        console.error(error);
+        toast({
+          variant: "destructive",
+          title: "Ошибка при обновлении продукта",
+        });
+      } finally {
+        router.refresh();
+        return;
+      }
+    }
+    setProduct(values);
     router.push("add/preview");
   }
   return (
@@ -160,10 +203,10 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
               )}
             />
           )}
-          {cats && (
+          {cats.length > 0 ? (
             <FormField
               control={form.control}
-              name="cat"
+              name="category_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="mb-5">Категория</FormLabel>
@@ -195,6 +238,10 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
                 </FormItem>
               )}
             />
+          ) : (
+            <div className="text-[12px] font-medium mb-5">
+              Загрузка категорий ...
+            </div>
           )}
 
           <FormField
@@ -212,7 +259,7 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
           />
           <FormField
             control={form.control}
-            name="desc"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="mb-5">Описание</FormLabel>
@@ -349,7 +396,7 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
             )}
           />
 
-          {isPack && (
+          {isPack && products.length > 0 ? (
             <div className="fields--products">
               <div className="text-[12px] font-medium uppercase mb-5">
                 Название продуктов
@@ -413,6 +460,10 @@ const ProductForm = ({ parsed }: { parsed?: Product }) => {
                   Добавить поле
                 </Button>
               </div>
+            </div>
+          ) : (
+            <div className="text-[12px] font-medium mb-5">
+              Загрузка продуктов ...
             </div>
           )}
 

@@ -11,6 +11,7 @@ import { homeTabs } from "../../nav";
 import Card from "./_components/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
 
 const Page = async ({
   searchParams,

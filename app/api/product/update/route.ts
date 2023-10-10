@@ -8,6 +8,7 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return new NextResponse("Unauthorized", { status: 401 });
+
     const apiKey = retrieveApiKey(session.backendTokens);
     if (!apiKey) return;
 
@@ -29,7 +30,7 @@ export async function POST(req: Request) {
     };
     console.log(data);
 
-    const res = await axiosBack.post("/product/add_product", data, {
+    const res = await axiosBack.post("/product/edit_product", data, {
       headers: {
         Authorization: apiKey,
       },
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
-    console.log("PUBLISH_ERROR", error);
+    console.log("UPDATE_ERROR", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

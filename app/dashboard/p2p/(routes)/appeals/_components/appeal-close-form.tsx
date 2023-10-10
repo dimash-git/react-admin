@@ -98,7 +98,7 @@ const AppealCloseForm = ({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post("/api/p2p/appeal/close", {
+      const res = await axios.post("/api/appeal/close", {
         ...values,
         id: parsed?.appeal_id,
       });

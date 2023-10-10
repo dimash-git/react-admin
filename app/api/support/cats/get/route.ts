@@ -7,6 +7,8 @@ import { authOptions } from "../../../auth/[...nextauth]/route";
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
+    console.log("session", session);
+
     if (!session) return new NextResponse("Unauthorized", { status: 401 });
 
     const apiKey = retrieveApiKey(session.backendTokens);

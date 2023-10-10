@@ -187,7 +187,7 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
             />
           ) : (
             <div className="text-[12px] font-medium mb-5">
-              Загрзука тэгов ...
+              Загрузка тэгов ...
             </div>
           )}
 

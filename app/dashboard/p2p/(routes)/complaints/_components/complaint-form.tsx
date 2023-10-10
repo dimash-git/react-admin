@@ -8,7 +8,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -50,7 +49,7 @@ const ComplaintForm = ({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post("/api/p2p/complaint/save", {
+      const res = await axios.post("/api/complaint/save", {
         ...values,
         id: parsed?.complain_id,
       });

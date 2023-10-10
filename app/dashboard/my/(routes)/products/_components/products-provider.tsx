@@ -1,17 +1,20 @@
 "use client";
 
 import React, { createContext, useState } from "react";
-import { ProductValues } from "../schema";
+import * as z from "zod";
+import formSchema from "../schema";
 
 interface _ProductContext {
-  product: ProductValues;
-  setProduct: React.Dispatch<React.SetStateAction<ProductValues>>;
+  product: z.infer<typeof formSchema>;
+  setProduct: React.Dispatch<React.SetStateAction<z.infer<typeof formSchema>>>;
 }
 
 const ProductContext = createContext<_ProductContext>({} as _ProductContext);
 
 const ProductProvider = ({ children }: { children: React.ReactNode }) => {
-  const [product, setProduct] = useState<ProductValues>({} as ProductValues);
+  const [product, setProduct] = useState<z.infer<typeof formSchema>>(
+    {} as z.infer<typeof formSchema>
+  );
 
   return (
     <ProductContext.Provider value={{ product, setProduct }}>

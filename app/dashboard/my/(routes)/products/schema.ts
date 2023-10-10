@@ -15,11 +15,11 @@ const productFormSchema = z.object({
         "Только файлы в формате .jpg, .jpeg, .png and .webp принимаются."
       )
   ),
-  cat: z.string({ required_error: "Категория обязательна" }),
+  category_id: z.string({ required_error: "Категория обязательна" }),
   name: z.string().min(3, {
     message: "Введите название",
   }),
-  desc: z.string().min(10, {
+  description: z.string().min(10, {
     message: "Описание должно быть больше 10 символов.",
   }),
   price: z.coerce
@@ -28,11 +28,9 @@ const productFormSchema = z.object({
       invalid_type_error: "Должна быть цифра",
     })
     .positive({ message: "Цифра должна быть не отрицательной" }),
-  discount: z.coerce
-    .number({
-      invalid_type_error: "Должна быть цифра",
-    })
-    .optional(),
+  discount: z.coerce.number({
+    invalid_type_error: "Должна быть цифра",
+  }),
   advantages: z.array(z.string()),
   products: z
     .array(
@@ -51,19 +49,24 @@ const productFormSchema = z.object({
   }),
 });
 
-export interface ProductValues {
+export interface ProductSendData {
+  product_id?: string; // for updated only
+  category_id: string;
+  img_base64?: string;
+  img_type?: string;
   name: string;
-  desc: string;
-  advantages: string[];
-  products?: {
-    product_id: string;
-  }[];
-  cover?: File;
-  price: number;
+  description: string;
+  price: string;
+  discount: string;
   is_pack: boolean;
   is_robot: boolean;
-  discount?: number;
-  cat?: string;
+  advantages: string[];
+  pack_product_json?: [
+    {
+      product_id: string;
+      count: number;
+    }[]
+  ];
 }
 
 export default productFormSchema;
