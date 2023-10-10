@@ -4,10 +4,11 @@ import { retrieveApiKey } from "@/lib/server-utils";
 
 import { BACKEND_URL } from "@/lib/server-constants";
 
-import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
 
 import Card from "./_components/card";
+import Tabs from "@/components/tabs";
+import { mlmTabs } from "../../nav";
 
 const Page = async ({
   searchParams,
@@ -30,21 +31,18 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(
-    BACKEND_URL + "/withdrawal/get_withdrawal_invoice",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: apiKey,
-      },
-      body: JSON.stringify({
-        skip,
-        limit: pageSize,
-      }),
-      next: { tags: ["withdrawals"] },
-    }
-  );
+  const response = await fetch(BACKEND_URL + "/user_transfer/get_users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: apiKey,
+    },
+    body: JSON.stringify({
+      skip,
+      limit: pageSize,
+    }),
+    next: { tags: ["transfers"] },
+  });
 
   if (!response.ok) {
     return <div>Ошибка загрузки списка</div>;
@@ -52,27 +50,25 @@ const Page = async ({
 
   const { content } = await response.json();
 
-  // console.log(content);
+  console.log(content);
 
-  const {
-    withdrawal_invoice,
-    count,
-  }: { withdrawal_invoice: WithdrawalInvoice[]; count: number } = content;
+  const { transfers, count }: { transfers: Mlm[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs />
-
+      <Tabs links={mlmTabs.mlm} />
       <div className="flex flex-col space-y-[30px]">
-        {withdrawal_invoice?.map((invoice, idx) => (
-          <Card key={idx} card={invoice} />
-        ))}
+        {transfers ? (
+          transfers.map((qual, idx) => <Card key={idx} card={qual} />)
+        ) : (
+          <div>Пусто</div>
+        )}
       </div>
 
       {/* PAGINATION */}
-      <div>
+      {transfers?.length > 0 && (
         <Pagination count={count} currPage={currPage} pageSize={pageSize} />
-      </div>
+      )}
     </div>
   );
 };

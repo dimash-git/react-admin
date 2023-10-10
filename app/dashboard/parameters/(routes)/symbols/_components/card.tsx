@@ -30,12 +30,7 @@ const Card = ({ card }: { card: Symbol }) => {
 
       <div className="flex gap-ten items-center">
         <ModalPost Form={SymbolsForm} title="Изменить символ" card={card}>
-          <Button
-            asChild
-            variant="formSubmit"
-            size="md"
-            className="text-[16px] h-10"
-          >
+          <Button asChild variant="formSubmit">
             <span>Редактировать</span>
           </Button>
         </ModalPost>

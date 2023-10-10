@@ -70,12 +70,15 @@ export const urlSegments = [
   { slug: "withdrawal", name: "Список инвойсов на вывод средств" },
   { slug: "passport", name: "Список инвойсов на верификацию" },
 
-  { slug: "panel", name: "админ панель" },
-  { slug: "clause-settings", name: "Настройки клаузы" },
-  { slug: "acc", name: "Акаунты администраторов" },
+  { slug: "qualifications", name: "Квалификации" },
+  { slug: "manual-transfers", name: "Ручные переводы" },
 
   { slug: "appeals", name: "Апелляции" },
   { slug: "complaints", name: "жалобы на чат" },
+
+  { slug: "panel", name: "админ панель" },
+  { slug: "clause-settings", name: "Настройки клаузы" },
+  { slug: "acc", name: "Акаунты администраторов" },
 ];
 
 export const ACCEPTED_IMAGE_TYPES = [

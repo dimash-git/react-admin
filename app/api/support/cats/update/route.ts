@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
+import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { authOptions } from "../../../auth/[...nextauth]/route";
 
 interface PutData {

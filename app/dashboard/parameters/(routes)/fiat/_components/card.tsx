@@ -23,12 +23,7 @@ const Card = ({ card }: { card: Fiat }) => {
 
       <div className="flex gap-ten items-center">
         <ModalPost Form={FiatForm} title="Изменить фиат" card={card}>
-          <Button
-            asChild
-            variant="formSubmit"
-            size="md"
-            className="text-[16px] h-10"
-          >
+          <Button asChild variant="formSubmit">
             <span>Редактировать</span>
           </Button>
         </ModalPost>

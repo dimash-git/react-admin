@@ -1,6 +1,6 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
+import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import NewsForm from "../../_components/news-form";

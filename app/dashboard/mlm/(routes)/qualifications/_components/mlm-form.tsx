@@ -20,7 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
 import axios from "axios";
-import { mlmBaseUrl } from "../nav";
+import { mlmBaseUrl } from "../../../nav";
 import { Checkbox } from "@/components/ui/checkbox";
 
 const MlmForm = ({ parsed }: { parsed?: Mlm }) => {

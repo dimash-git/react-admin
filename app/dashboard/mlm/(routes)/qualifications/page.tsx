@@ -1,14 +1,16 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { retrieveApiKey } from "@/lib/serverUtils";
+import { retrieveApiKey } from "@/lib/server-utils";
 
-import { BACKEND_URL } from "@/lib/serverConstants";
+import { BACKEND_URL } from "@/lib/server-constants";
 
 import Pagination from "@/components/pagination";
 
 import Card from "./_components/card";
 import Tabs from "@/components/tabs";
-import { mlmTabs } from "../nav";
+import { mlmTabs } from "../../nav";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 const Page = async ({
   searchParams,
@@ -31,7 +33,7 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/user_transfer/get_users", {
+  const response = await fetch(BACKEND_URL + "/mlm/get_qualifications", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +43,7 @@ const Page = async ({
       skip,
       limit: pageSize,
     }),
-    next: { tags: ["transfers"] },
+    next: { tags: ["mlm"] },
   });
 
   if (!response.ok) {
@@ -50,26 +52,30 @@ const Page = async ({
 
   const { content } = await response.json();
 
-  console.log(content);
+  // console.log(content);
 
-  const { transfers, count }: { transfers: Mlm[]; count: number } = content;
+  const {
+    qualifications,
+    count,
+  }: { qualifications: MlmList[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Tabs links={mlmTabs.mlm} />
+      <Link href="qualifications/add">
+        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
+          Добавить квалификацию
+        </Button>
+      </Link>
       <div className="flex flex-col space-y-[30px]">
-        {transfers ? (
-          transfers.map((qual, idx) => <Card key={idx} card={qual} />)
-        ) : (
-          <div>Пусто</div>
-        )}
+        {qualifications.map((qual, idx) => (
+          <Card key={idx} card={qual} />
+        ))}
       </div>
 
       {/* PAGINATION */}
       <div>
-        {transfers && (
-          <Pagination count={count} currPage={currPage} pageSize={pageSize} />
-        )}
+        <Pagination count={count} currPage={currPage} pageSize={pageSize} />
       </div>
     </div>
   );

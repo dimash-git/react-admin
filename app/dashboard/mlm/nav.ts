@@ -3,23 +3,14 @@ export const mlmBaseUrl = "/dashboard/mlm";
 export const mlmTabs = {
   mlm: [
     {
-      to: mlmBaseUrl + "",
-      slug: "mlm",
+      to: mlmBaseUrl + "/qualifications",
+      slug: "qualifications",
       name: "МЛМ Квалификации",
     },
     {
-      to: mlmBaseUrl + "/manual",
-      slug: "manual",
+      to: mlmBaseUrl + "/manual-transfers",
+      slug: "manual-transfers",
       name: "Ручной  перевод пользователя",
-    },
-  ],
-};
-
-export const mlmBreadcrumbs = {
-  mlm: [
-    {
-      to: "/dashboard/mlm",
-      name: "МЛМ",
     },
   ],
 };

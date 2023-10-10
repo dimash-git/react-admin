@@ -1,6 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { BACKEND_URL } from "@/lib/serverConstants";
-import { retrieveApiKey } from "@/lib/serverUtils";
+import { BACKEND_URL } from "@/lib/server-constants";
+import { retrieveApiKey } from "@/lib/server-utils";
 import WalletIcon from "@/public/icons/wallet.svg";
 import { getServerSession } from "next-auth";
 import WalletAction from "./wallet-action";

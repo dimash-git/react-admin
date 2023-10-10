@@ -1,12 +1,12 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import { retrieveApiKey } from "@/lib/serverUtils";
+import { retrieveApiKey } from "@/lib/server-utils";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import { homeTabs } from "../../nav";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
-import { BACKEND_URL } from "@/lib/serverConstants";
+import { BACKEND_URL } from "@/lib/server-constants";
 import ProductCard from "./_components/card";
 import Container from "@/components/container";
 

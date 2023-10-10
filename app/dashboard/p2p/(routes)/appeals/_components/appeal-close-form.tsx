@@ -156,7 +156,7 @@ const AppealCloseForm = ({
               name="appeal_status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="mb-5">Категория</FormLabel>
+                  <FormLabel className="mb-5">Cтатус</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}

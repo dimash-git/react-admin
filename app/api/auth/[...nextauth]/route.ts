@@ -4,7 +4,7 @@ import {
   axiosBack,
   getVerificationKey,
   retrieveApiKey,
-} from "@/lib/serverUtils";
+} from "@/lib/server-utils";
 import { JWT } from "next-auth/jwt";
 
 const ACCESS_TOKEN_EXPIRE_TIME = 9 * 60 * 1000;
@@ -24,7 +24,7 @@ async function refreshToken(token: JWT): Promise<JWT> {
     },
   });
 
-  // console.log("refresh attempt: ", res.data);
+  console.log("refresh attempt: ", res.data);
 
   const { access_token, refresh_token } = res.data.content;
 

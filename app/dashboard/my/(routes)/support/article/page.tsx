@@ -1,6 +1,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
+import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 

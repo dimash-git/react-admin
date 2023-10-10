@@ -1,11 +1,11 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 
-import { retrieveApiKey } from "@/lib/serverUtils";
+import { retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 import ProductForm from "../../_components/product-form";
-import { BACKEND_URL } from "@/lib/serverConstants";
+import { BACKEND_URL } from "@/lib/server-constants";
 import Container from "@/components/container";
 
 const EditPage = async ({ params }: { params: { id: string } }) => {

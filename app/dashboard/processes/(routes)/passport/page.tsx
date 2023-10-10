@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { retrieveApiKey } from "@/lib/serverUtils";
+import { retrieveApiKey } from "@/lib/server-utils";
 
-import { BACKEND_URL } from "@/lib/serverConstants";
+import { BACKEND_URL } from "@/lib/server-constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";

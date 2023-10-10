@@ -1,7 +1,7 @@
 import Breadcrumbs from "@/components/breadcrumbs";
 
 import EventForm from "../../_components/event-form";
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
+import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 

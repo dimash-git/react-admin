@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../[...nextauth]/route";
-import { axiosBack, retrieveApiKey } from "@/lib/serverUtils";
+import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 
 export async function GET(req: Request) {
   try {
