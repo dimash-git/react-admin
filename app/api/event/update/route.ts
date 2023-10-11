@@ -14,35 +14,11 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const {
-      event_id,
-      name,
-      desc,
-      timestamp,
-      is_online,
-      img_type,
-      img_data_base64,
-      media_blocks,
-    } = body;
-
-    const res = await axiosBack.post(
-      "/event/edit_event",
-      {
-        event_id,
-        name,
-        desc,
-        is_online,
-        timestamp,
-        img_type,
-        img_data_base64,
-        media_blocks,
+    const res = await axiosBack.post("/event/edit_event", body, {
+      headers: {
+        Authorization: apiKey,
       },
-      {
-        headers: {
-          Authorization: apiKey,
-        },
-      }
-    );
+    });
 
     // console.log(res.data.response);
 

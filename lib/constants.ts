@@ -88,4 +88,6 @@ export const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
-export const MAX_FILE_SIZE = 3000000;
+export const MAX_FILE_SIZE = 2000000;
+
+export const PAGE_SIZE = 8;

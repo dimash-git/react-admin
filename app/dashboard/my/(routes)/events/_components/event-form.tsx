@@ -58,6 +58,8 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
   const { event, setEvent } = useContext(EventContext);
   const [selectedCover, setSelectedCover] = useState<boolean>(false);
 
+  // console.log(parsed);
+
   /* START */
   let defaultValues: z.infer<typeof formSchema> = {
     name: parsed?.name ?? event?.name ?? "",
@@ -366,7 +368,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
           <AddFieldsPanel name="мероприятие" append={append} />
 
           <div className="flex gap-ten">
-            <Button variant="form" onClick={() => router.back()}>
+            <Button variant="form" type="button" onClick={() => router.back()}>
               Отмена
             </Button>
             <Button

@@ -21,55 +21,55 @@ import { MarketingContext } from "../../_components/marketing-provider";
 import { MarketingSendData } from "../../schema";
 
 const PreviewPage = () => {
-  const { marketing } = useContext(MarketingContext);
   const { toast } = useToast();
   const router = useRouter();
 
+  const { marketing } = useContext(MarketingContext);
+
   const handlePublish = async () => {
-    const { name, desc, cover, media_blocks } = marketing;
+    const { cover, media_blocks, ...restValues } = marketing;
 
-    const mediaBlocksWithBase64 = await Promise.all(
-      media_blocks.map(convertMediaBlockToBase64)
-    );
+    try {
+      const mediaBlocksWithBase64 = await Promise.all(
+        media_blocks.map(convertMediaBlockToBase64)
+      );
 
-    let formData: MarketingSendData = {
-      name,
-      desc,
-      media_blocks: mediaBlocksWithBase64,
-    };
+      let sendData: MarketingSendData = {
+        ...restValues,
+        media_blocks: mediaBlocksWithBase64,
+      };
 
-    if (cover) {
-      try {
+      if (cover) {
         const base64String = await fileToBase64(cover);
-        formData.img_data_base64 = base64String as string;
-        formData.img_type = getFileType(cover.type);
-      } catch (error) {
-        console.log(`Error: ${error}`);
+        sendData.img_data_base64 = base64String as string;
+        sendData.img_type = getFileType(cover.type);
       }
-    }
 
-    // console.log("fields:", formData);
+      const res = await axios.post("/api/marketing/add", sendData);
 
-    const res = await axios.post("/api/marketing/add", formData);
+      console.log("Response:", res.data);
 
-    // console.log("Response:", res.data);
+      const { status } = res.data;
 
-    const { status } = res.data;
-    if (status != 200) {
+      if (status != 200) {
+        throw new Error("Error posting marketing");
+      }
+
       toast({
         variant: "success",
-        title: "Ошибка при добавлении маркетинг продукта!",
+        title: "Маркетинг продукт добавлен успешно!",
       });
-      return;
+
+      router.push(`${homeBaseUrl}/marketing`);
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Ошибка при добавлении маркетинг продукта",
+      });
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: "Маркетинг продукт добавлен успешно!",
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/marketing`);
   };
 
   return (

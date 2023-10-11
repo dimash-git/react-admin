@@ -234,3 +234,11 @@ interface Complaint {
   }[];
   messages: Message[];
 }
+
+interface User {
+  user_id: string;
+  login: string;
+  phone?: string;
+  google_secret: string;
+  is_block: boolean;
+}

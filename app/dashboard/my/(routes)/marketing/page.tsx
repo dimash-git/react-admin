@@ -1,13 +1,15 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+
+import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
 import { retrieveApiKey } from "@/lib/server-utils";
 
 import Breadcrumbs from "@/components/breadcrumbs";
-import { homeTabs } from "../../nav";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
-import { BACKEND_URL } from "@/lib/server-constants";
 import Card from "./_components/card";
+import { homeTabs } from "../../nav";
 
 const MarketingPage = async ({
   searchParams,
@@ -20,7 +22,7 @@ const MarketingPage = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 3;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

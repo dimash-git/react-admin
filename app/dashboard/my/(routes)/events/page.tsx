@@ -2,15 +2,16 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/server-utils";
 
+import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
+
 import Breadcrumbs from "@/components/breadcrumbs";
 import EventCard from "./_components/card";
-import { homeTabs } from "../../nav";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
-import { BACKEND_URL } from "@/lib/server-constants";
+import { homeTabs } from "../../nav";
 
 const EventsPage = async ({
-  params,
   searchParams,
 }: {
   params: { slug: string };
@@ -21,7 +22,7 @@ const EventsPage = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 3;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

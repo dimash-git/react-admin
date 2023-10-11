@@ -40,6 +40,8 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
   const { marketing, setMarketing } = useContext(MarketingContext);
   const [selectedCover, setSelectedCover] = useState<boolean>(false);
 
+  // console.log(parsed);
+
   /* START */
   let defaultValues: z.infer<typeof formSchema> = {
     name: parsed?.name ?? marketing?.name ?? "",
@@ -56,7 +58,6 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
     defaultValues.cover = marketing?.cover;
   }
   /* END */
-  // console.log(parsed);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,8 +70,6 @@ const MarketingForm = ({ parsed }: { parsed?: Marketing }) => {
     control: form.control,
     name: "media_blocks",
   });
-
-  console.log("fields", fields);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (parsed) {

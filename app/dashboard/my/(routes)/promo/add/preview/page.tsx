@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { PromoContext } from "../../_components/promo-provider";
 import { homeBaseUrl } from "@/app/dashboard/my/nav";
+import { PromoSendData } from "../../schema";
 
 const PromoPreviewPage = () => {
   const { promo } = useContext(PromoContext);
@@ -19,59 +20,46 @@ const PromoPreviewPage = () => {
   const router = useRouter();
 
   const handlePublish = async () => {
-    const { name } = promo;
-    const formData = {
-      name,
-      img_data_base64: "",
-      img_data_type: "",
-      file_data_base64: "",
-      file_data_type: "",
-    };
+    const { cover, file, ...restPromo } = promo;
 
-    if (promo?.image) {
-      const { image } = promo;
-      try {
-        const base64String = await fileToBase64(image);
-        formData.img_data_base64 = base64String as string;
-        formData.img_data_type = getFileType(image.type);
-      } catch (error: any) {
-        console.error("Publish error: ", error.message);
+    try {
+      const sendData: PromoSendData = {
+        ...restPromo,
+      };
+
+      if (cover) {
+        const base64String = await fileToBase64(cover);
+        sendData.img_data_base64 = base64String as string;
+        sendData.img_data_type = getFileType(cover.type);
       }
-    }
-
-    if (promo?.file) {
-      const { file } = promo;
-      try {
+      if (file) {
         const base64String = await fileToBase64(file);
-        formData.file_data_base64 = base64String as string;
-        formData.file_data_type = getFileType(file.type);
-      } catch (error: any) {
-        console.error("Publish error: ", error.message);
+        sendData.file_data_base64 = base64String as string;
+        sendData.file_data_type = getFileType(file.type);
       }
-    }
 
-    console.log("Publish:", formData);
+      const res = await axios.post("/api/promo/add", sendData);
 
-    const res = await axios.post("/api/promo/add", formData);
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error posting promo " + status);
+      }
 
-    // console.log("Response:", res.data);
+      toast({
+        variant: "success",
+        title: "Промо материал добавлено успешно!",
+      });
 
-    const { status } = res.data;
-    if (status != 200) {
+      router.push(`${homeBaseUrl}/promo`);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
-        title: "Ошибка при добавлении промо материала!",
+        title: "Ошибка при добавлении промо материала",
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: "Промо материал добавлено успешно!",
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/promo`);
   };
 
   return (
@@ -87,12 +75,12 @@ const PromoPreviewPage = () => {
         </div>
 
         <div className="preview__cover">
-          {promo?.image && (
+          {promo?.cover && (
             <Image
               width={400}
               height={238}
               alt="Image"
-              src={URL.createObjectURL(promo.image)}
+              src={URL.createObjectURL(promo.cover)}
               className="w-full object-cover"
             />
           )}

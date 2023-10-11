@@ -35,7 +35,7 @@ const formSchema = z.object({
   msg_order: z.string().min(3, {
     message: "Введите сообщение",
   }),
-  user_id_p2p_ban: z.string().optional(),
+  user_id_p2p_ban: z.string(),
   appeal_status: z.string({ required_error: "Статус обязателен" }),
 });
 
@@ -87,6 +87,7 @@ const AppealCloseForm = ({
     msg_offer: "",
     msg_order: "",
     appeal_status: "",
+    user_id_p2p_ban: "",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({

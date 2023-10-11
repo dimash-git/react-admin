@@ -1,23 +1,19 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
-import { retrieveApiKey } from "@/lib/server-utils";
 
-import Breadcrumbs from "@/components/breadcrumbs";
-import PromoCard from "./_components/card";
-import { homeTabs } from "../../nav";
-import Tabs from "@/components/tabs";
-import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/server-constants";
 import { PAGE_SIZE } from "@/lib/constants";
+import { retrieveApiKey } from "@/lib/server-utils";
 
-const EventsPage = async ({
+import Pagination from "@/components/pagination";
+import Card from "./_components/card";
+
+const UsersPage = async ({
   searchParams,
 }: {
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  console.log(searchParams);
-
   const session = await getServerSession(authOptions);
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
@@ -33,7 +29,7 @@ const EventsPage = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/promo/get_promo_materials", {
+  const response = await fetch(BACKEND_URL + "/main/user/get_users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -43,31 +39,24 @@ const EventsPage = async ({
       skip,
       limit: pageSize,
     }),
-    next: { tags: ["promos"] },
+    next: { tags: ["users"] },
   });
-
-  if (!response.ok) {
-    throw new Error("Error Loading Promo Materials");
-  }
 
   const { status, content } = await response.json();
 
   if (status.code !== 200) {
-    throw new Error("Error Loading Promo Materials");
+    throw new Error("Error Loading Marketing Products");
   }
 
-  const {
-    promo_materials,
-    count,
-  }: { promo_materials: Promo[]; count: number } = content;
+  console.log(content);
+
+  const { users, count }: { users: any[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
-      <Breadcrumbs />
-      <Tabs links={homeTabs.promo} />
       <div className="flex flex-col space-y-[30px]">
-        {promo_materials.map((promo, idx) => (
-          <PromoCard key={idx} card={promo} />
+        {users.map((user, idx) => (
+          <Card key={idx} card={user} />
         ))}
       </div>
       <div>
@@ -77,4 +66,4 @@ const EventsPage = async ({
   );
 };
 
-export default EventsPage;
+export default UsersPage;

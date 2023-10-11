@@ -2,17 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useContext } from "react";
-import { PassportContext } from "./passport-provider";
 
-const Card = ({ card }: { card: Passport }) => {
-  const { setPassport } = useContext(PassportContext);
-
-  const handleUpdate = () => {
-    setPassport(card);
-  };
-
+const Card = ({ card }: { card: User }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex flex-col gap-[7px] max-w-[169px] w-full">
@@ -20,11 +11,14 @@ const Card = ({ card }: { card: Passport }) => {
         <span className="text-[10px] uppercase">{card?.user_id}</span>
       </div>
 
+      <div className="flex flex-col gap-[7px] max-w-[169px] w-full">
+        <span className="text-[10px] uppercase">Логин</span>
+        <span className="text-[10px] uppercase">{card?.login}</span>
+      </div>
+
       <div className="flex gap-ten items-center">
         <Button variant="formSubmit" type="button" asChild>
-          <Link href={`passport/${card?.user_id}/view`} onClick={handleUpdate}>
-            Посмотреть документы
-          </Link>
+          <Link href={`users/${card?.user_id}/main`}>Посмотреть</Link>
         </Button>
       </div>
     </div>

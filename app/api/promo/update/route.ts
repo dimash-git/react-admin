@@ -13,17 +13,11 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { id, ...restValues } = body;
-
-    const res = await axiosBack.post(
-      "/bank/edit_bank",
-      { ...restValues, bank_id: id },
-      {
-        headers: {
-          Authorization: apiKey,
-        },
-      }
-    );
+    const res = await axiosBack.post("/promo/edit_promo_material", body, {
+      headers: {
+        Authorization: apiKey,
+      },
+    });
 
     return NextResponse.json({ status: 200 });
   } catch (error: any) {

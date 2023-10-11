@@ -14,39 +14,20 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { id, user_id_p2p_ban, appeal_status, msg_offer, msg_order } = body;
+    const { id, user_id_p2p_ban, ...restValues } = body;
 
-    console.log({
+    const data = {
       appeal_id: id,
-      user_id_p2p_ban: user_id_p2p_ban ? user_id_p2p_ban.split(",") : undefined,
-      appeal_status,
-      msg_offer,
-      msg_order,
-    });
+      user_id_p2p_ban:
+        user_id_p2p_ban != "" ? user_id_p2p_ban.split(",") : null,
+      ...restValues,
+    };
 
-    const res = await axiosBack.post(
-      "/p2p_appeal/close_appeal",
-      {
-        appeal_id: id,
-        user_id_p2p_ban: user_id_p2p_ban
-          ? user_id_p2p_ban.split(",")
-          : undefined,
-        appeal_status,
-        msg_offer,
-        msg_order,
+    const res = await axiosBack.post("/p2p_appeal/close_appeal", data, {
+      headers: {
+        Authorization: apiKey,
       },
-      {
-        headers: {
-          Authorization: apiKey,
-        },
-      }
-    );
-
-    if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Close failed", { status: 500 });
-    }
-
-    // console.log(res.data.response);
+    });
 
     return NextResponse.json({ status: 200 });
   } catch (error) {
