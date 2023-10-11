@@ -1,6 +1,8 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const UserMainPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -40,7 +42,21 @@ const UserMainPage = async ({ params }: { params: { id: string } }) => {
     return <>{String(error)}</>;
   }
 
-  return <></>;
+  return (
+    <>
+      <div>
+        <Button
+          asChild
+          type="button"
+          variant="formSubmit"
+          size="md"
+          className="text-[16px] h-10"
+        >
+          <Link href="main/edit">Изменить</Link>
+        </Button>
+      </div>
+    </>
+  );
 };
 
 export default UserMainPage;

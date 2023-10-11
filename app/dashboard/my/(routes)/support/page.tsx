@@ -63,11 +63,18 @@ const Page = async ({
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
       <Tabs links={homeTabs.support} />
-      <Link href="support/add">
-        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
-          Создать вопрос
+
+      <div>
+        <Button
+          asChild
+          variant="formSubmit"
+          size="md"
+          className="text-[16px] h-10"
+        >
+          <Link href="support/add"> Создать вопрос</Link>
         </Button>
-      </Link>
+      </div>
+
       <div className="flex flex-col space-y-[30px]">
         {questions.map((qa, idx) => (
           <Card key={idx} card={qa} />

@@ -43,7 +43,7 @@ const UserMainForm = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post("/api/bank/", values);
+      const res = await axios.post("/api/user/main/update", values);
 
       // console.log("Response:", res.data);
 
@@ -188,7 +188,7 @@ const UserMainForm = () => {
           />
 
           <div className="flex gap-ten">
-            <Button variant="form" type="button">
+            <Button variant="form" type="button" onClick={() => router.back()}>
               Отмена
             </Button>
             <Button

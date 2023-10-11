@@ -17,7 +17,7 @@ const AddBank = () => {
     }
   }, []);
   return (
-    <div className="max-w-[200px]">
+    <div>
       <ModalPost Form={BankForm} title="Добавить банк">
         <Button
           asChild

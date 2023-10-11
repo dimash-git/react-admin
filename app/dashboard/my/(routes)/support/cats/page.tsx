@@ -65,11 +65,18 @@ const SubCategoriesPage = async ({
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
       <Tabs links={homeTabs.support} />
-      <Link href="cats/add">
-        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
-          Создать категорию
+
+      <div>
+        <Button
+          asChild
+          variant="formSubmit"
+          size="md"
+          className="text-[16px] h-10"
+        >
+          <Link href="cats/add"> Создать категорию </Link>
         </Button>
-      </Link>
+      </div>
+
       <div className="flex flex-col space-y-[30px]">
         {categories.map((cat, idx) => (
           <Card key={idx} card={cat} />

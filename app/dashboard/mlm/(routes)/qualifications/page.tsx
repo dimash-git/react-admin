@@ -62,11 +62,18 @@ const Page = async ({
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Tabs links={mlmTabs.mlm} />
-      <Link href="qualifications/add">
-        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
-          Добавить квалификацию
+
+      <div>
+        <Button
+          asChild
+          variant="formSubmit"
+          size="md"
+          className="text-[16px] h-10"
+        >
+          <Link href="qualifications/add"> Добавить квалификацию</Link>
         </Button>
-      </Link>
+      </div>
+
       <div className="flex flex-col space-y-[30px]">
         {qualifications.map((qual, idx) => (
           <Card key={idx} card={qual} />

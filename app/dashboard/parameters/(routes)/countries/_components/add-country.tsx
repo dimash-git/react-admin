@@ -17,7 +17,7 @@ const AddCountry = () => {
     }
   }, []);
   return (
-    <div className="max-w-[240px]">
+    <div>
       <ModalPost Form={CountriesForm} title="Добавить страну">
         <Button
           asChild

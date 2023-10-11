@@ -7,17 +7,21 @@ const userMainFormSchema = z.object({
     message: "Введите логин",
   }),
   user_phone: z
-    .string()
-    .min(3, {
-      message: "Введите телефон",
+    .string({
+      required_error: "Номер телефона обязателен",
+    })
+    .min(7, {
+      message: "Введите номер телефона",
     })
     .regex(phoneRegex, "Не корректный номер телефона"),
   user_email: z
-    .string()
-    .min(3, {
-      message: "Введите email",
+    .string({
+      required_error: "Почта обязательна",
     })
-    .email("Это не валидный email"),
+    .min(4, {
+      message: "Введите почту",
+    })
+    .email("Это не валидная почта"),
   user_is_confirmed: z.boolean({
     required_error: "Обязателен",
     invalid_type_error: "Должен быть boolean",

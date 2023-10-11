@@ -17,7 +17,7 @@ const AddSymbol = () => {
     }
   }, []);
   return (
-    <div className="max-w-[240px]">
+    <div>
       <ModalPost Form={SymbolsForm} title="Добавить символ">
         <Button
           asChild

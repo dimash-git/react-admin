@@ -55,11 +55,18 @@ const MarketingPage = async ({
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
-      <Link href="acc/add">
-        <Button variant="formSubmit" size="md" className="text-[16px] h-10">
-          Добавить аккаунт администратора
+
+      <div>
+        <Button
+          asChild
+          variant="formSubmit"
+          size="md"
+          className="text-[16px] h-10"
+        >
+          <Link href="acc/add"> Добавить аккаунт администратора</Link>
         </Button>
-      </Link>
+      </div>
+
       <div className="flex flex-col space-y-[30px]">
         {/* {products.map((product, idx) => (
             <ProductCard key={idx} card={product} />

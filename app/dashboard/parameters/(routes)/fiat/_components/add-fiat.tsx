@@ -17,7 +17,7 @@ const AddFiat = () => {
     }
   }, []);
   return (
-    <div className="max-w-[200px]">
+    <div>
       <ModalPost Form={FiatForm} title="Добавить фиат">
         <Button
           asChild
