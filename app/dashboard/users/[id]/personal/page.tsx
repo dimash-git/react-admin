@@ -4,7 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-const UserMlmPage = async ({ params }: { params: { id: string } }) => {
+const UserPersonalPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -12,11 +12,11 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let user: User;
+  let personal: any;
 
   try {
     const res = await axiosBack.post(
-      "/user/mlm_info/get_mlm_info",
+      "/user/personal_info/get_personal_info",
       {
         user_id: id,
       },
@@ -32,11 +32,10 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
     const { status, content } = res.data;
 
     if (status.code != 200) {
-      throw new Error("Error loading Mlm Info for user");
+      throw new Error("Error loading Personal Info for user");
     }
 
-    user = content.user;
-    console.log(user);
+    personal = content.personal;
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
@@ -52,11 +51,11 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
           size="md"
           className="text-[16px] h-10"
         >
-          <Link href="mlm/edit">Изменить</Link>
+          <Link href="personal/edit">Изменить</Link>
         </Button>
       </div>
     </>
   );
 };
 
-export default UserMlmPage;
+export default UserPersonalPage;

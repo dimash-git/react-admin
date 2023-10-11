@@ -1,10 +1,8 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
-const UserMlmPage = async ({ params }: { params: { id: string } }) => {
+const UserBanPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -12,13 +10,21 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let user: User;
+  let history: any;
 
   try {
     const res = await axiosBack.post(
-      "/user/mlm_info/get_mlm_info",
+      "/user/user_transaction/get_user_transaction",
       {
         user_id: id,
+        timestamp_from: "<integer>",
+        timestamp_to: "<integer>",
+        type: "mlm_percent",
+        status: "success",
+        from_: "<string>",
+        to_: "<string>",
+        skip: 0,
+        limit: 9,
       },
       {
         headers: {
@@ -32,31 +38,16 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
     const { status, content } = res.data;
 
     if (status.code != 200) {
-      throw new Error("Error loading Mlm Info for user");
+      throw new Error("Error loading Transaction History for user");
     }
 
-    user = content.user;
-    console.log(user);
+    history = content.history;
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
   }
 
-  return (
-    <>
-      <div>
-        <Button
-          asChild
-          type="button"
-          variant="formSubmit"
-          size="md"
-          className="text-[16px] h-10"
-        >
-          <Link href="mlm/edit">Изменить</Link>
-        </Button>
-      </div>
-    </>
-  );
+  return <></>;
 };
 
-export default UserMlmPage;
+export default UserBanPage;

@@ -1,10 +1,9 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import PassportFullscreen from "./_components/passport-fullscreen";
 
-const UserMlmPage = async ({ params }: { params: { id: string } }) => {
+const UserPassportPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -12,11 +11,11 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let user: User;
+  let passport: any;
 
   try {
     const res = await axiosBack.post(
-      "/user/mlm_info/get_mlm_info",
+      "/user/passport/get_passport_info",
       {
         user_id: id,
       },
@@ -32,11 +31,10 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
     const { status, content } = res.data;
 
     if (status.code != 200) {
-      throw new Error("Error loading Mlm Info for user");
+      throw new Error("Error loading Passport info for user");
     }
 
-    user = content.user;
-    console.log(user);
+    passport = content.two_fa_info;
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
@@ -44,19 +42,15 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <div>
-        <Button
-          asChild
-          type="button"
-          variant="formSubmit"
-          size="md"
-          className="text-[16px] h-10"
-        >
-          <Link href="mlm/edit">Изменить</Link>
-        </Button>
+      <div className="flex flex-col space-y-[10px]">
+        <span className="font-medium text-[12px] leading-3 uppercase">
+          подтвержден ли паспорт
+        </span>
+        <span className="font-bold text-[20px] leading-4">Да</span>
       </div>
+      <PassportFullscreen id="" passport={{}} />
     </>
   );
 };
 
-export default UserMlmPage;
+export default UserPassportPage;

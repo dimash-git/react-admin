@@ -1,10 +1,8 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
-const UserMlmPage = async ({ params }: { params: { id: string } }) => {
+const UserProductPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
@@ -12,11 +10,11 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let user: User;
+  let product: any;
 
   try {
     const res = await axiosBack.post(
-      "/user/mlm_info/get_mlm_info",
+      "/user/product/get_bought_product",
       {
         user_id: id,
       },
@@ -32,31 +30,16 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
     const { status, content } = res.data;
 
     if (status.code != 200) {
-      throw new Error("Error loading Mlm Info for user");
+      throw new Error("Error loading Bought Products for user");
     }
 
-    user = content.user;
-    console.log(user);
+    product = content.product;
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
   }
 
-  return (
-    <>
-      <div>
-        <Button
-          asChild
-          type="button"
-          variant="formSubmit"
-          size="md"
-          className="text-[16px] h-10"
-        >
-          <Link href="mlm/edit">Изменить</Link>
-        </Button>
-      </div>
-    </>
-  );
+  return <></>;
 };
 
-export default UserMlmPage;
+export default UserProductPage;

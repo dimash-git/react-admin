@@ -1,5 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import axios from "axios";
+
 import {
   Form,
   FormControl,
@@ -12,31 +15,29 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
-import { useRouter } from "next/navigation";
-import axios from "axios";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import { Checkbox } from "@/components/ui/checkbox";
+
 const formSchema = z.object({
-  name: z.string().min(3, {
-    message: "Введите название",
+  is_p2p_ban: z.boolean({
+    required_error: "Обязателен",
+    invalid_type_error: "Должен быть boolean",
   }),
 });
 
-const UserMainForm = ({
+const P2PBanForm = ({
   setOpen,
-  parsed,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  parsed?: Bank;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
 
   const defaultValues = {
-    name: parsed?.name ?? "",
+    is_p2p_ban: false,
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,54 +48,64 @@ const UserMainForm = ({
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await axios.post(
-      `/api/bank/${parsed ? "update" : "add"}`,
-      parsed ? { ...values, id: parsed.bank_id } : values
-    );
+    try {
+      const res = await axios.post("/api/user/ban/update", {
+        ...values,
+        user_id: "",
+      });
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error updating ban info for user");
+      }
+
+      toast({
+        variant: "success",
+        title: "Решение обновлено успешно!",
+      });
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
-        title: `Ошибка при ${parsed?.name ? "обновлении" : "добавлении"} банк`,
+        title: "Ошибка при обновлении решения",
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `Банк ${parsed?.name ? "обновлен" : "добавлен"} успешно!`,
-    });
-
-    setOpen(false);
-    router.refresh();
   }
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[30px]">
           <FormField
             control={form.control}
-            name="name"
+            name="is_p2p_ban"
             render={({ field }) => (
-              <FormItem className="space-y-5">
-                <FormLabel>название банка</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
+              <FormItem>
+                <FormLabel className="mb-5">Заблокировать</FormLabel>
+                <div className="flex items-center gap-4">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <span className="text-[12px] font-semibold">
+                    {field.value ? "Да" : "Нет"}
+                  </span>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
-
           <div className="flex gap-ten w-full justify-between">
             <Button
               variant="form"
               type="button"
               onClick={() => setOpen(false)}
-              className="w-full"
+              className="w-full h-10 text-[16px]"
             >
               Отмена
             </Button>
@@ -102,7 +113,7 @@ const UserMainForm = ({
               variant="formSubmit"
               type="submit"
               disabled={isLoading || isSubmitting}
-              className="w-full"
+              className="w-full h-10 text-[16px]"
             >
               Сохранить
             </Button>
@@ -113,4 +124,4 @@ const UserMainForm = ({
   );
 };
 
-export default UserMainForm;
+export default P2PBanForm;

@@ -17,13 +17,13 @@ export const usersTabs = [
     name: "2Fa информация",
   },
   {
-    to: "/user_delete",
-    slug: "user_delete",
+    to: "/remove",
+    slug: "remove",
     name: "Удаление аккаунта",
   },
   {
-    to: "/user_ban",
-    slug: "user_ban",
+    to: "/ban",
+    slug: "ban",
     name: "Блокировка аккаунта",
   },
   {
