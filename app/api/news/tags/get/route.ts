@@ -8,7 +8,6 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return new NextResponse("Unauthorized", { status: 401 });
-
     const apiKey = retrieveApiKey(session.backendTokens);
     if (!apiKey) return;
 
@@ -25,15 +24,17 @@ export async function POST(req: Request) {
       }
     );
 
-    if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Get tags failed", { status: 500 });
+    return NextResponse.json({ status: 200, content: res?.data?.content });
+  } catch (error: any) {
+    const { response } = error;
+
+    if (!response) {
+      return new NextResponse("Internal error", { status: 500 });
     }
 
-    // console.log(res.data);
+    const { status, statusText } = response;
 
-    return NextResponse.json({ status: 200, content: res?.data?.content });
-  } catch (error) {
-    console.log("TAGS_GET_ERROR", error);
-    return new NextResponse("Internal error", { status: 500 });
+    console.error("GET_ERROR", status, statusText);
+    return new NextResponse(statusText, { status });
   }
 }

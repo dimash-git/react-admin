@@ -8,20 +8,14 @@ export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return new NextResponse("Unauthorized", { status: 401 });
-
     const apiKey = retrieveApiKey(session.backendTokens);
     if (!apiKey) return;
 
     const body = await req.json();
 
-    const { headline, text } = body;
-
     const res = await axiosBack.post(
       "/notification/add_global_notification",
-      {
-        headline,
-        text,
-      },
+      body,
       {
         headers: {
           Authorization: apiKey,
@@ -29,15 +23,17 @@ export async function POST(req: Request) {
       }
     );
 
-    if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Publish failed", { status: 500 });
+    return NextResponse.json({ status: 200 });
+  } catch (error: any) {
+    const { response } = error;
+
+    if (!response) {
+      return new NextResponse("Internal error", { status: 500 });
     }
 
-    // console.log(res.data.response);
+    const { status, statusText } = response;
 
-    return NextResponse.json({ status: 200 });
-  } catch (error) {
-    console.log("PUBLISH_ERROR", error);
-    return new NextResponse("Internal error", { status: 500 });
+    console.error("CREATE_ERROR", status, statusText);
+    return new NextResponse(statusText, { status });
   }
 }

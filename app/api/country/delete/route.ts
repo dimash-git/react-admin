@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     const { status, statusText } = response;
 
-    console.error("UPDATE_ERROR", status, statusText);
+    console.error("DELETE_ERROR", status, statusText);
     return new NextResponse(statusText, { status });
   }
 }

@@ -47,7 +47,7 @@ const MlmForm = ({ parsed }: { parsed?: Mlm }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const res = await axios.post(
       `/api/mlm/${parsed ? "update" : "add"}`,
-      parsed ? { ...values, id: parsed.qualification_id } : values
+      parsed ? { ...values, qualification_id: parsed.qualification_id } : values
     );
 
     // console.log("Response:", res.data);

@@ -14,14 +14,11 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const { id, decision } = body;
+    const { id, ...restValues } = body;
 
     const res = await axiosBack.post(
       "/p2p_complain/save_decision",
-      {
-        complain_id: id,
-        decision,
-      },
+      { ...restValues, complain_id: id },
       {
         headers: {
           Authorization: apiKey,
@@ -29,15 +26,17 @@ export async function POST(req: Request) {
       }
     );
 
-    if (res.status != 200 || res.data.status.code != 200) {
-      return new NextResponse("Save failed", { status: 500 });
+    return NextResponse.json({ status: 200 });
+  } catch (error: any) {
+    const { response } = error;
+
+    if (!response) {
+      return new NextResponse("Internal error", { status: 500 });
     }
 
-    // console.log(res.data.response);
+    const { status, statusText } = response;
 
-    return NextResponse.json({ status: 200 });
-  } catch (error) {
-    console.log("SAVE_ERROR", error);
-    return new NextResponse("Internal error", { status: 500 });
+    console.error("SAVE_ERROR", status, statusText);
+    return new NextResponse(statusText, { status });
   }
 }
