@@ -1,7 +1,9 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+
+import { useState } from "react";
+import axios from "axios";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -13,33 +15,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
-import { useRouter } from "next/navigation";
-
-import formSchema from "../schema";
-import { fileToBase64, getFileType } from "@/lib/utils";
-import { homeBaseUrl } from "@/app/dashboard/my/nav";
 import { useToast } from "@/components/ui/use-toast";
-import axios from "axios";
-import Image from "next/image";
-import { useState } from "react";
 
-interface DefValues {
-  name: string;
-  icon?: null;
-}
+import { homeBaseUrl } from "@/app/dashboard/my/nav";
+import { fileToBase64, getFileType } from "@/lib/utils";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import formSchema, { QuestionCatSendData } from "../schema";
 
 const CatsForm = ({ parsed }: { parsed?: QuestionCat }) => {
   const router = useRouter();
   const { toast } = useToast();
   const [isSwitchOn, setSwitchOn] = useState<boolean>(false);
 
-  let defaultValues: DefValues = {
+  let defaultValues: z.infer<typeof formSchema> = {
     name: parsed?.name ?? "",
   };
 
   if (!parsed?.img) {
-    defaultValues.icon = null;
+    defaultValues.icon = {} as File;
   }
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -50,50 +46,48 @@ const CatsForm = ({ parsed }: { parsed?: QuestionCat }) => {
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { name, icon } = values;
+    const { icon, ...restValues } = values;
 
-    let formData = {
-      name,
-      category_id: parsed?.category_id ?? "",
-      data_type: "",
-      data_base64: "",
-    };
+    try {
+      let sendData: QuestionCatSendData = {
+        ...restValues,
+      };
 
-    if (icon) {
-      try {
+      if (icon) {
         const base64String = await fileToBase64(icon);
-        formData.data_base64 = base64String as string;
-        formData.data_type = getFileType(icon.type);
-      } catch (error: any) {
-        console.error("Get icon base64 error: ", error.message);
+        sendData.data_base64 = base64String as string;
+        sendData.data_type = getFileType(icon.type);
       }
-    }
 
-    const res = await axios.post(
-      `/api/support/cats/${parsed ? "update" : "add"}`,
-      formData
-    );
+      const res = await axios.post(
+        `/api/support/cats/${parsed ? "update" : "add"}`,
+        parsed ? { ...sendData, category_id: parsed.category_id } : sendData
+      );
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error updating a category");
+      }
+
+      toast({
+        variant: "success",
+        title: `Категория ${parsed?.name ? "обновлена" : "добавлена"} успешно!`,
+      });
+
+      router.push(`${homeBaseUrl}/support/cats`);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: `Ошибка при ${
           parsed?.name ? "обновлении" : "добавлении"
         } категории!`,
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `Категория ${parsed?.name ? "обновлена" : "добавлена"} успешно!`,
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/support/cats`);
   }
   return (
     <div>

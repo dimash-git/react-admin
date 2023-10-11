@@ -12,33 +12,33 @@ const UserMainPage = async ({ params }: { params: { id: string } }) => {
 
   let user: User;
 
-  try {
-    const res = await axiosBack.post(
-      "/user/main_info/get_main_info",
-      {
-        user_id: id,
-      },
-      {
-        headers: {
-          Authorization: apiKey,
-        },
-      }
-    );
+  // try {
+  //   const res = await axiosBack.post(
+  //     "/user/main_info/get_main_info",
+  //     {
+  //       user_id: id,
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: apiKey,
+  //       },
+  //     }
+  //   );
 
-    console.log(res.data);
+  //   console.log(res.data);
 
-    const { status, content } = res.data;
+  //   const { status, content } = res.data;
 
-    if (status.code != 200) {
-      throw new Error("Error loading Main Info for user");
-    }
+  //   if (status.code != 200) {
+  //     throw new Error("Error loading Main Info for user");
+  //   }
 
-    user = content.user;
-    console.log(user);
-  } catch (error) {
-    console.error(error);
-    return <>{String(error)}</>;
-  }
+  //   user = content.user;
+  //   console.log(user);
+  // } catch (error) {
+  //   console.error(error);
+  //   return <>{String(error)}</>;
+  // }
 
   return <></>;
 };

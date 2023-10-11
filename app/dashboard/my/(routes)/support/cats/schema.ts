@@ -3,7 +3,7 @@ import * as z from "zod";
 
 const MAX_FILE_SIZE = 1000000;
 
-const formSchema = z.object({
+const questionCatFormSchema = z.object({
   name: z.string().min(3, {
     message: "Введите название категории",
   }),
@@ -22,4 +22,11 @@ const formSchema = z.object({
   ),
 });
 
-export default formSchema;
+export interface QuestionCatSendData {
+  name: string;
+  category_id?: string;
+  data_type?: string;
+  data_base64?: string;
+}
+
+export default questionCatFormSchema;

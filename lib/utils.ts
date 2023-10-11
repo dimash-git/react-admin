@@ -134,3 +134,7 @@ export async function convertMediaBlockToBase64(block: any) {
 
   return result;
 }
+
+export const phoneRegex = new RegExp(
+  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+);

@@ -127,7 +127,6 @@ const NewsForm = ({ parsed }: { parsed?: News }) => {
       // console.log("Response:", res.data);
 
       const { status } = res.data;
-
       if (status !== 200) {
         throw new Error(`Error ${parsed ? "updating" : "adding"} single news`);
       }

@@ -1,4 +1,5 @@
 "use client";
+
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,17 +10,19 @@ interface TabItem {
   name: string;
 }
 
-const Tabs = ({ links }: { links: TabItem[] }) => {
+const UserTabs = ({ links }: { links: TabItem[] }) => {
   const pathname = usePathname();
+
+  const allExceptLast = pathname.split("/").slice(0, -1).join("/");
   const lastPath = pathname.split("/").pop();
 
   return (
-    <div className="flex items-center justify-between max-h-[58px] h-full p-ten gap-[10px] rounded-[20px]  uppercase font-medium text-[15px] leading-4 bg-[#2D3D52]">
+    <div className="grid grid-cols-5 p-ten gap-y-[10px] gap-x-[5px] rounded-[20px] uppercase font-medium text-[14px] leading-4 bg-[#2D3D52]">
       {links.map((link, idx) => (
         <Link
-          href={link.to}
+          href={allExceptLast + link.to}
           className={cn(
-            "w-full text-center rounded-[20px] py-ten px-[30px] transition",
+            "flex items-center justify-center text-center rounded-[10px] py-[10px] px-[5px] transition h-[50px]",
             link.slug === lastPath
               ? "bg-thBlue hover:bg-thBlue/80"
               : "hover:bg-slate-500"
@@ -33,4 +36,4 @@ const Tabs = ({ links }: { links: TabItem[] }) => {
   );
 };
 
-export default Tabs;
+export default UserTabs;

@@ -38,28 +38,33 @@ const TagForm = ({ parsed }: { parsed?: Tag }) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { name } = values;
-    const res = await axios.post("/api/news/tags/add", {
-      name,
-    });
+    try {
+      const res = await axios.post("/api/news/tags/add", {
+        name,
+      });
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error posting a tag for news");
+      }
+
+      toast({
+        variant: "success",
+        title: `Тэг ${parsed?.name ? "обновлен" : "добавлен"} успешно!`,
+      });
+
+      router.push(`${homeBaseUrl}/news/tags`);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: `Ошибка при ${parsed?.name ? "обновлении" : "добавлении"} тэга!`,
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `Тэг ${parsed?.name ? "обновлен" : "добавлен"} успешно!`,
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/news/tags`);
   }
   return (
     <div>

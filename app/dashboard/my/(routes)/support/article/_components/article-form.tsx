@@ -103,7 +103,6 @@ const ArticleForm = ({ parsed }: { parsed?: Article }) => {
       // console.log("Response:", res.data);
 
       const { status } = res.data;
-
       if (status !== 200) {
         throw new Error("Error updating article");
       }

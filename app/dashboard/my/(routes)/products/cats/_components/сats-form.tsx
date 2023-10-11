@@ -37,34 +37,37 @@ const CatsForm = ({ parsed }: { parsed?: QuestionCat }) => {
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { name } = values;
+    try {
+      const res = await axios.post(
+        `/api/product/cats/${parsed ? "update" : "add"}`,
+        parsed ? { ...values, category_id: parsed?.category_id } : values
+      );
 
-    const res = await axios.post(
-      `/api/product/cats/${parsed ? "update" : "add"}`,
-      { name, category_id: parsed?.category_id }
-    );
+      // console.log("Response:", res.data);
 
-    console.log("Response:", res.data);
+      const { status } = res.data;
 
-    const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error posting a category for a product");
+      }
 
-    if (status != 200) {
+      toast({
+        variant: "success",
+        title: `Категория ${parsed?.name ? "обновлена" : "добавлена"} успешно!`,
+      });
+
+      router.push(`${homeBaseUrl}/products/cats`);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "success",
         title: `Ошибка при ${
           parsed?.name ? "обновлении" : "добавлении"
         } категории!`,
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `Категория ${parsed?.name ? "обновлена" : "добавлена"} успешно!`,
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/products/cats`);
   }
   return (
     <div>

@@ -62,31 +62,36 @@ const QuestionForm = ({ parsed }: { parsed?: Question }) => {
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await axios.post(
-      `/api/support/${parsed ? "update" : "add"}`,
-      parsed ? { ...values, question_id: parsed.question_id } : values
-    );
+    try {
+      const res = await axios.post(
+        `/api/support/${parsed ? "update" : "add"}`,
+        parsed ? { ...values, question_id: parsed.question_id } : values
+      );
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error updating question");
+      }
+
+      toast({
+        variant: "success",
+        title: `Короткий вопрос ${parsed ? "обновлен" : "добавлен"} успешно!`,
+      });
+
+      router.push(`${homeBaseUrl}/support`);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "success",
         title: `Ошибка при ${
           parsed ? "обновлении" : "добавлении"
         } короткого вопроса!`,
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `Короткий вопрос ${parsed ? "обновлен" : "добавлен"} успешно!`,
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/support`);
   }
   return (
     <div>
