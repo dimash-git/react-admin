@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 
 import {
@@ -30,14 +30,17 @@ const formSchema = z.object({
 
 const P2PBanForm = ({
   setOpen,
+  parsed,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  parsed?: boolean;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const pathname = usePathname();
 
   const defaultValues = {
-    is_p2p_ban: false,
+    is_p2p_ban: parsed ?? false,
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,9 +52,9 @@ const P2PBanForm = ({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post("/api/user/ban/update", {
+      const res = await axios.post("/api/user/p2p_ban", {
         ...values,
-        user_id: "",
+        user_id: pathname.split("/").slice(-2, -1)[0],
       });
 
       // console.log("Response:", res.data);
@@ -72,6 +75,7 @@ const P2PBanForm = ({
         title: "Ошибка при обновлении решения",
       });
     } finally {
+      setOpen(false);
       router.refresh();
     }
   }

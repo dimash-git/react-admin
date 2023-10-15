@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 
 import {
@@ -38,16 +38,19 @@ const formSchema = z.object({
 
 const User2FAForm = ({
   setOpen,
+  parsed,
 }: {
+  parsed?: User2FA;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const pathname = usePathname();
 
   const defaultValues = {
-    disable_email: false,
-    disable_phone: false,
-    disable_google: false,
+    disable_email: parsed?.email_enable ?? false,
+    disable_phone: parsed?.phone_enable ?? false,
+    disable_google: parsed?.google_enable ?? false,
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,9 +62,14 @@ const User2FAForm = ({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post("/api/user/remove/update", {
+      console.log({
         ...values,
-        user_id: "",
+        user_id: pathname.split("/").slice(-2, -1)[0],
+      });
+
+      const res = await axios.post("/api/user/2fa", {
+        ...values,
+        user_id: pathname.split("/").slice(-2, -1)[0],
       });
 
       // console.log("Response:", res.data);
@@ -82,6 +90,7 @@ const User2FAForm = ({
         title: "Ошибка при обновлении решения",
       });
     } finally {
+      setOpen(false);
       router.refresh();
     }
   }

@@ -4,12 +4,13 @@ import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { p2pBaseUrl } from "@/app/dashboard/p2p/nav";
-import Chat from "../../_components/chat";
+
+import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
 import ComplaintForm from "../../_components/complaint-form";
+import Chat from "../../_components/chat";
+import { p2pBaseUrl } from "@/app/dashboard/p2p/nav";
 
 const ViewPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

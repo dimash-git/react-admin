@@ -22,12 +22,10 @@ const productFormSchema = z.object({
   description: z.string().min(10, {
     message: "Описание должно быть больше 10 символов.",
   }),
-  price: z.coerce
-    .number({
-      required_error: "Цена обязательна",
-      invalid_type_error: "Должна быть цифра",
-    })
-    .positive({ message: "Цифра должна быть не отрицательной" }),
+  price: z.coerce.number({
+    required_error: "Цена обязательна",
+    invalid_type_error: "Должна быть цифра",
+  }),
   discount: z.coerce.number({
     invalid_type_error: "Должна быть цифра",
   }),

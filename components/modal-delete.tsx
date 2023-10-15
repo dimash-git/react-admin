@@ -9,12 +9,14 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { cn } from "@/lib/utils";
 
 const ModalDelete = ({
   id,
   apiUrl,
   what,
   messages,
+  btn,
 }: {
   id: string;
   apiUrl: string;
@@ -23,6 +25,7 @@ const ModalDelete = ({
     error: string;
     success: string;
   };
+  btn?: boolean;
 }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -50,10 +53,23 @@ const ModalDelete = ({
     setOpen(false);
     router.refresh();
   };
+
   return (
     <Modal open={open} setOpen={setOpen}>
-      <Modal.Trigger className="inline-flex items-center justify-center rounded-[5px] font-medium bg-thRed text-white hover:bg-thRed/90 h-[25px] py-[5px] px-ten">
-        <Trash />
+      <Modal.Trigger
+        className={cn(
+          btn
+            ? null
+            : "inline-flex items-center justify-center rounded-[5px] font-medium bg-thRed text-white hover:bg-thRed/90 h-[25px] py-[5px] px-ten"
+        )}
+      >
+        {btn ? (
+          <Button asChild variant="formSubmit">
+            <span>Удалить</span>
+          </Button>
+        ) : (
+          <Trash />
+        )}
       </Modal.Trigger>
       <Modal.Content className="max-w-[355px] bg-[#2D3D52] p-5 rounded-[20px]">
         <div className="flex flex-col space-y-6">

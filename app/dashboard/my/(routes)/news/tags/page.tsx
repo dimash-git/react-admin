@@ -10,6 +10,7 @@ import { BACKEND_URL } from "@/lib/server-constants";
 import Card from "./_components/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { PAGE_SIZE } from "@/lib/constants";
 
 const TagsPage = async ({
   searchParams,
@@ -22,7 +23,7 @@ const TagsPage = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 3;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

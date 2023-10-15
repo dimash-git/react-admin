@@ -4,21 +4,19 @@ import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-import {
-  AppealContactItem,
-  AppealOrderItem,
-} from "../../_components/appeal-view";
-import AppealCommentsForm from "../../_components/appeal-comments-form";
-
 import EmailIcon from "@/public/icons/email.svg";
 import TgIcon from "@/public/icons/telegram.svg";
 import PhoneIcon from "@/public/icons/phone.svg";
 
-import { unixToReadableDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import InfoBlock from "@/components/info-block";
+import { ContactBlock } from "@/components/contact-block";
+import AppealCommentsForm from "../../_components/appeal-comments-form";
 import AppealCloseModal from "../../_components/appeal-close-modal";
 import AppealCloseForm from "../../_components/appeal-close-form";
+
 import Link from "next/link";
+import { unixToReadableDate } from "@/lib/utils";
 import { p2pBaseUrl } from "@/app/dashboard/p2p/nav";
 
 const ViewPage = async ({ params }: { params: { id: string } }) => {
@@ -95,16 +93,13 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
 
       <div className="grid grid-cols-2 gap-y-[30px]">
         {viewItems?.map((item, idx) => (
-          <AppealOrderItem key={idx} label={item.label} value={item.value} />
+          <InfoBlock key={idx} title={item.label} content={item.value} />
         ))}
       </div>
-      <AppealOrderItem
-        label="Причина подачи апелляции"
-        value={appeal?.reason}
-      />
-      <AppealOrderItem
-        label="Пояснение от создателя апелляции"
-        value={appeal?.description}
+      <InfoBlock title="Причина подачи апелляции" content={appeal?.reason} />
+      <InfoBlock
+        title="Пояснение от создателя апелляции"
+        content={appeal?.description}
       />
       {/* MediaFiles */}
       {/* <div className="flex flex-col space-y-[10px]">
@@ -120,9 +115,9 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
         comments={appeal?.comments ?? ""}
         id={appeal?.appeal_id}
       />
-      <AppealOrderItem
-        label="дата создания апелляции"
-        value={
+      <InfoBlock
+        title="дата создания апелляции"
+        content={
           appeal?.create_timestamp
             ? unixToReadableDate(appeal.create_timestamp)
             : ""
@@ -136,7 +131,7 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
           <div className="flex flex-col space-y-[10px]">
             {orderContactItems.map((contact, idx) =>
               contact.value ? (
-                <AppealContactItem
+                <ContactBlock
                   key={idx}
                   Icon={contact.icon}
                   value={contact.value}
@@ -152,7 +147,7 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
           <div className="flex flex-col space-y-[10px]">
             {offerContactItems.map((contact, idx) =>
               contact.value ? (
-                <AppealContactItem
+                <ContactBlock
                   key={idx}
                   Icon={contact.icon}
                   value={contact.value}

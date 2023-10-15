@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 
 import {
@@ -29,14 +29,17 @@ const formSchema = z.object({
 
 const UserBanForm = ({
   setOpen,
+  parsed,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  parsed?: boolean;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const pathname = usePathname();
 
   const defaultValues = {
-    is_user_ban: false,
+    is_user_ban: parsed ?? false,
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,9 +51,9 @@ const UserBanForm = ({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post("/api/user/ban/update", {
+      const res = await axios.post("/api/user/ban", {
         ...values,
-        user_id: "",
+        user_id: pathname.split("/").slice(-2, -1)[0],
       });
 
       // console.log("Response:", res.data);
@@ -71,6 +74,7 @@ const UserBanForm = ({
         title: "Ошибка при обновлении решения",
       });
     } finally {
+      setOpen(false);
       router.refresh();
     }
   }

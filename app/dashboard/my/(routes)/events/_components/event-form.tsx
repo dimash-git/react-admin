@@ -235,7 +235,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span>Pick a date</span>
+                            <span>Выберите дату</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -275,8 +275,8 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
               control={form.control}
               name="cover"
               render={({ field: { value, ...field } }) => (
-                <FormItem>
-                  <FormLabel className="mb-5">Обложка</FormLabel>
+                <FormItem className="space-y-[10px]">
+                  <FormLabel>Обложка</FormLabel>
                   <FormControl>
                     <Input
                       type="file"

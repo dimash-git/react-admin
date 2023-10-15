@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    const res = await axiosBack.post("/user/main_info/edit_main_info", body, {
+    const res = await axiosBack.post("/user/remove/remove_account", body, {
       headers: {
         Authorization: apiKey,
       },
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
     const { status, statusText } = response;
 
-    console.error("CREATE_ERROR", status, statusText);
+    console.error("UPDATE_ERROR", status, statusText);
     return new NextResponse(statusText, { status });
   }
 }

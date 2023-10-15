@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
 import UserRemoveForm from "./_components/user-remove-form";
+import InfoBlock from "@/components/info-block";
 
 const UserRemovePage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -14,10 +15,7 @@ const UserRemovePage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let remove: {
-    is_remove: string | null;
-    reason: string | null;
-  };
+  let remove: UserRemoved;
 
   try {
     const res = await axiosBack.post(
@@ -48,27 +46,17 @@ const UserRemovePage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Удален ли аккаунт
-        </span>
-        <span className="font-bold text-[20px] leading-4">
-          {remove.is_remove ? "Да" : "Нет"}
-        </span>
-      </div>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Причина удаления
-        </span>
-        <span className="font-bold text-[20px] leading-4">
-          {remove.reason ?? "-"}
-        </span>
-      </div>
+      <InfoBlock
+        title="Удален ли аккаунт"
+        content={remove?.is_remove ? "Да" : "Нет"}
+      />
+      <InfoBlock title="Причина удаления" content={remove?.reason ?? "-"} />
       <div>
         <ModalPost
           Form={UserRemoveForm}
           title="Изменить решение об удалении"
           maxWidth="max-w-[355px]"
+          card={remove}
         >
           <Button
             asChild

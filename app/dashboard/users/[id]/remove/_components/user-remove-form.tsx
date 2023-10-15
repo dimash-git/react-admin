@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 
 import {
@@ -37,15 +37,18 @@ const formSchema = z.object({
 
 const UserRemoveForm = ({
   setOpen,
+  parsed,
 }: {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  parsed?: UserRemoved;
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const pathname = usePathname();
 
   let defaultValues: z.infer<typeof formSchema> = {
-    is_remove: false,
-    reason: "",
+    is_remove: parsed?.is_remove ?? false,
+    reason: parsed?.reason ?? "",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,9 +72,9 @@ const UserRemoveForm = ({
     console.log(values);
 
     try {
-      const res = await axios.post("/api/user/remove/update", {
+      const res = await axios.post("/api/user/remove", {
         ...values,
-        user_id: "",
+        user_id: pathname.split("/").slice(-2, -1)[0],
       });
 
       // console.log("Response:", res.data);

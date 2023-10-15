@@ -242,3 +242,75 @@ interface User {
   google_secret: string;
   is_block: boolean;
 }
+
+interface UserMain {
+  user_id: string;
+  user_login: string;
+  user_phone: string;
+  user_email: string;
+  user_is_confirmed: boolean;
+  user_is_passed_academy: boolean;
+  parent_id: string | null;
+  logo: string;
+  balance: number;
+}
+interface UserMlm {
+  user_id: string;
+  personal_sales: number;
+  team_sales: number;
+  personal_registry: number;
+  team_registry: number;
+  qualification_level: number;
+  career_closing_date: number;
+  clause: {
+    clause: number;
+    clause_user_id: string | null;
+    is_on_clause: boolean;
+    is_clause_enable: boolean;
+  };
+  quick_start: {
+    percent: string | null;
+    create_date: number | null;
+    expired_date: number | null;
+  };
+}
+interface User2FA {
+  email_enable: boolean;
+  phone_enable: boolean;
+  google_enable: boolean;
+}
+
+interface UserRemoved {
+  is_remove: boolean;
+  reason: string | null;
+}
+
+interface UserBanned {
+  is_p2p_ban: boolean;
+  is_user_ban: boolean;
+}
+
+interface UserPersonal {
+  user_id: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  birthday_timestamp: number;
+  country: string;
+  telegram: string;
+}
+
+interface UserBought {
+  product_id: string;
+  img_uri: string;
+  category: string;
+  name: string;
+  description: string;
+  advantage: string[];
+  discount: number | null;
+  price: number;
+  is_robot: boolean;
+  bought_product_id: string;
+  is_pack: boolean;
+  is_activate: boolean;
+}

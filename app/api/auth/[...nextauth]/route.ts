@@ -26,19 +26,16 @@ async function refreshToken(token: JWT): Promise<JWT> {
 
   console.log("refresh attempt: ", res.data);
 
-  const { access_token, refresh_token } = res.data.content;
+  const { status, content } = res.data;
 
-  // if (!access_token || !refreshToken) {
-  //   console.log("could not refresh: ", {
-  //     ...token,
-  //   });
+  if (status.code != 200) {
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
 
-  //   return {
-  //     ...token,
-  //   };
-  // }
-
-  // console.log("success refresh");
+  const { access_token, refresh_token } = content;
 
   return {
     ...token,
@@ -134,7 +131,7 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }) {
       session.user = { id: token.id };
       session.backendTokens = token.backendTokens;
-
+      session.error = token.error;
       return session;
     },
   },

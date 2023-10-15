@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
 import User2FAForm from "./_components/user-2fa-form";
+import InfoBlock from "@/components/info-block";
 
 const User2FAPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -13,7 +14,7 @@ const User2FAPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let two_fa_info: boolean;
+  let two_fa_info: User2FA;
 
   try {
     const res = await axiosBack.post(
@@ -37,7 +38,6 @@ const User2FAPage = async ({ params }: { params: { id: string } }) => {
     }
 
     two_fa_info = content.two_fa_info;
-    console.log(two_fa_info);
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
@@ -45,29 +45,24 @@ const User2FAPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Включена ли защита через email
-        </span>
-        <span className="font-bold text-[20px] leading-4">Нет</span>
-      </div>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Включена ли защита через номер телефона
-        </span>
-        <span className="font-bold text-[20px] leading-4">Да</span>
-      </div>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Включена ли защита через google 2fa
-        </span>
-        <span className="font-bold text-[20px] leading-4">Да</span>
-      </div>
+      <InfoBlock
+        title="Включена ли защита через email"
+        content={two_fa_info?.email_enable ? "Да" : "Нет"}
+      />
+      <InfoBlock
+        title="Включена ли защита через номер телефона"
+        content={two_fa_info?.phone_enable ? "Да" : "Нет"}
+      />
+      <InfoBlock
+        title="Включена ли защита через google 2fa"
+        content={two_fa_info?.google_enable ? "Да" : "Нет"}
+      />
       <div>
         <ModalPost
           Form={User2FAForm}
           title="Изменить настройки 2FA"
           maxWidth="max-w-[355px]"
+          card={two_fa_info}
         >
           <Button
             asChild

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
 import UserBanForm from "./_components/user-ban-form";
 import P2PBanForm from "./_components/p2p-ban-form";
+import InfoBlock from "@/components/info-block";
 
 const UserBanPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -14,7 +15,7 @@ const UserBanPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let two_fa_info: boolean;
+  let ban_info: UserBanned;
 
   try {
     const res = await axiosBack.post(
@@ -29,7 +30,7 @@ const UserBanPage = async ({ params }: { params: { id: string } }) => {
       }
     );
 
-    console.log(res.data);
+    // console.log(res.data);
 
     const { status, content } = res.data;
 
@@ -37,8 +38,7 @@ const UserBanPage = async ({ params }: { params: { id: string } }) => {
       throw new Error("Error loading Ban Info for user");
     }
 
-    two_fa_info = content.two_fa_info;
-    console.log(two_fa_info);
+    ban_info = content.ban_info;
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
@@ -46,33 +46,19 @@ const UserBanPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          заблокирован ли доступ к p2p
-        </span>
-        <span className="font-bold text-[20px] leading-4">Нет</span>
-      </div>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Причина блокировки доступа к p2p
-        </span>
-        <span className="font-bold text-[20px] leading-4">-</span>
-      </div>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Заблокирован ли аккаунт
-        </span>
-        <span className="font-bold text-[20px] leading-4">Да</span>
-      </div>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          Причина блокировки аккаунта
-        </span>
-        <span className="font-bold text-[20px] leading-4">-</span>
-      </div>
+      <InfoBlock
+        title="Заблокирован ли доступ к p2p"
+        content={ban_info?.is_p2p_ban ? "Да" : "-"}
+      />
+      <InfoBlock
+        title="Заблокирован ли аккаунт
+"
+        content={ban_info?.is_user_ban ? "Да" : "-"}
+      />
       <div className="flex items-center space-x-[10px]">
         <ModalPost
           Form={P2PBanForm}
+          card={ban_info?.is_p2p_ban}
           title="Заблокировать доступ к P2P"
           maxWidth="max-w-[355px]"
         >
@@ -82,6 +68,7 @@ const UserBanPage = async ({ params }: { params: { id: string } }) => {
         </ModalPost>
         <ModalPost
           Form={UserBanForm}
+          card={ban_info?.is_user_ban}
           title="Заблокировать аккаунт"
           maxWidth="max-w-[355px]"
         >

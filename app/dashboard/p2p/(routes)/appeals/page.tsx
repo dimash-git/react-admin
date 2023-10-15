@@ -10,6 +10,7 @@ import Pagination from "@/components/pagination";
 import Card from "./_components/card";
 import Tabs from "@/components/tabs";
 import { p2pTabs } from "../../nav";
+import { PAGE_SIZE } from "@/lib/constants";
 
 const Page = async ({
   searchParams,
@@ -23,7 +24,7 @@ const Page = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = Math.floor(8 / 2); // instead of 8, get half for each type of appeals
+  const pageSize = Math.floor(PAGE_SIZE / 2); // instead of 8, get half for each type of appeals
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

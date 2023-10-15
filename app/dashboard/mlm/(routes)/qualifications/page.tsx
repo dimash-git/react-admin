@@ -11,6 +11,7 @@ import Tabs from "@/components/tabs";
 import { mlmTabs } from "../../nav";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { PAGE_SIZE } from "@/lib/constants";
 
 const Page = async ({
   searchParams,
@@ -23,7 +24,7 @@ const Page = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 8;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

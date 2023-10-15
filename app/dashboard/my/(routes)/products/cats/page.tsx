@@ -11,6 +11,7 @@ import { homeTabs } from "../../../nav";
 import Card from "./_components/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { PAGE_SIZE } from "@/lib/constants";
 
 const ProductCategoriesPage = async ({
   searchParams,
@@ -23,7 +24,7 @@ const ProductCategoriesPage = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 3;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

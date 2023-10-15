@@ -30,14 +30,13 @@ const userMainFormSchema = z.object({
     required_error: "Обязателен",
     invalid_type_error: "Должен быть boolean",
   }),
-  date: z.date({
-    required_error: "Пожалуйста выберите дату и время",
-    invalid_type_error: "Это не дата!",
-  }),
-  parent_id: z.string().min(3, {
-    message: "Введите id родителя",
-  }),
-  user_logo: z.optional(
+  parent_id: z
+    .string()
+    .min(3, {
+      message: "Введите id родителя",
+    })
+    .optional(),
+  logo: z.optional(
     z
       .any()
       .refine((file) => file?.name, "Файл не выбран")
@@ -51,5 +50,17 @@ const userMainFormSchema = z.object({
       )
   ),
 });
+
+export interface UserMainSendData {
+  user_id: string;
+  user_login: string;
+  user_phone: string;
+  user_email: string;
+  user_is_confirmed: boolean;
+  user_is_passed_academy: boolean;
+  parent_id?: string;
+  logo_base64?: string;
+  logo_type?: string;
+}
 
 export default userMainFormSchema;

@@ -28,19 +28,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import formSchema from "./schema";
 
-import { cn } from "@/lib/utils";
+import { cn, dateToUnix } from "@/lib/utils";
 
-const UserMainForm = () => {
+const UserPersonalForm = ({ parsed }: { parsed?: UserPersonal }) => {
   const router = useRouter();
   const { toast } = useToast();
 
   const defaultValues = {
-    first_name: "",
-    middle_name: "",
-    last_name: "",
-    birthday_date: new Date(),
-    country: "",
-    telegram: "",
+    first_name: parsed?.first_name ?? "",
+    middle_name: parsed?.middle_name ?? "",
+    last_name: parsed?.last_name ?? "",
+    birthday_date: parsed?.birthday_timestamp
+      ? new Date(parsed.birthday_timestamp * 1000)
+      : new Date(),
+    country: parsed?.country ?? "",
+    telegram: parsed?.telegram ?? "",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,8 +53,13 @@ const UserMainForm = () => {
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const { birthday_date, ...restValues } = values;
     try {
-      const res = await axios.post("/api/user/main/update", values);
+      const res = await axios.post("/api/user/personal", {
+        user_id: parsed?.user_id,
+        birthday_timestamp: dateToUnix(birthday_date),
+        ...restValues,
+      });
 
       // console.log("Response:", res.data);
 
@@ -65,6 +72,7 @@ const UserMainForm = () => {
         variant: "success",
         title: "Персональные данные обновлены успешно!",
       });
+      router.back();
     } catch (error) {
       console.error(error);
       toast({
@@ -139,7 +147,7 @@ const UserMainForm = () => {
                           {field.value ? (
                             format(field.value, "PPP")
                           ) : (
-                            <span>Pick a date</span>
+                            <span>Выберите дату</span>
                           )}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
@@ -150,7 +158,7 @@ const UserMainForm = () => {
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
+                        disabled={(date) => date > new Date()}
                         initialFocus
                       />
                     </PopoverContent>
@@ -205,4 +213,4 @@ const UserMainForm = () => {
   );
 };
 
-export default UserMainForm;
+export default UserPersonalForm;

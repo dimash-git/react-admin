@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { retrieveApiKey } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
 
 import { BACKEND_URL } from "@/lib/server-constants";
 
@@ -8,6 +9,7 @@ import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
 
 import Card from "./_components/card";
+import { PAGE_SIZE } from "@/lib/constants";
 
 const Page = async ({
   searchParams,
@@ -16,11 +18,14 @@ const Page = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 8;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

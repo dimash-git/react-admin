@@ -8,6 +8,7 @@ import Pagination from "@/components/pagination";
 import { BACKEND_URL } from "@/lib/server-constants";
 import NewsCard from "./_components/card";
 import { homeTabs } from "../../nav";
+import { PAGE_SIZE } from "@/lib/constants";
 
 const NewsPage = async ({
   searchParams,
@@ -20,7 +21,7 @@ const NewsPage = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 3;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize

@@ -5,6 +5,7 @@ declare module "next-auth" {
     user: {
       id?: string;
     };
+    error?: string;
     backendTokens: BackendTokens;
   }
 }
@@ -14,6 +15,7 @@ import { JWT } from "next-auth/jwt";
 declare module "next-auth/jwt" {
   interface JWT {
     id: string;
+    error?: string;
     backendTokens: BackendTokensWE;
   }
 }

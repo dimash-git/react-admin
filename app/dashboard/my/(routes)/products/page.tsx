@@ -1,14 +1,16 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/server-utils";
+import { BACKEND_URL } from "@/lib/server-constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
-import { homeTabs } from "../../nav";
-import Tabs from "@/components/tabs";
-import Pagination from "@/components/pagination";
-import { BACKEND_URL } from "@/lib/server-constants";
-import ProductCard from "./_components/card";
 import Container from "@/components/container";
+import Pagination from "@/components/pagination";
+import Tabs from "@/components/tabs";
+
+import Card from "./_components/card";
+import { homeTabs } from "../../nav";
+import { PAGE_SIZE } from "@/lib/constants";
 
 const MarketingPage = async ({
   searchParams,
@@ -21,7 +23,7 @@ const MarketingPage = async ({
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 3;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize
@@ -31,32 +33,37 @@ const MarketingPage = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/product/get_products", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: apiKey,
-    },
-    body: JSON.stringify({
-      skip,
-      limit: pageSize,
-    }),
-    next: { tags: ["products"] },
-  });
+  let products: Product[];
+  let count: number = 0;
 
-  if (!response.ok) {
-    throw new Error("Error Loading Products");
+  try {
+    const response = await fetch(BACKEND_URL + "/product/get_products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: apiKey,
+      },
+      body: JSON.stringify({
+        skip,
+        limit: pageSize,
+      }),
+      next: { tags: ["products"] },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error Loading Products");
+    }
+
+    const { content } = await response.json();
+
+    // console.log(content);
+
+    products = content.products;
+    count = content.count;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
   }
-
-  const { status, content } = await response.json();
-
-  if (status.code !== 200) {
-    throw new Error("Error Loading Products");
-  }
-
-  // console.log(content);
-
-  const { products, count }: { products: Product[]; count: number } = content;
 
   return (
     <Container>
@@ -64,9 +71,8 @@ const MarketingPage = async ({
         <Breadcrumbs />
         <Tabs links={homeTabs.products} />
         <div className="flex flex-col space-y-[30px]">
-          {products.map((product, idx) => (
-            <ProductCard key={idx} card={product} />
-          ))}
+          {products &&
+            products.map((product, idx) => <Card key={idx} item={product} />)}
         </div>
         <div>
           <Pagination count={count} currPage={currPage} pageSize={pageSize} />
