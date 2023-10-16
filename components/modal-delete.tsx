@@ -32,26 +32,31 @@ const ModalDelete = ({
   const [open, setOpen] = useState<boolean>(false);
 
   const handleDelete = async () => {
-    const res = await axios.post(apiUrl, {
-      id,
-    });
+    try {
+      const res = await axios.post(apiUrl, {
+        id,
+      });
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error Deleting Post");
+      }
+
+      toast({
+        variant: "success",
+        title: `${messages.success} успешно удалена!`,
+      });
+
+      setOpen(false);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: `Ошибка при удалении ${messages.error}`,
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `${messages.success} успешно удалена!`,
-    });
-
-    setOpen(false);
-    router.refresh();
   };
 
   return (

@@ -1,14 +1,10 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 import AdvIcon from "@/public/icons/adv.svg";
 import ModalDelete from "@/components/modal-delete";
 import InfoBlock from "@/components/info-block";
 
 const BoughtProductCard = ({ product }: { product: UserBought }) => {
-  console.log(product);
-
   return (
     <div className="flex flex-col rounded-[20px] bg-[#2D3D52] p-5 space-y-[20px]">
       <div className="card__cover relative">
@@ -21,14 +17,6 @@ const BoughtProductCard = ({ product }: { product: UserBought }) => {
             className="w-full rounded-[5px] h-[263px] object-cover"
           />
         )}
-        {/* <div className="absolute left-[20px] top-[50%] -translate-y-[50%]">
-            <div className="text-[20px] leading-5 font-medium">
-              Торговая система
-            </div>
-            <span className="font-bold text-[35px] leading-9">
-              {product?.name}
-            </span>
-          </div> */}
       </div>
       <div className="card__description flex flex-col space-y-[10px] text-[15px] font-medium">
         <span className="uppercase text-[10px] font-medium text-[#EAECEF]">
