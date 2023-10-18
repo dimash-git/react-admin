@@ -20,10 +20,12 @@ const MlmStatsChart = ({ id }: { id: string }) => {
   const [type, setType] = useState("personal_sales");
 
   const sevenDaysAgo = useMemo(() => {
-    return new Date(Date.now() - 7 * 24 * 3600 * 1000);
+    return new Date(Date.now() - 180 * 24 * 3600 * 1000);
   }, []);
   const [fromDate, setFromDate] = useState<Date | undefined>(sevenDaysAgo);
-  const [toDate, setToDate] = useState<Date | undefined>(new Date());
+  const [toDate, setToDate] = useState<Date | undefined>(
+    new Date(Date.now() - 90 * 24 * 3600 * 1000)
+  );
 
   const [data, setData] = useState([]);
 
@@ -50,7 +52,7 @@ const MlmStatsChart = ({ id }: { id: string }) => {
     getStats();
   }, [id, fromDate, toDate, type, sevenDaysAgo]);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>

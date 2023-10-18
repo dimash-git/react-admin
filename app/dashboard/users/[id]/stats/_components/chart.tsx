@@ -84,7 +84,7 @@ const Chart = ({ data }: { data: ChartDataEntry[] }) => {
 
   const chartData = {
     labels: data.map((item) =>
-      new Date(item.timestamp * 1000).toLocaleDateString()
+      new Date(item.timestamp * 1000).toLocaleDateString("ru-RU")
     ),
     datasets: [
       {

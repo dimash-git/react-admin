@@ -65,19 +65,6 @@ const UserHistoryPage = async ({
       }
     );
 
-    console.log({
-      user_id: id,
-      timestamp_from:
-        searchParams?.f ?? new Date(Date.now() - 7 * 24 * 3600 * 1000),
-      timestamp_to: searchParams?.t ?? dateToUnix(new Date()),
-      type: searchParams?.type ?? "buy",
-      status: searchParams?.status ?? "success",
-      // from_: "<string>",
-      // to_: "<string>",
-      skip,
-      limit: pageSize,
-    });
-
     const data = await response.json();
     const { status, content } = data;
 
