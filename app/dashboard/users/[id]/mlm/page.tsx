@@ -7,11 +7,15 @@ import InfoBlock from "@/components/info-block";
 import { unixToReadableDate } from "@/lib/utils";
 import ModalPost from "@/components/modal-post";
 import UserClauseForm from "./_components/user-clause-form";
+import { redirect } from "next/navigation";
 
 const UserMlmPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;

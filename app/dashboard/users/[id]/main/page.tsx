@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import InfoBlock from "@/components/info-block";
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 const UserMainPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;

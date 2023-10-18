@@ -9,11 +9,15 @@ import TgIcon from "@/public/icons/telegram.svg";
 
 import Link from "next/link";
 import { unixToReadableDate } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 const UserPersonalPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;

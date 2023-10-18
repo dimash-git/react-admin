@@ -5,11 +5,15 @@ import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
 import User2FAForm from "./_components/user-2fa-form";
 import InfoBlock from "@/components/info-block";
+import { redirect } from "next/navigation";
 
 const User2FAPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;

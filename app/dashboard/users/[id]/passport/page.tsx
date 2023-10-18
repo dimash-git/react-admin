@@ -2,11 +2,15 @@ import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import PassportFullscreen from "./_components/passport-fullscreen";
+import { redirect } from "next/navigation";
 
 const UserPassportPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;

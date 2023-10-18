@@ -7,6 +7,7 @@ import { retrieveApiKey } from "@/lib/server-utils";
 
 import Pagination from "@/components/pagination";
 import Card from "./_components/card";
+import { redirect } from "next/navigation";
 
 const UsersPage = async ({
   searchParams,
@@ -15,6 +16,9 @@ const UsersPage = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
@@ -45,7 +49,7 @@ const UsersPage = async ({
   const { status, content } = await response.json();
 
   if (status.code !== 200) {
-    throw new Error("Error Loading Marketing Products");
+    throw new Error("Error Loading Users");
   }
 
   console.log(content);

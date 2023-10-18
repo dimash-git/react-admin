@@ -6,11 +6,15 @@ import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
 import UserRemoveForm from "./_components/user-remove-form";
 import InfoBlock from "@/components/info-block";
+import { redirect } from "next/navigation";
 
 const UserRemovePage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;

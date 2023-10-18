@@ -6,11 +6,15 @@ import ModalPost from "@/components/modal-post";
 import UserBanForm from "./_components/user-ban-form";
 import P2PBanForm from "./_components/p2p-ban-form";
 import InfoBlock from "@/components/info-block";
+import { redirect } from "next/navigation";
 
 const UserBanPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;

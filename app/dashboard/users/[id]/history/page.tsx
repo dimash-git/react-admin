@@ -7,6 +7,7 @@ import Pagination from "@/components/pagination";
 import { PAGE_SIZE } from "@/lib/constants";
 import TransactionFilter from "./_components/transaction-filter";
 import { BACKEND_URL } from "@/lib/server-constants";
+import { redirect } from "next/navigation";
 
 const UserHistoryPage = async ({
   params,
@@ -18,6 +19,9 @@ const UserHistoryPage = async ({
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
@@ -47,7 +51,8 @@ const UserHistoryPage = async ({
         body: JSON.stringify({
           user_id: id,
           timestamp_from:
-            searchParams?.f ?? new Date(Date.now() - 7 * 24 * 3600 * 1000),
+            searchParams?.f ??
+            dateToUnix(new Date(Date.now() - 7 * 24 * 3600 * 1000)),
           timestamp_to: searchParams?.t ?? dateToUnix(new Date()),
           type: searchParams?.type ?? "buy",
           status: searchParams?.status ?? "success",
@@ -60,8 +65,21 @@ const UserHistoryPage = async ({
       }
     );
 
-    // console.log(res.data);
-    const { status, content } = await response.json();
+    console.log({
+      user_id: id,
+      timestamp_from:
+        searchParams?.f ?? new Date(Date.now() - 7 * 24 * 3600 * 1000),
+      timestamp_to: searchParams?.t ?? dateToUnix(new Date()),
+      type: searchParams?.type ?? "buy",
+      status: searchParams?.status ?? "success",
+      // from_: "<string>",
+      // to_: "<string>",
+      skip,
+      limit: pageSize,
+    });
+
+    const data = await response.json();
+    const { status, content } = data;
 
     if (status.code != 200) {
       throw new Error("Error loading Transaction History for user");
