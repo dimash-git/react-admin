@@ -13,15 +13,13 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    console.log(body);
-
-    const res = await axiosBack.post("/event/add_event", body, {
+    const res = await axiosBack.post("/user/user_mlm/get_mlm_statistic", body, {
       headers: {
         Authorization: apiKey,
       },
     });
 
-    return NextResponse.json({ status: 200 });
+    return NextResponse.json({ status: 200, content: res.data?.content });
   } catch (error: any) {
     const { response } = error;
 
@@ -31,7 +29,7 @@ export async function POST(req: Request) {
 
     const { status, statusText } = response;
 
-    console.error("CREATE_ERROR", status, statusText);
+    console.error("GET_ERROR", status, statusText);
     return new NextResponse(statusText, { status });
   }
 }

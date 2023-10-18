@@ -11,7 +11,7 @@ const UserPassportPage = async ({ params }: { params: { id: string } }) => {
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  let passport: any;
+  let passport: UserPassport;
 
   try {
     const res = await axiosBack.post(
@@ -35,6 +35,7 @@ const UserPassportPage = async ({ params }: { params: { id: string } }) => {
     }
 
     passport = content.two_fa_info;
+    console.log(passport);
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
@@ -48,7 +49,7 @@ const UserPassportPage = async ({ params }: { params: { id: string } }) => {
         </span>
         <span className="font-bold text-[20px] leading-4">Да</span>
       </div>
-      <PassportFullscreen id="" passport={{}} />
+      <PassportFullscreen id={id} passport={passport} />
     </>
   );
 };

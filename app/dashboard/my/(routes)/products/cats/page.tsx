@@ -82,7 +82,11 @@ const ProductCategoriesPage = async ({
         ))}
       </div>
       <div>
-        <Pagination count={count} currPage={currPage} pageSize={pageSize} />
+        <Pagination
+          postsCount={count}
+          active={currPage}
+          postsPerPage={pageSize}
+        />
       </div>
     </div>
   );

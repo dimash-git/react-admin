@@ -13,21 +13,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import formSchema, { UserMainSendData } from "./schema";
-import { Checkbox } from "@/components/ui/checkbox";
-import Image from "next/image";
-import { useState } from "react";
-import { fileToBase64, getFileType } from "@/lib/utils";
 
 const UserMainForm = ({ parsed }: { parsed?: UserMain }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [selectedCover, setSelectedCover] = useState<boolean>(false);
 
   let defaultValues: z.infer<typeof formSchema> = {
     user_login: parsed?.user_login ?? "",
@@ -36,9 +32,6 @@ const UserMainForm = ({ parsed }: { parsed?: UserMain }) => {
     user_is_confirmed: parsed?.user_is_confirmed ?? false,
     user_is_passed_academy: parsed?.user_is_passed_academy ?? false,
   };
-  if (!parsed?.logo) {
-    defaultValues.logo = {} as File;
-  }
 
   if (parsed?.parent_id) {
     defaultValues.parent_id = parsed.parent_id;
@@ -52,20 +45,13 @@ const UserMainForm = ({ parsed }: { parsed?: UserMain }) => {
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { logo, ...restValues } = values;
-
     if (!parsed) return;
 
     try {
       let sendData: UserMainSendData = {
         user_id: parsed.user_id,
-        ...restValues,
+        ...values,
       };
-      if (logo) {
-        const base64String = await fileToBase64(logo);
-        sendData.logo_base64 = base64String as string;
-        sendData.logo_type = getFileType(logo.type);
-      }
       console.log(sendData);
       const res = await axios.post("/api/user/main", sendData);
 
@@ -190,45 +176,6 @@ const UserMainForm = ({ parsed }: { parsed?: UserMain }) => {
               </FormItem>
             )}
           />
-          {parsed?.logo && !selectedCover ? (
-            <div className="flex flex-col space-y-2">
-              <span className="block text-[12px] font-medium uppercase ">
-                Обложка
-              </span>
-              <Image
-                src={`${parsed?.logo}`}
-                width={200}
-                height={100}
-                alt="Лого пользователя"
-                className="w-[200px] h-[100px] object-cover rounded-[5px] cursor-not-allowed"
-                onClick={() => setSelectedCover(true)}
-              />
-            </div>
-          ) : (
-            <FormField
-              control={form.control}
-              name="logo"
-              render={({ field: { value, ...field } }) => (
-                <FormItem>
-                  <FormLabel className="space-y-[10px]">
-                    Лого пользователя
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      {...field}
-                      // spreading value is important cause you do not want default value change
-                      onChange={(e) => {
-                        if (!e.target.files) return;
-                        field.onChange(e.target.files[0]);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          )}
 
           <div className="flex gap-ten">
             <Button variant="form" type="button" onClick={() => router.back()}>

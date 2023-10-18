@@ -36,19 +36,6 @@ const userMainFormSchema = z.object({
       message: "Введите id родителя",
     })
     .optional(),
-  logo: z.optional(
-    z
-      .any()
-      .refine((file) => file?.name, "Файл не выбран")
-      .refine(
-        (file) => file?.size < MAX_FILE_SIZE,
-        `Максимальный размер файла ${MAX_FILE_SIZE / 1000000} MB.`
-      )
-      .refine(
-        (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-        "Только файлы в формате .jpg, .jpeg, .png and .webp принимаются."
-      )
-  ),
 });
 
 export interface UserMainSendData {

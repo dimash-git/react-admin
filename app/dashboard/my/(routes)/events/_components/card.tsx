@@ -2,7 +2,7 @@ import { cn, unixToReadableDate } from "@/lib/utils";
 import CardAction from "@/components/card-action";
 import Image from "next/image";
 
-const EventCard = ({ card }: { card: Evt }) => {
+const Card = ({ card }: { card: Evt }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
       <div className="flex gap-[30px] items-center max-w-[300px] w-full">
@@ -58,4 +58,4 @@ const EventCard = ({ card }: { card: Evt }) => {
   );
 };
 
-export default EventCard;
+export default Card;

@@ -5,19 +5,35 @@ import ChevronLeft from "@/public/icons/chevron-left.svg";
 import { cn } from "@/lib/utils";
 
 const Pagination = ({
-  pageSize,
-  page,
-  count,
-  setPage,
+  active,
+  setActive,
+  postsCount,
+  postsPerPage,
 }: {
-  pageSize: number;
-  page: number;
-  count: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  active: number;
+  setActive: React.Dispatch<React.SetStateAction<number>>;
+  postsCount: number;
+  postsPerPage: number;
 }) => {
-  const pages = Math.ceil(count / pageSize);
-  const half = Math.floor(pages / 2);
-  const pagesArray = Array.from({ length: pages });
+  const pages = Math.ceil(postsCount / postsPerPage);
+
+  const step = 2;
+  const numsToShow = step * 2 + 1;
+
+  let start = 2;
+  let startArrayNum = start;
+  let startDots = false;
+  let endDots = false;
+
+  startDots = active > step + start ? true : false;
+  endDots = pages > active + step + 1 ? true : false;
+
+  if (active > start && active != start + 1) {
+    startArrayNum = active - step;
+  }
+  if (pages < active + step + 1) {
+    startArrayNum = pages - numsToShow;
+  }
 
   return (
     <div className="flex gap-ten">
@@ -25,73 +41,79 @@ const Pagination = ({
       <button
         type="button"
         onClick={() => {
-          if (page > 1) setPage(page - 1);
+          if (active > 1) setActive(active - 1);
         }}
-        className="flex items-center transition hover:bg-thBlue py-[5px] px-ten bg-[#455580] rounded-[5px]"
+        className={cn(
+          "flex items-center transition py-[5px] px-ten rounded-[5px]",
+          active == 1
+            ? "bg-[#455580] opacity-40 hover:cursor-not-allowed"
+            : "bg-[#455580] hover:bg-thBlue"
+        )}
       >
         <ChevronLeft />
       </button>
-
       <ul className="flex gap-ten">
-        {pages <= 5 ? (
-          Array.from({ length: pages }).map((_, idx) => (
-            <button
-              type="button"
-              onClick={() => setPage(idx + 1)}
-              key={idx}
+        {pages > numsToShow + start ? (
+          <>
+            <li
+              onClick={() => setActive(1)}
               className={cn(
-                "flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
-                page == idx + 1 ? "bg-thBlue" : "bg-[#455580]"
+                "cursor-pointer flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
+                active == 1 ? "bg-thBlue" : "bg-[#455580]"
               )}
             >
-              {idx + 1}
-            </button>
-          ))
-        ) : (
-          <>
-            {pagesArray.map((_, idx) => {
-              if (idx + 1 > page + 2) {
-                return (
-                  <button
-                    type="button"
-                    onClick={() => setPage(idx + 1)}
-                    key={idx}
-                    className={cn(
-                      "flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
-                      page == idx + 1 ? "bg-thBlue" : "bg-[#455580]"
-                    )}
-                  >
-                    {idx + 1}
-                  </button>
-                );
-              }
-            })}
-            {/* {Array.from({ length: 4 }).map((_, idx) => (
-              <button
-                type="button"
-                onClick={() => setPage(idx + 1)}
+              1
+            </li>
+
+            {startDots && (
+              <li className="flex items-center text-[16px] font-bold leading-4 py-[5px] px-ten bg-[#455580] rounded-[5px]">
+                ...
+              </li>
+            )}
+
+            {Array.from({ length: numsToShow }).map((_, idx) => (
+              <li
+                onClick={() => setActive(idx + startArrayNum)}
                 key={idx}
                 className={cn(
-                  "flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
-                  page == idx + 1 ? "bg-thBlue" : "bg-[#455580]"
+                  "cursor-pointer flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
+                  active == idx + startArrayNum ? "bg-thBlue" : "bg-[#455580]"
                 )}
               >
-                {idx + 1}
-              </button>
-            ))} */}
-            {/* <li className="flex items-center text-[16px] font-bold leading-4 py-[5px] px-ten bg-[#455580] rounded-[5px]">
-              ...
-            </li>
-            <button
-              type="button"
-              onClick={() => setPage(pages)}
+                {idx + startArrayNum}
+              </li>
+            ))}
+
+            {endDots && (
+              <li className="flex items-center text-[16px] font-bold leading-4 py-[5px] px-ten bg-[#455580] rounded-[5px]">
+                ...
+              </li>
+            )}
+
+            <li
+              onClick={() => setActive(pages)}
               className={cn(
-                "flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
-                page == pages ? "bg-thBlue" : "bg-[#455580]"
+                "cursor-pointer flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
+                active == pages ? "bg-thBlue" : "bg-[#455580]"
               )}
             >
               {pages}
-            </button> */}
+            </li>
+          </>
+        ) : (
+          <>
+            {Array.from({ length: pages }).map((_, idx) => (
+              <li
+                onClick={() => setActive(idx + 1)}
+                key={idx}
+                className={cn(
+                  "cursor-pointer flex items-center transition hover:bg-thBlue text-[16px] font-bold leading-4 py-[5px] px-ten rounded-[5px]",
+                  active == idx + 1 ? "bg-thBlue" : "bg-[#455580]"
+                )}
+              >
+                {idx + 1}
+              </li>
+            ))}
           </>
         )}
       </ul>
@@ -100,9 +122,14 @@ const Pagination = ({
       <button
         type="button"
         onClick={() => {
-          if (page < pages) setPage(page + 1);
+          if (active < pages) setActive(active + 1);
         }}
-        className="flex items-center transition hover:bg-thBlue py-[5px] px-ten bg-[#455580] rounded-[5px]"
+        className={cn(
+          "flex items-center transition py-[5px] px-ten rounded-[5px]",
+          active == pages
+            ? "bg-[#455580] opacity-40 hover:cursor-not-allowed"
+            : "bg-[#455580] hover:bg-thBlue"
+        )}
       >
         <ChevronRight />
       </button>

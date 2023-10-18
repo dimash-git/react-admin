@@ -314,3 +314,34 @@ interface UserBought {
   is_pack: boolean;
   is_activate: boolean;
 }
+
+interface UserPassport {
+  is_verified_passport: boolean;
+  passport_living?: string;
+  passport_main?: string;
+}
+
+interface Transaction {
+  transactions_id: string;
+  type:
+    | "buy"
+    | "withdrawal"
+    | "transfer_p2p"
+    | "frozen_p2p"
+    | "mlm_percent"
+    | "mlm_matching"
+    | "other";
+  status: "success" | "process" | "cancelled";
+  sum: number;
+  timestamp: number;
+  from_: string;
+  to_: string;
+  desc: string;
+  channel: string;
+  is_reduce: boolean;
+  is_increase: boolean;
+}
+
+interface MlmStat {
+  type: "personal_sales" | "team_sales" | "personal_registry" | "team_registry";
+}

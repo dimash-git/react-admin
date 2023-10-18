@@ -98,6 +98,9 @@ const AppealCloseForm = ({
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+
+    return;
     try {
       const res = await axios.post("/api/appeal/close", {
         ...values,

@@ -8,7 +8,7 @@ const PassportFullscreen = ({
   passport,
   id,
 }: {
-  passport: any;
+  passport: UserPassport;
   id: string;
 }) => {
   const toggleFullscreen = (imageId: string) => {
@@ -32,9 +32,9 @@ const PassportFullscreen = ({
           id="mainImageContainer"
           className="rounded-[10px] overflow-hidden relative max-h-[300px]"
         >
-          {passport?.user_id ? (
+          {passport?.passport_main ? (
             <Image
-              src={passport?.passport_main}
+              src={passport.passport_main}
               alt={`Front: ${id}`}
               height={300}
               width={500}
@@ -57,9 +57,9 @@ const PassportFullscreen = ({
           id="livingImageContainer"
           className="rounded-[10px] overflow-hidden relative max-h-[300px]"
         >
-          {passport?.user_id ? (
+          {passport?.passport_living ? (
             <Image
-              src={passport?.passport_living}
+              src={passport.passport_living}
               alt={`Back: ${id}`}
               height={300}
               width={500}

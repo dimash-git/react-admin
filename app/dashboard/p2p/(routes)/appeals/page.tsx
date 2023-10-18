@@ -111,7 +111,11 @@ const Page = async ({
 
       {/* PAGINATION */}
       {count > 0 && (
-        <Pagination count={count} currPage={currPage} pageSize={pageSize * 2} />
+        <Pagination
+          postsCount={count}
+          active={currPage}
+          pageSize={pageSize * 2}
+        />
       )}
     </div>
   );

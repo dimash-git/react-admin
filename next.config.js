@@ -14,10 +14,4 @@ module.exports = {
   images: {
     domains: ["cdn.generaltradergroup.com"],
   },
-  serverRuntimeConfig: {
-    // Configure bodyParser size limit here
-    bodyParser: {
-      sizeLimit: "20mb",
-    },
-  },
 };

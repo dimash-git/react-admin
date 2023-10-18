@@ -33,9 +33,17 @@ function MultiSelect({
 
   const selectables = OPTIONS.filter((option) => !selected.includes(option));
 
-  const handleUnselect = React.useCallback((option: Option) => {
-    setSelected((prev) => prev.filter((s) => s.value !== option.value));
-  }, []);
+  const handleUnselect = React.useCallback(
+    (option: Option) => {
+      setSelected((prev) => prev.filter((s) => s.value !== option.value));
+
+      const newValues = selected
+        .filter((s) => s.value !== option.value)
+        .map((item) => (byLabel ? item.label : item.value));
+      onValueChange([...newValues].join(","));
+    },
+    [selected, byLabel, onValueChange]
+  );
 
   const handleKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -115,12 +123,12 @@ function MultiSelect({
                     onSelect={(value) => {
                       setInputValue("");
                       setSelected((prev) => [...prev, option]);
-                      const frValues = selected.map((fr) =>
-                        byLabel ? fr.label : fr.value
+                      const newValues = selected.map((item) =>
+                        byLabel ? item.label : item.value
                       );
                       onValueChange(
                         [
-                          ...frValues,
+                          ...newValues,
                           byLabel ? option.label : option.value,
                         ].join(",")
                       );

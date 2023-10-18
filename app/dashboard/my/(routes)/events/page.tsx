@@ -50,7 +50,6 @@ const EventsPage = async ({
   const { status, content } = data;
 
   if (status.code != 200) return <div>Ошибка загрузки списка</div>;
-
   const { events, count }: { events: Evt[]; count: number } = content;
 
   return (
@@ -62,9 +61,13 @@ const EventsPage = async ({
           <EventCard key={idx} card={event} />
         ))}
       </div>
-      <div>
-        <Pagination count={count} currPage={currPage} pageSize={pageSize} />
-      </div>
+      {count > 0 && (
+        <Pagination
+          postsCount={count}
+          active={currPage}
+          postsPerPage={pageSize}
+        />
+      )}
     </div>
   );
 };

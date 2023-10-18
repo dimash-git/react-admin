@@ -94,6 +94,9 @@ module.exports = {
       gap: {
         ten: "10px",
       },
+      cursor: {
+        remove: "url(/icons/bin-remove.png), default",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

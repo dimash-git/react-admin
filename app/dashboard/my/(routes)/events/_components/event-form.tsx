@@ -228,7 +228,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
                           variant="inputLike"
                           size="inputLike"
                           className={cn(
-                            "w-full pl-3 text-left",
+                            "w-full pl-3 text-left h-10",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -266,7 +266,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
                 width={200}
                 height={100}
                 alt={parsed?.name}
-                className="w-[200px] h-[100px] object-cover rounded-[5px] cursor-not-allowed"
+                className="w-[200px] h-[100px] object-cover rounded-[5px] cursor-remove"
                 onClick={() => setSelectedCover(true)}
               />
             </div>

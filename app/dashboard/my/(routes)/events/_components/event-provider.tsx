@@ -11,12 +11,9 @@ interface EvtContext {
 const EventContext = createContext<EvtContext>({} as EvtContext);
 
 const EventProvider = ({ children }: { children: React.ReactNode }) => {
-  const [event, setEvent] = useState<z.infer<typeof formSchema>>({
-    name: "",
-    desc: "",
-    type: "offline",
-    date: new Date(),
-  } as z.infer<typeof formSchema>);
+  const [event, setEvent] = useState<z.infer<typeof formSchema>>(
+    {} as z.infer<typeof formSchema>
+  );
 
   return (
     <EventContext.Provider value={{ event, setEvent }}>

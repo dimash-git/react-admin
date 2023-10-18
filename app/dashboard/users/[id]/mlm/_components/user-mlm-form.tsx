@@ -186,7 +186,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                           variant="inputLike"
                           size="inputLike"
                           className={cn(
-                            "w-full pl-3 text-left",
+                            "w-full pl-3 text-left h-10",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -231,7 +231,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                           variant="inputLike"
                           size="inputLike"
                           className={cn(
-                            "w-full pl-3 text-left",
+                            "w-full pl-3 text-left h-10",
                             !field.value && "text-muted-foreground"
                           )}
                         >
@@ -273,7 +273,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                           variant="inputLike"
                           size="inputLike"
                           className={cn(
-                            "w-full pl-3 text-left",
+                            "w-full pl-3 text-left h-10",
                             !field.value && "text-muted-foreground"
                           )}
                         >

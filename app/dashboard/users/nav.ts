@@ -42,8 +42,8 @@ export const usersTabs = [
     name: "Просмотр истории транзакций",
   },
   {
-    to: "/mlm_stat",
-    slug: "mlm_stat",
+    to: "/stats",
+    slug: "stats",
     name: "МЛМ статистика",
   },
   {

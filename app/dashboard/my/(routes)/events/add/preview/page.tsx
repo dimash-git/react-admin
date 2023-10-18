@@ -27,50 +27,49 @@ const EventPreviewPage = () => {
   const router = useRouter();
 
   const handlePublish = async () => {
-    const { name, desc, date, type, cover, media_blocks } = event;
+    const { date, type, cover, media_blocks, ...restEvent } = event;
 
-    const mediaBlocksWithBase64 = await Promise.all(
-      media_blocks.map(convertMediaBlockToBase64)
-    );
+    try {
+      const mediaBlocksWithBase64 = await Promise.all(
+        media_blocks.map(convertMediaBlockToBase64)
+      );
 
-    let formData: EventSendData = {
-      name,
-      desc,
-      timestamp: dateToUnix(date),
-      is_online: type == "online" ? true : false,
-      media_blocks: mediaBlocksWithBase64,
-    };
+      let sendData: EventSendData = {
+        timestamp: dateToUnix(date),
+        is_online: type == "online" ? true : false,
+        media_blocks: mediaBlocksWithBase64,
+        ...restEvent,
+      };
 
-    if (cover) {
-      try {
+      if (cover) {
         const base64String = await fileToBase64(cover);
-        formData.img_data_base64 = base64String as string;
-        formData.img_type = getFileType(cover.type);
-      } catch (error: any) {
-        console.log(`Error: ${error}`);
+        sendData.img_data_base64 = base64String as string;
+        sendData.img_type = getFileType(cover.type);
       }
-    }
 
-    const res = await axios.post("/api/event/add", formData);
+      const res = await axios.post("/api/event/add", sendData);
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error uploading post");
+      }
+
+      toast({
+        variant: "success",
+        title: "Мероприятие добавлено успешно!",
+      });
+      router.push(`${homeBaseUrl}/events`);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Ошибка при добавлении мероприятия!",
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: "Мероприятие добавлено успешно!",
-    });
-
-    router.refresh();
-    router.push(`${homeBaseUrl}/events`);
   };
 
   return (

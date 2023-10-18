@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -61,6 +61,11 @@ const User2FAForm = ({
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log({
+      ...values,
+      user_id: pathname.split("/").slice(-2, -1)[0],
+    });
+
     try {
       console.log({
         ...values,

@@ -75,7 +75,11 @@ const MarketingPage = async ({
             products.map((product, idx) => <Card key={idx} item={product} />)}
         </div>
         <div>
-          <Pagination count={count} currPage={currPage} pageSize={pageSize} />
+          <Pagination
+            postsCount={count}
+            active={currPage}
+            postsPerPage={pageSize}
+          />
         </div>
       </div>
     </Container>

@@ -68,7 +68,11 @@ const Page = async ({
 
       {/* PAGINATION */}
       {transfers?.length > 0 && (
-        <Pagination count={count} currPage={currPage} pageSize={pageSize} />
+        <Pagination
+          postsCount={count}
+          active={currPage}
+          postsPerPage={pageSize}
+        />
       )}
     </div>
   );

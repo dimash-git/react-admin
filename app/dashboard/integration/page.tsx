@@ -16,7 +16,7 @@ const UserBanPage = async ({ params }: { params: { id: string } }) => {
     const res = await axiosBack.post(
       "/main/integration/get_user_lk_id",
       {
-        input: "dev_account2",
+        input: "dev_account3",
       },
       {
         headers: {
