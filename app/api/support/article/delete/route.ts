@@ -13,7 +13,6 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const { id } = body;
-    console.log("id", id);
 
     const res = await axiosBack.post(
       "/support/delete_article",

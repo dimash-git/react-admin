@@ -25,8 +25,6 @@ const CardAction = ({ id, apiUrl, children, messages }: CardActionProps) => {
   const { toast } = useToast();
   const router = useRouter();
 
-  // console.log("id", id);
-
   const [open, setOpen] = useState<boolean>(false);
 
   const handleDelete = async () => {

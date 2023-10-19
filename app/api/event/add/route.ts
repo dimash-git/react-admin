@@ -13,8 +13,6 @@ export async function POST(req: Request) {
 
     const body = await req.json();
 
-    console.log(body);
-
     const res = await axiosBack.post("/event/add_event", body, {
       headers: {
         Authorization: apiKey,

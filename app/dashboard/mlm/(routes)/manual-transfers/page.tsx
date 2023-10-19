@@ -51,7 +51,7 @@ const Page = async ({
 
   const { content } = await response.json();
 
-  console.log(content);
+  // console.log(content);
 
   const { transfers, count }: { transfers: Mlm[]; count: number } = content;
 

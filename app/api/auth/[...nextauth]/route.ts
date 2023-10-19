@@ -75,7 +75,6 @@ export const authOptions: NextAuthOptions = {
           type: "google",
           code,
         });
-        console.log("-----------");
 
         console.log("VerKey: ", verification_key);
 

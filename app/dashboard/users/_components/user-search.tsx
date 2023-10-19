@@ -19,8 +19,6 @@ const UserSearch = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  console.log(isLoading);
-
   useEffect(() => {
     setSearch(debouncedInput);
   }, [debouncedInput]);
@@ -35,14 +33,11 @@ const UserSearch = () => {
         });
         const { status, content } = res.data;
 
-        console.log(res.data);
-
         if (status != 200) {
           throw new Error("Error finding user id");
         }
 
         const { user_id } = content;
-
         if (user_id) {
           setFoundUser(user_id);
           setIsLoading(false);
