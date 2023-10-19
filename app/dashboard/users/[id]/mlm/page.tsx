@@ -44,7 +44,6 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
     }
 
     mlm_info = content.mlm_info;
-    console.log(mlm_info?.quick_start);
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
@@ -71,6 +70,14 @@ const UserMlmPage = async ({ params }: { params: { id: string } }) => {
       <InfoBlock
         title="Уровень квалификации"
         content={String(mlm_info?.qualification_level)}
+      />
+      <InfoBlock
+        title="Дата завершения карьеры"
+        content={
+          mlm_info?.career_closing_date
+            ? unixToReadableDate(mlm_info.career_closing_date)
+            : "-"
+        }
       />
 
       <div className="flex flex-col space-y-[30px]">

@@ -95,6 +95,7 @@ const UserRemoveForm = ({
         title: "Ошибка при обновлении решения",
       });
     } finally {
+      setOpen(false);
       router.refresh();
     }
   }

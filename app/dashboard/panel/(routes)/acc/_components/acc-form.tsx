@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -10,50 +12,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
+import { panelBaseUrl } from "../../../nav";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import formSchema from "../schema";
 
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { panelBaseUrl } from "../../../nav";
-import MultiSelect from "@/components/multiselect";
-
 const AccForm = ({ parsed }: { parsed?: any }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [favorites, setFavorites] = useState([]);
-  const [blocks, setBlocks] = useState([]);
-
-  useEffect(() => {
-    async function getFavorites() {
-      const res = await axios.post("/api/acc/favorites/get");
-      const { status, content } = res.data;
-      if (status != 200) return;
-      // console.log(res.data);
-
-      const { favorites } = content;
-      setFavorites(favorites);
-    }
-
-    // getFavorites();
-  }, []);
 
   const defaultValues = {
     login: "",
+    password: "",
+    google_secret: "",
+    phone: "",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -64,29 +42,32 @@ const AccForm = ({ parsed }: { parsed?: any }) => {
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res = await axios.post(
-      `/api/acc/${parsed ? "update" : "add"}`,
-      values
-    );
+    try {
+      const res = await axios.post(
+        `/api/acc/${parsed ? "update" : "add"}`,
+        values
+      );
 
-    // console.log("Response:", res.data);
+      // console.log("Response:", res.data);
 
-    const { status } = res.data;
-    if (status != 200) {
+      const { status } = res.data;
+      if (status != 200) {
+        throw new Error("Error posting Admin User");
+      }
+      toast({
+        variant: "success",
+        title: `Аккаунт ${parsed ? "обновлена" : "добавлена"} успешно!`,
+      });
+      router.push(`${panelBaseUrl}/acc`);
+    } catch (error) {
+      console.error(error);
       toast({
         variant: "success",
         title: `Ошибка при ${parsed ? "обновлении" : "добавлении"} аккаунта`,
       });
-      return;
+    } finally {
+      router.refresh();
     }
-
-    toast({
-      variant: "success",
-      title: `Аккаунт ${parsed ? "обновлена" : "добавлена"} успешно!`,
-    });
-
-    router.refresh();
-    router.push(`${panelBaseUrl}/acc`);
   }
   return (
     <div>
@@ -120,7 +101,20 @@ const AccForm = ({ parsed }: { parsed?: any }) => {
           />
           <FormField
             control={form.control}
-            name="ga_secret"
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="mb-5">Телефон</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="google_secret"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="mb-5">Google secret qr code</FormLabel>
@@ -131,7 +125,7 @@ const AccForm = ({ parsed }: { parsed?: any }) => {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="is_blocked"
             render={({ field }) => (
@@ -151,8 +145,8 @@ const AccForm = ({ parsed }: { parsed?: any }) => {
                 <FormMessage />
               </FormItem>
             )}
-          />
-          {blocks && (
+          /> */}
+          {/* {blocks && (
             <FormField
               control={form.control}
               name="block"
@@ -187,9 +181,9 @@ const AccForm = ({ parsed }: { parsed?: any }) => {
                 </FormItem>
               )}
             />
-          )}
+          )} */}
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="favorites"
             render={({ field }) => (
@@ -208,7 +202,7 @@ const AccForm = ({ parsed }: { parsed?: any }) => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           <div className="flex gap-ten">
             <Button variant="form" type="button" onClick={() => router.back()}>

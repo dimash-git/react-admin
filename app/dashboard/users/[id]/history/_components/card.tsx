@@ -4,7 +4,7 @@ import { statuses, types } from "./records";
 const Card = ({ card }: { card: Transaction }) => {
   return (
     <div className="flex font-medium items-center pb-ten justify-between border-b-[#2D3D52] border-b-[1px]">
-      <div className="flex flex-col gap-[7px] max-w-[100px] w-full">
+      <div className="flex flex-col gap-[7px] max-w-[120px] w-full">
         <span className="text-[10px] uppercase">Тип</span>
         <span className="text-[10px] uppercase">{types[card?.type]}</span>
       </div>
@@ -18,11 +18,11 @@ const Card = ({ card }: { card: Transaction }) => {
         <span className="text-[10px] uppercase">Статус</span>
         <span className="text-[10px] uppercase">{statuses[card?.status]}</span>
       </div>
-      <div className="flex flex-col gap-[7px] max-w-[110px] w-full">
+      <div className="flex flex-col gap-[7px] max-w-[120px] w-full">
         <span className="text-[10px] uppercase">Сумма</span>
         <span className="text-[10px] uppercase">{card?.sum}$</span>
       </div>
-      <div className="flex flex-col gap-[7px] max-w-[110px] w-full">
+      <div className="flex flex-col gap-[7px] max-w-[120px] w-full">
         <span className="text-[10px] uppercase">Дата создания</span>
         <span className="text-[10px] uppercase">
           {card?.timestamp && unixToReadableDate(card.timestamp)}

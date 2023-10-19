@@ -37,7 +37,7 @@ const UserPersonalPage = async ({ params }: { params: { id: string } }) => {
       }
     );
 
-    console.log(res.data);
+    // console.log(res.data);
 
     const { status, content } = res.data;
 

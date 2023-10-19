@@ -1,27 +1,33 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+
+import { redirect } from "next/navigation";
+import Link from "next/link";
+
+import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
 import { retrieveApiKey } from "@/lib/server-utils";
 
-import Breadcrumbs from "@/components/breadcrumbs";
-
 import Pagination from "@/components/pagination";
-import { BACKEND_URL } from "@/lib/server-constants";
-
-import Link from "next/link";
+import Card from "./_components/card";
+import Breadcrumbs from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
 
-const MarketingPage = async ({
+const UsersPage = async ({
   searchParams,
 }: {
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const pageSize = 8;
+  const pageSize = PAGE_SIZE;
   const skip =
     searchParams && searchParams.page && !Array.isArray(searchParams.page)
       ? (parseInt(searchParams.page) - 1) * pageSize
@@ -31,31 +37,32 @@ const MarketingPage = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  // const response = await fetch(BACKEND_URL + "/admins/get_admins", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: apiKey,
-  //   },
-  //   body: JSON.stringify({
-  //     skip,
-  //     limit: pageSize,
-  //   }),
-  //   next: { tags: ["acc"] },
-  // });
+  const response = await fetch(BACKEND_URL + "/main/user/get_users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: apiKey,
+    },
+    body: JSON.stringify({
+      skip,
+      limit: pageSize,
+    }),
+    next: { tags: ["users"] },
+  });
 
-  // const data = await response.json();
-  // console.log(data);
-  // const { status, content } = data;
+  const { status, content } = await response.json();
 
-  // if (status.code != 200) return <div>Ошибка загрузки списка</div>;
+  if (status.code !== 200) {
+    throw new Error("Error Loading Users");
+  }
 
-  // const { products, count }: { products: Product[]; count: number } = content;
+  // console.log(content);
+
+  const { users, count }: { users: any[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
-
       <div>
         <Button
           asChild
@@ -66,17 +73,18 @@ const MarketingPage = async ({
           <Link href="acc/add"> Добавить аккаунт администратора</Link>
         </Button>
       </div>
-
       <div className="flex flex-col space-y-[30px]">
-        {/* {products.map((product, idx) => (
-            <ProductCard key={idx} card={product} />
-          ))} */}
+        {count > 0 && users.map((user, idx) => <Card key={idx} card={user} />)}
       </div>
-      <div>
-        {/* <Pagination postsCount={count} active={currPage} postsPerPage={pageSize} /> */}
-      </div>
+      {count > 0 && (
+        <Pagination
+          postsCount={count}
+          active={currPage}
+          postsPerPage={pageSize}
+        />
+      )}
     </div>
   );
 };
 
-export default MarketingPage;
+export default UsersPage;

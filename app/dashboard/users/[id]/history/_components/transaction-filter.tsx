@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import { usePathname, useRouter } from "next/navigation";
 import { cn, dateToUnix } from "@/lib/utils";
 import { statuses, types } from "./records";
@@ -32,35 +34,46 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 
 const formSchema = z.object({
-  from: z.date({
-    invalid_type_error: "Это не дата!",
-  }),
-  to: z.date({
-    invalid_type_error: "Это не дата!",
-  }),
-  type: z.enum([
-    "buy",
-    "withdrawal",
-    "transfer_p2p",
-    "frozen_p2p",
-    "mlm_percent",
-    "mlm_matching",
-    "other",
-  ]),
-  status: z.enum(["success", "process", "cancelled"]),
+  from: z
+    .date({
+      invalid_type_error: "Это не дата!",
+    })
+    .optional(),
+  to: z
+    .date({
+      invalid_type_error: "Это не дата!",
+    })
+    .optional(),
+  type: z
+    .enum([
+      "buy",
+      "withdrawal",
+      "transfer_p2p",
+      "frozen_p2p",
+      "mlm_percent",
+      "mlm_matching",
+      "other",
+    ])
+    .optional(),
+  status: z.enum(["success", "process", "cancelled"]).optional(),
 });
 
 const TransactionFilter = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const sevenDaysAgo = useMemo(() => {
+    return new Date(Date.now() - 7 * 24 * 3600 * 1000);
+  }, []);
+
   const defaultValues: z.infer<typeof formSchema> = {
-    from: new Date(Date.now() - 7 * 24 * 3600 * 1000),
-    to: new Date(),
-    type: "buy",
-    status: "success",
+    // from: sevenDaysAgo,
+    // to: new Date(),
+    // type: "buy",
+    // status: "success",
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -70,11 +83,14 @@ const TransactionFilter = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const { from, to, type, status } = values;
-    const timestamp_from = dateToUnix(from);
-    const timestamp_to = dateToUnix(to);
-    router.push(
-      `${pathname}?f=${timestamp_from}&t=${timestamp_to}&type=${type}&status=${status}`
-    );
+
+    let redirectUrl = "";
+    if (from) redirectUrl += `?f=${dateToUnix(from)}`;
+    if (to) redirectUrl += `&t=${dateToUnix(to)}`;
+    if (type) redirectUrl += `&type=${type}`;
+    if (status) redirectUrl += `&status=${status}`;
+
+    router.push(pathname + redirectUrl);
   }
 
   const { isLoading, isSubmitting } = form.formState;
@@ -105,7 +121,7 @@ const TransactionFilter = () => {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "PPP")
+                              format(field.value, "PPP", { locale: ru })
                             ) : (
                               <span>Выберите дату</span>
                             )}
@@ -118,6 +134,7 @@ const TransactionFilter = () => {
                           mode="single"
                           selected={field.value}
                           onSelect={field.onChange}
+                          locale={ru}
                           initialFocus
                         />
                       </PopoverContent>
@@ -146,7 +163,7 @@ const TransactionFilter = () => {
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "PPP")
+                              format(field.value, "PPP", { locale: ru })
                             ) : (
                               <span>Выберите дату</span>
                             )}
@@ -160,6 +177,7 @@ const TransactionFilter = () => {
                           selected={field.value}
                           onSelect={field.onChange}
                           initialFocus
+                          locale={ru}
                         />
                       </PopoverContent>
                     </Popover>

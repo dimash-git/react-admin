@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { format } from "date-fns";
+import { cn, dateToUnix } from "@/lib/utils";
 
 import {
   Form,
@@ -27,8 +28,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import formSchema from "./schema";
-
-import { cn, dateToUnix } from "@/lib/utils";
+import { ru } from "date-fns/locale";
 
 const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
   const router = useRouter();
@@ -77,6 +77,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
         career_closing_date: dateToUnix(career_closing_date),
         ...restValues,
       };
+      console.log(qw_create_date, qw_expired_date);
       console.log(sendData);
 
       const res = await axios.post("/api/user/mlm", sendData);
@@ -191,7 +192,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { locale: ru })
                           ) : (
                             <span>Выберите дату</span>
                           )}
@@ -206,6 +207,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                         onSelect={field.onChange}
                         disabled={(date) => date < new Date()}
                         initialFocus
+                        locale={ru}
                       />
                     </PopoverContent>
                   </Popover>
@@ -236,7 +238,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { locale: ru })
                           ) : (
                             <span>Выберите дату</span>
                           )}
@@ -250,6 +252,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
+                        locale={ru}
                       />
                     </PopoverContent>
                   </Popover>
@@ -278,7 +281,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { locale: ru })
                           ) : (
                             <span>Выберите дату</span>
                           )}
@@ -292,6 +295,7 @@ const UserMlmForm = ({ parsed }: { parsed?: UserMlm }) => {
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
+                        locale={ru}
                       />
                     </PopoverContent>
                   </Popover>

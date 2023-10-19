@@ -3,11 +3,17 @@
 import { useContext, useState } from "react";
 import CrossCircleIcon from "@/public/icons/cross-circle.svg";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm } from "react-hook-form";
-import * as z from "zod";
-import formSchema, { EventSendData } from "../schema";
-import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import axios from "axios";
+import {
+  cn,
+  convertMediaBlockToBase64,
+  dateToUnix,
+  fileToBase64,
+  getFileType,
+  mapMediaBlocks,
+} from "@/lib/utils";
 
 import {
   Form,
@@ -37,20 +43,15 @@ import { CalendarIcon } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 import { EventContext } from "@/app/dashboard/my/(routes)/events/_components/event-provider";
-import {
-  cn,
-  convertMediaBlockToBase64,
-  dateToUnix,
-  fileToBase64,
-  getFileType,
-  mapMediaBlocks,
-} from "@/lib/utils";
-
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import axios from "axios";
-import { homeBaseUrl } from "../../../nav";
 import AddFieldsPanel from "./add-fields-panel";
+import { homeBaseUrl } from "../../../nav";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
+import * as z from "zod";
+import formSchema, { EventSendData } from "../schema";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 
 const EventForm = ({ parsed }: { parsed?: Evt }) => {
   const router = useRouter();
@@ -233,7 +234,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { locale: ru })
                           ) : (
                             <span>Выберите дату</span>
                           )}
@@ -248,6 +249,7 @@ const EventForm = ({ parsed }: { parsed?: Evt }) => {
                         onSelect={field.onChange}
                         disabled={(date) => date < new Date()}
                         initialFocus
+                        locale={ru}
                       />
                     </PopoverContent>
                   </Popover>

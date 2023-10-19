@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { format } from "date-fns";
+import { cn, dateToUnix } from "@/lib/utils";
 
 import {
   Form,
@@ -22,17 +25,43 @@ import { CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import formSchema from "./schema";
-
-import { cn, dateToUnix } from "@/lib/utils";
+import { ru } from "date-fns/locale";
 
 const UserPersonalForm = ({ parsed }: { parsed?: UserPersonal }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const [countries, setCountries] = useState<Country[]>([]);
+
+  useEffect(() => {
+    async function getCountries() {
+      try {
+        const res = await axios.post("/api/country/get");
+        const { status, content } = res.data;
+
+        if (status != 200) {
+          throw new Error("Error loading Countries");
+        }
+
+        const { countries } = content;
+        setCountries(countries);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getCountries();
+  }, []);
 
   const defaultValues = {
     first_name: parsed?.first_name ?? "",
@@ -145,7 +174,7 @@ const UserPersonalForm = ({ parsed }: { parsed?: UserPersonal }) => {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, "PPP", { locale: ru })
                           ) : (
                             <span>Выберите дату</span>
                           )}
@@ -160,6 +189,7 @@ const UserPersonalForm = ({ parsed }: { parsed?: UserPersonal }) => {
                         onSelect={field.onChange}
                         disabled={(date) => date > new Date()}
                         initialFocus
+                        locale={ru}
                       />
                     </PopoverContent>
                   </Popover>
@@ -168,19 +198,47 @@ const UserPersonalForm = ({ parsed }: { parsed?: UserPersonal }) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="country"
-            render={({ field }) => (
-              <FormItem className="space-y-[10px]">
-                <FormLabel>Страна</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
+          {countries?.length > 0 ? (
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mb-5">Страна</FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Выберите страну" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {countries.length > 0 &&
+                          countries.map((country, idx) => (
+                            <SelectItem
+                              key={idx}
+                              value={country?.name}
+                              className="text-white hover:text-black focus:text-black cursor-pointer"
+                            >
+                              {country?.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : (
+            <div className="text-[12px] font-medium mb-5">
+              Загрузка стран ...
+            </div>
+          )}
           <FormField
             control={form.control}
             name="telegram"

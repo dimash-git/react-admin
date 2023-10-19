@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import PassportFullscreen from "./_components/passport-fullscreen";
 import { redirect } from "next/navigation";
+import InfoBlock from "@/components/info-block";
 
 const UserPassportPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -30,7 +31,7 @@ const UserPassportPage = async ({ params }: { params: { id: string } }) => {
       }
     );
 
-    console.log(res.data);
+    // console.log(res.data);
 
     const { status, content } = res.data;
 
@@ -38,8 +39,7 @@ const UserPassportPage = async ({ params }: { params: { id: string } }) => {
       throw new Error("Error loading Passport info for user");
     }
 
-    passport = content.two_fa_info;
-    console.log(passport);
+    passport = content.passport;
   } catch (error) {
     console.error(error);
     return <>{String(error)}</>;
@@ -47,12 +47,11 @@ const UserPassportPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <div className="flex flex-col space-y-[10px]">
-        <span className="font-medium text-[12px] leading-3 uppercase">
-          подтвержден ли паспорт
-        </span>
-        <span className="font-bold text-[20px] leading-4">Да</span>
-      </div>
+      <InfoBlock
+        title="подтвержден ли паспорт"
+        content={passport?.is_verified_passport ? "Да" : "Нет"}
+      />
+
       <PassportFullscreen id={id} passport={passport} />
     </>
   );

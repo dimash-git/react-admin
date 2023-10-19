@@ -33,7 +33,7 @@ const UserMainPage = async ({ params }: { params: { id: string } }) => {
       }
     );
 
-    console.log(res.data);
+    // console.log(res.data);
 
     const { status, content } = res.data;
 
@@ -67,7 +67,10 @@ const UserMainPage = async ({ params }: { params: { id: string } }) => {
             title="Пройдена академия"
             content={main_info?.user_is_passed_academy ? "Да" : "Нет"}
           />
-          <InfoBlock title="Баланс" content={String(main_info?.balance)} />
+          <InfoBlock
+            title="Баланс"
+            content={String(main_info?.balance) + " USDT"}
+          />
         </div>
         <div className="flex flex-col space-y-[10px]">
           <span className="font-medium text-[12px] leading-3 uppercase">

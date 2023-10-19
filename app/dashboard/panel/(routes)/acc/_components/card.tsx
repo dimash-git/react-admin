@@ -18,7 +18,7 @@ const Card = ({ card }: { card: User }) => {
 
       <div className="flex gap-ten items-center">
         <Button variant="formSubmit" type="button" asChild>
-          <Link href={`users/${card?.user_id}/main`}>Посмотреть</Link>
+          <Link href={`acc/${card?.user_id}/edit`}>Изменить</Link>
         </Button>
       </div>
     </div>
