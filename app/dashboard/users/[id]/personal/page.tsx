@@ -1,15 +1,16 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
+import { unixToReadableDate } from "@/lib/utils";
+
+import TgIcon from "@/public/icons/telegram.svg";
 import { Button } from "@/components/ui/button";
 import InfoBlock from "@/components/info-block";
 import { ContactBlock } from "@/components/contact-block";
-import TgIcon from "@/public/icons/telegram.svg";
 
 import Link from "next/link";
-import { unixToReadableDate } from "@/lib/utils";
-import { redirect } from "next/navigation";
 
 const UserPersonalPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

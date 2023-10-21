@@ -6,12 +6,13 @@ import ExpandIcon from "@/public/icons/expand.svg";
 import Breadcrumbs from "@/components/breadcrumbs";
 import { PassportContext } from "../../_components/passport-provider";
 
-import Image from "next/image";
 import ModalPost from "@/components/modal-post";
 import { Button } from "@/components/ui/button";
 import PassportForm from "../../_components/passport-form";
 import ModalApprove from "@/components/modal-approve";
+
 import { processBaseUrl } from "@/app/dashboard/processes/nav";
+import Image from "next/image";
 
 const EditPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;

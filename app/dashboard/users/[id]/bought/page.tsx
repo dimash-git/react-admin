@@ -1,9 +1,9 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
 import BoughtProducts from "./_components/bought-products";
-import { redirect } from "next/navigation";
 
 const UserBoughtPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

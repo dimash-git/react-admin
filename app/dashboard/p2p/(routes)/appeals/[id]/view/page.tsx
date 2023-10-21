@@ -1,8 +1,7 @@
-import Breadcrumbs from "@/components/breadcrumbs";
-
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
 import EmailIcon from "@/public/icons/email.svg";
 import TgIcon from "@/public/icons/telegram.svg";
@@ -11,6 +10,7 @@ import PhoneIcon from "@/public/icons/phone.svg";
 import { Button } from "@/components/ui/button";
 import InfoBlock from "@/components/info-block";
 import { ContactBlock } from "@/components/contact-block";
+import Breadcrumbs from "@/components/breadcrumbs";
 import AppealCommentsForm from "../../_components/appeal-comments-form";
 import AppealCloseModal from "../../_components/appeal-close-modal";
 import AppealCloseForm from "../../_components/appeal-close-form";
@@ -23,30 +23,38 @@ const ViewPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const res = await axiosBack.post(
-    "/p2p_appeal/get_appeal",
-    {
-      appeal_id: id,
-    },
-    {
-      headers: {
-        Authorization: apiKey,
+  let appeal: Appeal;
+  try {
+    const res = await axiosBack.post(
+      "/p2p_appeal/get_appeal",
+      {
+        appeal_id: id,
       },
+      {
+        headers: {
+          Authorization: apiKey,
+        },
+      }
+    );
+
+    const { content, status } = res.data;
+    if (status.code !== 200) {
+      throw new Error("Error Loading Appeal");
     }
-  );
 
-  const { content, status } = res.data;
-
-  // console.log(res.data);
-
-  if (status.code != 200) return <>Ошибка загрузки поста</>;
-
-  const { appeals: appeal }: { appeals: Appeal } = content;
-  // backend wrong name for single appeal
+    appeal = content.appeals;
+    // backend wrong name for single appeal
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
+  }
 
   const viewItems = [
     { label: "Владелец оффера id", value: appeal?.user_offer_owner_id },

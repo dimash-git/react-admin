@@ -1,16 +1,17 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { retrieveApiKey } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
 
 import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
-
-import Card from "./_components/card";
 import Tabs from "@/components/tabs";
+import Card from "./_components/card";
+
 import { p2pTabs } from "../../nav";
-import { PAGE_SIZE } from "@/lib/constants";
 
 const Page = async ({
   searchParams,
@@ -18,8 +19,10 @@ const Page = async ({
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  // GET SESSION INFO
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
@@ -36,6 +39,7 @@ const Page = async ({
 
   let appeals: AppealList[] = [];
   let count: number = 0;
+
   try {
     const fixed_response = await fetch(
       BACKEND_URL + "/p2p_appeal/get_fixed_appeals",
@@ -92,10 +96,9 @@ const Page = async ({
     appeals.sort((a, b) => b.create_timestamp - a.create_timestamp);
 
     count = non_fixed_data.content.count + fixed_data.content.count;
-
-    console.log("count =", count, pageSize);
-  } catch (error: unknown) {
-    return <div>Ошибка загрузки списка: {String(error)}</div>;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
   }
 
   return (
@@ -104,9 +107,8 @@ const Page = async ({
       <Tabs links={p2pTabs.appeals_complaints} />
 
       <div className="flex flex-col space-y-[30px]">
-        {appeals.map((appeal, idx) => (
-          <Card key={idx} card={appeal} />
-        ))}
+        {count > 0 &&
+          appeals.map((appeal, idx) => <Card key={idx} card={appeal} />)}
       </div>
 
       {/* PAGINATION */}

@@ -93,17 +93,19 @@ const Page = async ({
     // console.log(complaints);
 
     count = non_fixed_data.content.count + fixed_data.content.count;
-  } catch (error: unknown) {
-    return <div>Ошибка загрузки списка: {String(error)}</div>;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
   }
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
       <Tabs links={p2pTabs.appeals_complaints} />
       <div className="flex flex-col space-y-[30px]">
-        {complaints.map((complaint, idx) => (
-          <Card key={idx} card={complaint} />
-        ))}
+        {count > 0 &&
+          complaints.map((complaint, idx) => (
+            <Card key={idx} card={complaint} />
+          ))}
       </div>
 
       {/* PAGINATION */}

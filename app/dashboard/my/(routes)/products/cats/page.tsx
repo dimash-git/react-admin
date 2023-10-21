@@ -1,17 +1,19 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
+
+import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
-
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
-import { BACKEND_URL } from "@/lib/server-constants";
-import { homeTabs } from "../../../nav";
-import Card from "./_components/card";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { PAGE_SIZE } from "@/lib/constants";
+import Card from "./_components/card";
+
+import { homeTabs } from "../../../nav";
+import Link from "next/link";
 
 const ProductCategoriesPage = async ({
   searchParams,
@@ -20,6 +22,9 @@ const ProductCategoriesPage = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
@@ -34,31 +39,33 @@ const ProductCategoriesPage = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/product/get_categories", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: apiKey,
-    },
-    body: JSON.stringify({
-      skip,
-      limit: pageSize,
-    }),
-    next: { tags: ["product_cats"] },
-  });
+  let categories: ProductCat[];
+  let count: number = 0;
+  try {
+    const response = await fetch(BACKEND_URL + "/product/get_categories", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: apiKey,
+      },
+      body: JSON.stringify({
+        skip,
+        limit: pageSize,
+      }),
+      next: { tags: ["product_cats"] },
+    });
 
-  if (!response.ok) {
-    throw new Error("Error Loading Categories");
+    const { status, content } = await response.json();
+
+    if (status.code !== 200) {
+      throw new Error("Error Loading Product Categories");
+    }
+    categories = content.categories;
+    count = content.count;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
   }
-
-  const { status, content } = await response.json();
-
-  if (status.code !== 200) {
-    throw new Error("Error Loading Categories");
-  }
-
-  const { categories, count }: { categories: ProductCat[]; count: number } =
-    content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
@@ -77,17 +84,16 @@ const ProductCategoriesPage = async ({
       </div>
 
       <div className="flex flex-col space-y-[30px]">
-        {categories.map((cat, idx) => (
-          <Card key={idx} card={cat} />
-        ))}
+        {count > 0 &&
+          categories.map((cat, idx) => <Card key={idx} card={cat} />)}
       </div>
-      <div>
+      {count > 0 && (
         <Pagination
           postsCount={count}
           active={currPage}
           postsPerPage={pageSize}
         />
-      </div>
+      )}
     </div>
   );
 };

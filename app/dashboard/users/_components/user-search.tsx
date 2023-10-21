@@ -40,9 +40,9 @@ const UserSearch = () => {
         const { user_id } = content;
         if (user_id) {
           setFoundUser(user_id);
-          setIsLoading(false);
           router.refresh();
         }
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }

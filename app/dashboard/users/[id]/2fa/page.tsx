@@ -1,11 +1,12 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
-import User2FAForm from "./_components/user-2fa-form";
 import InfoBlock from "@/components/info-block";
-import { redirect } from "next/navigation";
+import User2FAForm from "./_components/user-2fa-form";
 
 const User2FAPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

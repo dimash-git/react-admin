@@ -1,15 +1,15 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { retrieveApiKey } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
 
 import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
-
 import Card from "./_components/card";
 import AddBank from "./_components/add-bank";
-import { PAGE_SIZE } from "@/lib/constants";
 
 const Page = async ({
   searchParams,
@@ -18,6 +18,9 @@ const Page = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
@@ -32,47 +35,50 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/bank/get_banks", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: apiKey,
-    },
-    body: JSON.stringify({
-      skip,
-      limit: pageSize,
-    }),
-    next: { tags: ["banks"] },
-  });
+  let banks: Bank[];
+  let count: number = 0;
+  try {
+    const response = await fetch(BACKEND_URL + "/bank/get_banks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: apiKey,
+      },
+      body: JSON.stringify({
+        skip,
+        limit: pageSize,
+      }),
+      next: { tags: ["banks"] },
+    });
 
-  if (!response.ok) {
-    return <div>Ошибка загрузки списка</div>;
+    const { status, content } = await response.json();
+    if (status.code !== 200) {
+      throw new Error("Error Loading Banks");
+    }
+
+    banks = content.banks;
+    count = content.count;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
   }
-
-  const { content } = await response.json();
-
-  // console.log(content);
-
-  const { banks, count }: { banks: Bank[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
       <AddBank />
       <div className="flex flex-col space-y-[30px]">
-        {banks.map((bank, idx) => (
-          <Card key={idx} card={bank} />
-        ))}
+        {count > 0 && banks.map((bank, idx) => <Card key={idx} card={bank} />)}
       </div>
 
       {/* PAGINATION */}
-      <div>
+      {count > 0 && (
         <Pagination
           postsCount={count}
           active={currPage}
           postsPerPage={pageSize}
         />
-      </div>
+      )}
     </div>
   );
 };

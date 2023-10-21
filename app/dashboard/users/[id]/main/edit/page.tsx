@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
 
 import UserMainForm from "../_components/user-main-form";
-import { redirect } from "next/navigation";
 
 const EditPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

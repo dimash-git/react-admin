@@ -1,14 +1,16 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
 
 import { BACKEND_URL } from "@/lib/server-constants";
 import { PAGE_SIZE } from "@/lib/constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
-import EventCard from "./_components/card";
 import Tabs from "@/components/tabs";
 import Pagination from "@/components/pagination";
+import EventCard from "./_components/card";
+
 import { homeTabs } from "../../nav";
 
 const EventsPage = async ({
@@ -18,6 +20,9 @@ const EventsPage = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
@@ -32,34 +37,41 @@ const EventsPage = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/event/get_events", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: apiKey,
-    },
-    body: JSON.stringify({
-      skip,
-      limit: pageSize,
-    }),
-    next: { tags: ["events"] },
-  });
+  let events: Evt[];
+  let count: number = 0;
+  try {
+    const response = await fetch(BACKEND_URL + "/event/get_events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: apiKey,
+      },
+      body: JSON.stringify({
+        skip,
+        limit: pageSize,
+      }),
+      next: { tags: ["events"] },
+    });
 
-  const data = await response.json();
-  // console.log(data);
-  const { status, content } = data;
+    const { status, content } = await response.json();
+    if (status.code !== 200) {
+      throw new Error("Error Loading Events");
+    }
 
-  if (status.code != 200) return <div>Ошибка загрузки списка</div>;
-  const { events, count }: { events: Evt[]; count: number } = content;
+    events = content.events;
+    count = content.count;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
+  }
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">
       <Breadcrumbs />
       <Tabs links={homeTabs.events} />
       <div className="flex flex-col space-y-[30px]">
-        {events.map((event, idx) => (
-          <EventCard key={idx} card={event} />
-        ))}
+        {count > 0 &&
+          events.map((event, idx) => <EventCard key={idx} card={event} />)}
       </div>
       {count > 0 && (
         <Pagination

@@ -1,21 +1,30 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import "server-only";
 import { BACKEND_URL } from "./server-constants";
-import fetch from "node-fetch";
 
-interface LoginCreds {
+const axiosBack = axios.create({
+  baseURL: BACKEND_URL,
+});
+interface CredsForStepTwo {
   login: string;
   type: "google" | "phone";
   code: string;
 }
 
-const getVerificationKey = async (
-  loginCreds: LoginCreds
-): Promise<string | null> => {
-  const { login, type, code } = loginCreds;
-  if (type == "google") {
-    const res = await axios.post(
-      BACKEND_URL + "/main/auth/get_verification_key_step_two",
+const getVerificationKey = async ({
+  login,
+  type,
+  code,
+}: {
+  login: string;
+  type: "google" | "phone";
+  code: string;
+}): Promise<string | null> => {
+  console.log({ login, type, code });
+
+  try {
+    const res = await axiosBack.post(
+      "/main/auth/get_verification_key_step_two",
       {
         login,
         type,
@@ -23,17 +32,22 @@ const getVerificationKey = async (
       }
     );
 
-    if (res.status == 200) {
-      const { content } = res.data;
-      return content.verification_key;
+    const { status, content } = res.data;
+
+    if (status != 200) {
+      throw new Error("Error Getting Verification Key");
     }
+
+    const { verification_key } = content;
+
+    return verification_key;
+  } catch (error) {
+    const err = error as AxiosError;
+    console.error(err?.response?.status, err?.response?.statusText);
   }
+
   return null;
 };
-
-const axiosBack = axios.create({
-  baseURL: BACKEND_URL,
-});
 
 const retrieveApiKey = (tokens: BackendTokens) => {
   if (!tokens) return null;

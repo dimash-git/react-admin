@@ -1,9 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { loginFormSchema as formSchema } from "../../schema";
+import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -14,105 +12,105 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { signIn } from "next-auth/react";
-import { useToast } from "@/components/ui/use-toast";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+
+import { CredsContext } from "../../creds-provider";
+
+const formSchema = z.object({
+  login: z.string().min(3, {
+    message: "Заполните логин или почту",
+  }),
+  password: z.string().min(4, { message: "Заполните пароль" }),
+});
 
 const SignInPage = () => {
-  const { toast } = useToast();
+  const router = useRouter();
+  const { creds, setCreds } = useContext(CredsContext);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "admin",
+      login: "admin",
       password: "admin",
-      code: "",
     },
   });
 
   const { isLoading, isSubmitting } = form.formState;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { username: login, password, code } = values;
-    try {
-      await signIn("credentials", {
-        login,
-        password,
-        code,
-        callbackUrl: "/dashboard/my",
-      });
-      toast({
-        variant: "success",
-        title: "Вход выполнен успешно!",
-      });
-    } catch (error) {
-      console.log("Sign-in Error", error);
-      toast({
-        variant: "destructive",
-        title: "Произошла ошибка при входе.",
-        dir: "top",
-      });
-    }
+    const { login, password } = values;
+    setCreds({
+      ...creds,
+      login,
+      password,
+    });
+
+    router.push("/sign-in/2fa");
   }
 
   return (
-    <div className="flex flex-col space-y-[20px]">
-      <h3 className="text-[20px] text-gray text-center block border-b-[1px] border-b-[#0072FF] pb-5">
-        Вход
-      </h3>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-[20px]">
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    placeholder="Логин или почта"
-                    {...field}
-                    variant="auth"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Пароль" {...field} variant="auth" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="code"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Код" {...field} variant="auth" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        <FormField
+          control={form.control}
+          name="login"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  placeholder="Логин или почта"
+                  {...field}
+                  variant="auth"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Пароль" {...field} variant="auth" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex gap-2">
           <Button
             variant="submit"
             size="md"
             type="submit"
             className="w-full"
             disabled={isLoading || isSubmitting}
+            onClick={() => {
+              setCreds({ ...creds, type: "google" });
+            }}
           >
-            Вход
+            GA
           </Button>
-        </form>
-      </Form>
-    </div>
+          <Button
+            variant="submit"
+            size="md"
+            type="submit"
+            className="w-full"
+            disabled={isLoading || isSubmitting}
+            onClick={() => {
+              setCreds({ ...creds, type: "phone" });
+            }}
+          >
+            SMS
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 

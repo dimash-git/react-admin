@@ -1,13 +1,16 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import InfoBlock from "@/components/info-block";
+import { redirect } from "next/navigation";
+
 import { unixToReadableDate } from "@/lib/utils";
+
+import { Button } from "@/components/ui/button";
+import InfoBlock from "@/components/info-block";
 import ModalPost from "@/components/modal-post";
 import UserClauseForm from "./_components/user-clause-form";
-import { redirect } from "next/navigation";
+
+import Link from "next/link";
 
 const UserMlmPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

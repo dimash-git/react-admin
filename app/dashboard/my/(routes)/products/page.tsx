@@ -1,16 +1,18 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import { retrieveApiKey } from "@/lib/server-utils";
+import { redirect } from "next/navigation";
+
 import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Container from "@/components/container";
 import Pagination from "@/components/pagination";
 import Tabs from "@/components/tabs";
-
 import Card from "./_components/card";
+
 import { homeTabs } from "../../nav";
-import { PAGE_SIZE } from "@/lib/constants";
 
 const MarketingPage = async ({
   searchParams,
@@ -19,6 +21,9 @@ const MarketingPage = async ({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
@@ -50,13 +55,11 @@ const MarketingPage = async ({
       next: { tags: ["products"] },
     });
 
-    if (!response.ok) {
+    const { status, content } = await response.json();
+
+    if (status.code !== 200) {
       throw new Error("Error Loading Products");
     }
-
-    const { content } = await response.json();
-
-    // console.log(content);
 
     products = content.products;
     count = content.count;
@@ -71,16 +74,16 @@ const MarketingPage = async ({
         <Breadcrumbs />
         <Tabs links={homeTabs.products} />
         <div className="flex flex-col space-y-[30px]">
-          {products &&
+          {count > 0 &&
             products.map((product, idx) => <Card key={idx} item={product} />)}
         </div>
-        <div>
+        {count > 0 && (
           <Pagination
             postsCount={count}
             active={currPage}
             postsPerPage={pageSize}
           />
-        </div>
+        )}
       </div>
     </Container>
   );

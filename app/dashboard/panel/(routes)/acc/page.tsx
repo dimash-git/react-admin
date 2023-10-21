@@ -37,28 +37,34 @@ const UsersPage = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(BACKEND_URL + "/main/user/get_users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: apiKey,
-    },
-    body: JSON.stringify({
-      skip,
-      limit: pageSize,
-    }),
-    next: { tags: ["users"] },
-  });
+  let users: User[];
+  let count: number = 0;
 
-  const { status, content } = await response.json();
+  try {
+    const response = await fetch(BACKEND_URL + "/main/user/get_users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: apiKey,
+      },
+      body: JSON.stringify({
+        skip,
+        limit: pageSize,
+      }),
+      next: { tags: ["users"] },
+    });
 
-  if (status.code !== 200) {
-    throw new Error("Error Loading Users");
+    const { status, content } = await response.json();
+    if (status.code !== 200) {
+      throw new Error("Error Loading Users");
+    }
+
+    users = content.users;
+    count = content.count;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
   }
-
-  // console.log(content);
-
-  const { users, count }: { users: any[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">

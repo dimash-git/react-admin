@@ -1,41 +1,24 @@
-import Breadcrumbs from "@/components/breadcrumbs";
-
-import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
+import { retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+
+import Breadcrumbs from "@/components/breadcrumbs";
 import { Button } from "@/components/ui/button";
+
 import Link from "next/link";
 import { panelBaseUrl } from "@/app/dashboard/panel/nav";
 
 const ViewPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
-  console.log(id);
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
-
-  // const res = await axiosBack.post(
-  //   "/p2p_appeal/get_appeal",
-  //   {
-  //     appeal_id: id,
-  //   },
-  //   {
-  //     headers: {
-  //       Authorization: apiKey,
-  //     },
-  //   }
-  // );
-  // console.log(res.data);
-
-  // const { content, status } = res.data;
-
-  // // console.log(res.data);
-
-  // if (status.code != 200) return <>Ошибка загрузки поста</>;
-
-  // // const { qualification } = content;
 
   return (
     <>

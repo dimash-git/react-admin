@@ -54,6 +54,10 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
+        type: {
+          label: "Type",
+          type: "text",
+        },
         login: {
           label: "Username",
           type: "text",
@@ -64,19 +68,27 @@ export const authOptions: NextAuthOptions = {
         },
         code: { label: "Two-Factor Code", type: "number" },
       },
+
       async authorize(credentials, req) {
-        if (!credentials?.login || !credentials?.password || !credentials?.code)
+        console.log(credentials);
+
+        if (
+          !credentials?.login ||
+          !credentials?.password ||
+          !credentials?.type ||
+          !credentials?.code
+        )
           return null;
 
-        const { login, password, code } = credentials;
+        const { login, password, code, type } = credentials;
 
         const verification_key = await getVerificationKey({
           login,
-          type: "google",
+          type: type as "google" | "phone",
           code,
         });
 
-        console.log("VerKey: ", verification_key);
+        console.log("Verification Key: ", verification_key);
 
         if (!verification_key) return null;
 

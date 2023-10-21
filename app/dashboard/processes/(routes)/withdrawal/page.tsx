@@ -4,12 +4,11 @@ import { retrieveApiKey } from "@/lib/server-utils";
 import { redirect } from "next/navigation";
 
 import { BACKEND_URL } from "@/lib/server-constants";
+import { PAGE_SIZE } from "@/lib/constants";
 
 import Breadcrumbs from "@/components/breadcrumbs";
 import Pagination from "@/components/pagination";
-
 import Card from "./_components/card";
-import { PAGE_SIZE } from "@/lib/constants";
 
 const Page = async ({
   searchParams,
@@ -35,34 +34,37 @@ const Page = async ({
       ? parseInt(searchParams.page)
       : 1;
 
-  const response = await fetch(
-    BACKEND_URL + "/withdrawal/get_withdrawal_invoice",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: apiKey,
-      },
-      body: JSON.stringify({
-        skip,
-        limit: pageSize,
-      }),
-      next: { tags: ["withdrawals"] },
+  let withdrawal_invoice: WithdrawalInvoice[];
+  let count: number = 0;
+
+  try {
+    const response = await fetch(
+      BACKEND_URL + "/withdrawal/get_withdrawal_invoice",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: apiKey,
+        },
+        body: JSON.stringify({
+          skip,
+          limit: pageSize,
+        }),
+        next: { tags: ["withdrawals"] },
+      }
+    );
+
+    const { status, content } = await response.json();
+    if (status.code !== 200) {
+      throw new Error("Error Loading Withdrawal Invoices");
     }
-  );
 
-  if (!response.ok) {
-    return <div>Ошибка загрузки списка</div>;
+    withdrawal_invoice = content.withdrawal_invoice;
+    count = content.count;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
   }
-
-  const { content } = await response.json();
-
-  // console.log(content);
-
-  const {
-    withdrawal_invoice,
-    count,
-  }: { withdrawal_invoice: WithdrawalInvoice[]; count: number } = content;
 
   return (
     <div className="h-fit flex flex-col space-y-[30px]">

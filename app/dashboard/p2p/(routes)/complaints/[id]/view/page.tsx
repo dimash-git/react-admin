@@ -1,42 +1,52 @@
-import Breadcrumbs from "@/components/breadcrumbs";
-
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
+import Breadcrumbs from "@/components/breadcrumbs";
 import ComplaintForm from "../../_components/complaint-form";
 import Chat from "../../_components/chat";
+
+import Link from "next/link";
 import { p2pBaseUrl } from "@/app/dashboard/p2p/nav";
 
 const ViewPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   const session = await getServerSession(authOptions);
+  if (session?.error == "RefreshAccessTokenError") {
+    redirect("/sign-in");
+  }
   if (!session) return;
   const apiKey = retrieveApiKey(session.backendTokens);
   if (!apiKey) return;
 
-  const res = await axiosBack.post(
-    "/p2p_complain/get_complain",
-    {
-      complain_id: id,
-    },
-    {
-      headers: {
-        Authorization: apiKey,
+  let complaint: Complaint;
+  try {
+    const res = await axiosBack.post(
+      "/p2p_complain/get_complain",
+      {
+        complain_id: id,
       },
+      {
+        headers: {
+          Authorization: apiKey,
+        },
+      }
+    );
+
+    const { content, status } = res.data;
+    if (status.code !== 200) {
+      throw new Error("Error Loading Complaint");
     }
-  );
 
-  const { content, status } = res.data;
-
-  if (status.code != 200) return <>Ошибка загрузки поста</>;
-
-  const { complain: complaint }: { complain: Complaint } = content;
+    complaint = content.complain;
+  } catch (error) {
+    console.error(error);
+    return <>{String(error)}</>;
+  }
   // console.log(complaint);
   // backend wrong name for single complaint
 

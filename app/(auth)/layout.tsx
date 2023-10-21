@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { CredsProvider } from "./creds-provider";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -10,7 +11,10 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
         <div className="flex justify-center mb-5">
           <Image width={251} height={249} src="/logo-auth.png" alt="Logo" />
         </div>
-        {children}
+        <h3 className="text-20 text-gray text-center pb-[10px] mb-5 block border-b-[1px] border-b-[#0072FF]">
+          Вход
+        </h3>
+        <CredsProvider>{children}</CredsProvider>
       </div>
     </div>
   );

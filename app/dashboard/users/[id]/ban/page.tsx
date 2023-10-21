@@ -1,12 +1,13 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
 import ModalPost from "@/components/modal-post";
+import InfoBlock from "@/components/info-block";
 import UserBanForm from "./_components/user-ban-form";
 import P2PBanForm from "./_components/p2p-ban-form";
-import InfoBlock from "@/components/info-block";
-import { redirect } from "next/navigation";
 
 const UserBanPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;

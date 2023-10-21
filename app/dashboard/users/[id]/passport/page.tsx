@@ -1,9 +1,10 @@
 import { axiosBack, retrieveApiKey } from "@/lib/server-utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import PassportFullscreen from "./_components/passport-fullscreen";
 import { redirect } from "next/navigation";
+
 import InfoBlock from "@/components/info-block";
+import PassportFullscreen from "./_components/passport-fullscreen";
 
 const UserPassportPage = async ({ params }: { params: { id: string } }) => {
   const { id } = params;
